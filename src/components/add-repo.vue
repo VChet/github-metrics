@@ -26,6 +26,7 @@ async function addRepo() {
       const isAlreadyStored = storage.value.repositories.some(({ id }) => id === repo.id);
       if (!isAlreadyStored) storage.value.repositories.push(repo);
     }
+    repoFullName.value = "";
   } catch (error) {
     hasError.value = true;
   }
