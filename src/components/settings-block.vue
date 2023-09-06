@@ -7,7 +7,7 @@
     </label>
     <form class="settings__token-form" @submit.prevent="setAuthToken(authTokenInput)">
       <input v-model="authTokenInput" placeholder="authToken" />
-      <button type="submit" :disabled="!authTokenInput">Set</button>
+      <button name="set-auth-token" type="submit" :disabled="!authTokenInput">Set</button>
     </form>
   </fieldset>
 </template>

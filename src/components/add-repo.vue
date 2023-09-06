@@ -3,7 +3,7 @@
     <legend>Add new GitHub repo</legend>
     <form class="add-repo__form" @submit.prevent="addRepo">
       <input v-model="repoFullName" placeholder="owner/name" />
-      <button type="submit" :disabled="!repoFullName">Submit</button>
+      <button name="add-repo" type="submit" :disabled="!repoFullName">Submit</button>
     </form>
   </fieldset>
 </template>

@@ -11,7 +11,12 @@
         </h1>
       </a>
       <div class="repo__header-actions">
-        <button class="icon-button icon-button--negative" @click="$emit('delete', repo.id)">
+        <button
+          name="delete-repo"
+          type="button"
+          class="icon-button icon-button--negative"
+          @click="$emit('delete', repo.id)"
+        >
           <icon-trash />
         </button>
         <icon-grip-vertical class="repo__header-actions-handler" />
