@@ -2,31 +2,73 @@
   <fieldset :class="classList">
     <legend>Add new GitHub repo</legend>
     <form class="add-repo__form" @submit.prevent="addRepo">
-      <input v-model="repoFullName" placeholder="owner/name" />
-      <button name="add-repo" type="submit" :disabled="!repoFullName">Submit</button>
+      <input v-model.trim="form.repoFullName" required placeholder="owner/name *" />
+      <button title="add repo" type="submit">Submit</button>
+      <details>
+        <summary>Additional</summary>
+        <div class="add-repo__form">
+          <input v-model.trim="form.monitorKey" placeholder="uptimerobot monitor key" />
+          <input v-model.trim="form.projectId" placeholder="hosting project id" />
+          <input-select v-model="form.bundler" :items="bundlerOptions" label="bundler:" />
+          <input-select v-model="form.analytics" :items="analyticsOptions" label="analytics:" />
+          <input-select v-model="form.tests" :items="testsOptions" label="tests:" />
+        </div>
+      </details>
     </form>
   </fieldset>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
+import InputSelect from "@/components/input-select.vue";
 import { storage } from "@/store/repositories";
 import { Repository } from "@/classes/Repo";
 
-const repoFullName = ref("");
+const formDefaults = {
+  repoFullName: "",
+  monitorKey: "",
+  projectId: "",
+  bundler: "",
+  analytics: "",
+  tests: ""
+} as const;
+Object.freeze(formDefaults);
+
+const bundlerOptions = [{ name: "Vite", value: "vite" }] as const;
+const analyticsOptions = [{ name: "counter.dev", value: "counter.dev" }] as const;
+const testsOptions = [
+  { name: "mocha", value: "mocha" },
+  { name: "jest", value: "jest" },
+  { name: "vitest", value: "vitest" }
+] as const;
+
+const form = reactive({ ...formDefaults });
+const integrations = computed(() => ({
+  monitorKey: form.monitorKey,
+  projectId: form.projectId,
+  bundler: form.bundler,
+  analytics: form.analytics,
+  tests: form.tests
+}));
+function resetForm() {
+  Object.assign(form, { ...formDefaults });
+}
 
 const hasError = ref(false);
-watch(repoFullName, () => {
-  hasError.value = false;
-});
+watch(
+  () => form.repoFullName,
+  () => {
+    hasError.value = false;
+  }
+);
 async function addRepo() {
   try {
     hasError.value = false;
-    const repo = await Repository.init(repoFullName.value);
+    const repo = await Repository.init(form.repoFullName, integrations.value);
     if (repo) {
-      const isAlreadyStored = storage.value.repositories.some(({ id }) => id === repo.id);
-      if (!isAlreadyStored) storage.value.repositories.push(repo);
+      const isNew = storage.value.repositories.every(({ id }) => id !== repo.id);
+      if (isNew) storage.value.repositories.push(repo);
     }
-    repoFullName.value = "";
+    resetForm();
   } catch (error) {
     hasError.value = true;
   }
@@ -36,19 +78,28 @@ const classList = computed(() => {
   const key = "add-repo";
   return {
     [key]: true,
-    error: hasError.value
+    [`${key}--invalid`]: hasError.value
   };
 });
 </script>
 <style lang="scss">
 .add-repo {
+  &--invalid {
+    border-color: #a10000;
+    legend {
+      color: #a10000;
+    }
+  }
   &__form {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    width: 100%;
-    input {
-      flex: 1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    details {
+      grid-column: 1 / -1;
+      .add-repo__form {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        margin: 1rem 0;
+      }
     }
     button {
       padding: 0.5rem;

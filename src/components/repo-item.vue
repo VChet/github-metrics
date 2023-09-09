@@ -12,7 +12,7 @@
       </a>
       <div class="repo__header-actions">
         <button
-          name="delete-repo"
+          title="delete repo"
           type="button"
           class="icon-button icon-button--negative"
           @click="$emit('delete', repo.id)"
@@ -25,30 +25,40 @@
     <section class="repo__body">
       <div>
         <div>{{ repo.language }}</div>
+        <div v-if="repo.license && repo.license.spdx_id !== 'NOASSERTION'">
+          {{ repo.license.spdx_id }}
+        </div>
         <a v-if="repo.homepage" :href="repo.homepage">
-          {{ getHosting(repo.homepage) ?? "Homepage" }}
+          {{ repo.hostingName ?? "Homepage" }}
           <icon-external-link />
         </a>
       </div>
       <div>
-        <a :href="`https://github.com/${repo.full_name}/stargazers`">
+        <a :href="`https://github.com/${repo.full_name}/stargazers`" title="stars">
           <icon-star />
           {{ repo.stargazers_count }}
         </a>
-        <a :href="`https://github.com/${repo.full_name}/forks`">
+        <a :href="`https://github.com/${repo.full_name}/forks`" title="forks">
           <icon-git-fork />
           {{ repo.forks_count }}
         </a>
-        <a :href="`https://github.com/${repo.full_name}/issues`">
+        <a :href="`https://github.com/${repo.full_name}/issues`" title="open issues">
           <icon-circle-dot />
           {{ repo.open_issues_count }}
         </a>
       </div>
+      <footer v-if="Object.keys(repo.integrations).length">
+        <img v-if="repo.uptimerobotImage" :src="repo.uptimerobotImage" alt="uptimerobot ratio" />
+        <img v-if="repo.hostingStatusImage" :src="repo.hostingStatusImage" alt="hosting status" />
+        <img v-if="repo.bundlerImage" :src="repo.bundlerImage" alt="bundler" />
+        <img v-if="repo.analyticsImage" :src="repo.analyticsImage" alt="analytics" />
+        <img v-if="repo.testsImage" :src="repo.testsImage" alt="tests" />
+      </footer>
     </section>
   </li>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, ref, type PropType } from "vue";
+import { onBeforeMount, ref } from "vue";
 import {
   IconBrandGithub,
   IconTemplate,
@@ -61,34 +71,24 @@ import {
 } from "@tabler/icons-vue";
 import { settings } from "@/store/settings";
 import { Repository } from "@/classes/Repo";
+import { storage } from "@/store/repositories";
 
-const props = defineProps({
-  repo: {
-    type: Object as PropType<Repository>,
-    required: true
-  }
-});
+const props = defineProps<{ repo: Repository }>();
 defineEmits(["delete"]);
 
 const repoData = ref(props.repo);
 onBeforeMount(async () => {
   if (!(repoData.value instanceof Repository)) {
-    const updatedData = await Repository.init(props.repo.full_name);
-    if (updatedData) repoData.value = updatedData;
+    const repoInstance = await Repository.init(props.repo.full_name, props.repo.integrations);
+    if (!repoInstance) throw new Error("repo not found");
+    const repoIndex = storage.value.repositories.findIndex(({ id }) => repoInstance.id === id);
+    if (repoIndex !== -1) {
+      storage.value.repositories[repoIndex] = repoInstance;
+    } else {
+      storage.value.repositories.push(repoInstance);
+    }
   }
 });
-
-function getHosting(homepage: string): string | null {
-  if (!homepage) return null;
-  if (homepage.includes("vercel.app")) {
-    return "Vercel";
-  } else if (homepage.includes("netlify.app")) {
-    return "Netlify";
-  } else if (homepage.includes("github.io")) {
-    return "GitHub";
-  }
-  return null;
-}
 </script>
 <style lang="scss">
 .repo {
@@ -130,16 +130,25 @@ function getHosting(homepage: string): string | null {
     }
   }
   &__body {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0.5rem;
     align-items: flex-end;
     justify-content: space-between;
     > div {
       display: flex;
       gap: 0.375rem;
-      justify-content: space-between;
-      &:first-child {
+      &:first-of-type {
         flex-direction: column;
       }
+      &:last-of-type {
+        justify-content: flex-end;
+      }
+    }
+    footer {
+      display: flex;
+      grid-column: 1 / -1;
+      gap: 0.5rem;
     }
   }
 }

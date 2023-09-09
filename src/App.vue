@@ -16,8 +16,8 @@ import RepoGrid from "@/components/repo-grid.vue";
 
 <style lang="scss">
 .main-header {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   margin: 1rem 0;
 }

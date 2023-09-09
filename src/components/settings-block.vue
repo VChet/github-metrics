@@ -6,8 +6,8 @@
       Owners
     </label>
     <form class="settings__token-form" @submit.prevent="setAuthToken(authTokenInput)">
-      <input v-model="authTokenInput" placeholder="authToken" />
-      <button name="set-auth-token" type="submit" :disabled="!authTokenInput">Set</button>
+      <input v-model.trim="authTokenInput" placeholder="authToken" />
+      <button title="set auth token" type="submit" :disabled="!authTokenInput">Set</button>
     </form>
   </fieldset>
 </template>

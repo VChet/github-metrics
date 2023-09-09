@@ -1,17 +1,18 @@
 @import "https://fonts.googleapis.com/css?family=Exo+2&display=swap";
 :root {
   --radius: 0.375rem;
+  --background: #202020;
   --base: #9da7b6;
   --base-dimmed: #363e4a;
   --accent: #b9b384;
 }
 *::selection {
-  color: #202020;
+  color: var(--background);
   background: var(--accent);
 }
 body {
   font-variant-numeric: tabular-nums;
-  background-color: #202020;
+  background-color: var(--background);
 }
 main {
   display: flex;
@@ -21,6 +22,13 @@ main {
   font-size: 16px;
   color: var(--base);
 }
+legend,
+summary {
+  user-select: none;
+}
+summary {
+  cursor: pointer;
+}
 fieldset {
   padding: 1rem;
   margin: 0;
@@ -29,12 +37,6 @@ fieldset {
   &:focus-within {
     color: var(--base);
     border-color: var(--base);
-  }
-  &.error {
-    border-color: #a10000;
-    legend {
-      color: #a10000;
-    }
   }
 }
 ul {
