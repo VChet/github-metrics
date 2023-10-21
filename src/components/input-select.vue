@@ -23,6 +23,7 @@ const props = withDefaults(
   }>(),
   {
     label: null,
+    modelValue: "",
     itemValue: "value",
     itemText: "name"
   }
@@ -39,14 +40,14 @@ const model = useVModel(props, "modelValue", emit);
   gap: 0.5rem;
   align-items: center;
   select {
-    padding: 0;
+    padding: 0.5rem;
     font: inherit;
-    line-height: 1.1;
     color: var(--base);
     appearance: none;
     cursor: pointer;
     background-color: transparent;
     border: none;
+    border-bottom: 1px solid var(--base-dimmed);
     outline: none;
     &:hover,
     &:focus-visible {

@@ -1,16 +1,16 @@
 <template>
   <li class="repo">
     <header class="repo__header">
-      <a :href="repo.html_url">
-        <h1 class="repo__header-name">
-          <icon-template v-if="repo.is_template" />
-          <span class="text-truncate">
-            {{ settings.showOwner ? repo.full_name : repo.name }}
-          </span>
-          <icon-brand-github />
-        </h1>
-      </a>
+      <h1 class="repo__header-name">
+        <icon-template v-if="repo.is_template" />
+        <icon-lock v-if="repo.private" />
+        <icon-archive v-if="repo.archived" />
+        <a :href="repo.html_url" class="text-truncate icon-button">
+          {{ settings.showOwner ? repo.full_name : repo.name }}
+        </a>
+      </h1>
       <div class="repo__header-actions">
+        <edit-repo :repo="repo" />
         <button
           title="delete repo"
           type="button"
@@ -29,7 +29,7 @@
           {{ repo.license.spdx_id }}
         </div>
         <a v-if="repo.homepage" :href="repo.homepage">
-          {{ repo.hostingName ?? "Homepage" }}
+          {{ hostingName ?? "Homepage" }}
           <icon-external-link />
         </a>
       </div>
@@ -47,48 +47,40 @@
           {{ repo.open_issues_count }}
         </a>
       </div>
-      <footer v-if="Object.keys(repo.integrations).length">
-        <img v-if="repo.uptimerobotImage" :src="repo.uptimerobotImage" alt="uptimerobot ratio" />
-        <img v-if="repo.hostingStatusImage" :src="repo.hostingStatusImage" alt="hosting status" />
-        <img v-if="repo.bundlerImage" :src="repo.bundlerImage" alt="bundler" />
-        <img v-if="repo.analyticsImage" :src="repo.analyticsImage" alt="analytics" />
-        <img v-if="repo.testsImage" :src="repo.testsImage" alt="tests" />
+      <footer v-if="hasIntegrations">
+        <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio" />
+        <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status" />
+        <img v-if="bundlerImage" :src="bundlerImage" alt="bundler" />
+        <img v-if="analyticsImage" :src="analyticsImage" alt="analytics" />
+        <img v-if="testsImage" :src="testsImage" alt="tests" />
       </footer>
     </section>
   </li>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { computed } from "vue";
 import {
-  IconBrandGithub,
-  IconTemplate,
-  IconGripVertical,
-  IconTrash,
-  IconGitFork,
+  IconArchive,
   IconCircleDot,
+  IconExternalLink,
+  IconGitFork,
+  IconGripVertical,
+  IconLock,
   IconStar,
-  IconExternalLink
+  IconTemplate,
+  IconTrash
 } from "@tabler/icons-vue";
+import EditRepo from "@/components/modals/edit-repo.vue";
 import { settings } from "@/store/settings";
-import { Repository } from "@/classes/Repo";
-import { storage } from "@/store/repositories";
+import { Repository, useRepository } from "@/composable/Repo";
 
 const props = defineProps<{ repo: Repository }>();
 defineEmits(["delete"]);
 
-const repoData = ref(props.repo);
-onBeforeMount(async () => {
-  if (!(repoData.value instanceof Repository)) {
-    const repoInstance = await Repository.init(props.repo.full_name, props.repo.integrations);
-    if (!repoInstance) throw new Error("repo not found");
-    const repoIndex = storage.value.repositories.findIndex(({ id }) => repoInstance.id === id);
-    if (repoIndex !== -1) {
-      storage.value.repositories[repoIndex] = repoInstance;
-    } else {
-      storage.value.repositories.push(repoInstance);
-    }
-  }
-});
+// Watch deep changes
+const repo = computed(() => props.repo);
+const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, bundlerImage, analyticsImage, testsImage } =
+  useRepository(repo);
 </script>
 <style lang="scss">
 .repo {
@@ -106,12 +98,12 @@ onBeforeMount(async () => {
   }
   &__header {
     display: flex;
-    gap: 16px;
+    gap: 1rem;
     justify-content: space-between;
     margin-bottom: 0.75rem;
     &-name {
       display: inline-flex;
-      gap: 2px;
+      gap: 0.125rem;
       align-items: center;
       min-width: 0;
       margin: 0;
@@ -147,6 +139,7 @@ onBeforeMount(async () => {
     }
     footer {
       display: flex;
+      flex-wrap: wrap;
       grid-column: 1 / -1;
       gap: 0.5rem;
     }

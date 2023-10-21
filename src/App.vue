@@ -1,24 +1,11 @@
 <template>
   <main class="container">
-    <header class="main-header">
-      <settings-block />
-      <add-repo />
-    </header>
+    <main-header />
     <repo-grid />
   </main>
 </template>
 
 <script setup lang="ts">
-import SettingsBlock from "@/components/settings-block.vue";
-import AddRepo from "@/components/add-repo.vue";
+import MainHeader from "@/components/main-header.vue";
 import RepoGrid from "@/components/repo-grid.vue";
 </script>
-
-<style lang="scss">
-.main-header {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-</style>
