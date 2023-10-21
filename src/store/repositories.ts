@@ -13,11 +13,14 @@ export const storage = useStorage<RepositoriesStore>("repositories", {
   repositories: []
 });
 
+function isRepoExists(id: Repository["id"]) {
+  return storage.value.repositories.some(({ id: repoId }) => repoId === id);
+}
+
 export async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]) {
   const repo = await fetchRepo(fullName);
   if (!repo) throw new Error("Repo not found");
-  const isNew = storage.value.repositories.every(({ id }) => id !== repo.id);
-  if (isNew) storage.value.repositories.push({ ...repo, integrations });
+  if (!isRepoExists(repo.id)) storage.value.repositories.push({ ...repo, integrations });
 }
 
 export function deleteRepository(id: Repository["id"]) {
@@ -39,7 +42,11 @@ export function updateRepositories() {
 }
 
 export function importRepositories(repositories: Repository[]) {
-  storage.value.repositories = repositories;
+  for (const repo of repositories) {
+    isRepoExists(repo.id)
+      ? updateRepository(repo.full_name, repo.integrations)
+      : addRepository(repo.full_name, repo.integrations);
+  }
 }
 
 export function exportRepositories() {

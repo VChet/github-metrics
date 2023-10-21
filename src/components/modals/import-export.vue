@@ -31,6 +31,7 @@ whenever(files, async (payload) => {
     const data = JSON.parse(content.toString());
     if (!data) throw new Error("Invalid JSON");
     importRepositories(data);
+    reset();
     close();
   }
 });
