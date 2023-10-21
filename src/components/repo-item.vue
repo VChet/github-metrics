@@ -110,9 +110,13 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, bund
       font-size: 1rem;
     }
     &-actions {
-      display: flex;
+      display: none;
       gap: 0.5rem;
       align-items: baseline;
+      .repo:hover &,
+      .repo:focus-within & {
+        display: flex;
+      }
       &-handler {
         cursor: grab;
         &:hover {
