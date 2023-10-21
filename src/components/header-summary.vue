@@ -16,12 +16,11 @@ import { storage } from "@/store/repositories";
 
 const summary = useArrayReduce(
   () => storage.value.repositories,
-  (acc, repo) => {
-    acc.stars += repo.stargazers_count;
-    acc.forks += repo.forks_count;
-    acc.issues += repo.open_issues_count;
-    return acc;
-  },
+  (acc, repo) => ({
+    stars: acc.stars + repo.stargazers_count,
+    forks: acc.forks + repo.forks_count,
+    issues: acc.issues + repo.open_issues_count
+  }),
   { stars: 0, forks: 0, issues: 0 }
 );
 </script>
