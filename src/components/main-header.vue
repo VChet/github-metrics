@@ -32,7 +32,6 @@ import { fetchRateLimit, rateLimit } from "@/service/octokit";
   gap: 0.5rem 1rem;
   align-items: center;
   justify-content: space-between;
-  margin: 1rem 0;
   > div {
     display: flex;
     gap: 1rem;

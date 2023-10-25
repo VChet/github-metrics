@@ -1,8 +1,6 @@
 <template>
-  <main class="container">
-    <main-header />
-    <repo-grid />
-  </main>
+  <main-header class="container" />
+  <repo-grid class="container" />
 </template>
 
 <script setup lang="ts">

@@ -11,13 +11,15 @@
   background: var(--accent);
 }
 body {
+  margin: 0;
   font-variant-numeric: tabular-nums;
   background-color: var(--background);
 }
-main {
+#app {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 3rem;
+  margin: 1rem 0;
   font-family: "Exo 2", "Open Sans", sans-serif;
   font-size: 16px;
   color: var(--base);
@@ -95,6 +97,7 @@ button {
   }
 }
 input {
+  width: 100%;
   padding: .5rem;
   color: inherit;
   caret-color: var(--base);
@@ -162,12 +165,8 @@ dialog {
   }
 }
 .container {
-  display: flex;
-  align-items: stretch;
-  padding-right: 1rem;
-  padding-left: 1rem;
-  margin-right: auto;
-  margin-left: auto;
+  margin-right: 3rem;
+  margin-left: 3rem;
 }
 .icon-button {
   padding: 0;
