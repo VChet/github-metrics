@@ -28,6 +28,8 @@ import { fetchRateLimit, rateLimit } from "@/service/octokit";
 <style lang="scss">
 .main-header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   align-items: center;
   justify-content: space-between;
   margin: 1rem 0;
