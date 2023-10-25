@@ -35,38 +35,11 @@ export function useRepository(data: Ref<Repository>) {
       return `https://img.shields.io/netlify/${data.value.integrations.hostingProjectId}?color=00C7B7`;
     return null;
   });
-  const bundlerImage = computed<string | null>(() => {
-    if (data.value.integrations?.bundler === "vite") return "https://img.shields.io/badge/bundler-vite-646cff";
-    return null;
-  });
-  const analyticsImage = computed<string | null>(() => {
-    if (!data.value.integrations?.analytics) return null;
-    if (data.value.integrations.analytics === "counter.dev")
-      return "https://img.shields.io/badge/metrics-counter.dev-147efb";
-    return null;
-  });
-  const testsImage = computed<string | null>(() => {
-    if (!data.value.integrations?.tests) return null;
-    const base = "https://img.shields.io/badge/";
-    switch (data.value.integrations.tests) {
-      case "mocha":
-        return `${base}tests-mocha-8d6748`;
-      case "jest":
-        return `${base}tests-jest-c21325`;
-      case "vitest":
-        return `${base}tests-vitest-eab308`;
-      default:
-        return null;
-    }
-  });
   const hasIntegrations = computed<boolean>(() => !!Object.values(data.value.integrations).filter(Boolean).length);
   return {
     hostingName: readonly(hostingName),
     uptimerobotImage: readonly(uptimerobotImage),
     hostingStatusImage: readonly(hostingStatusImage),
-    bundlerImage: readonly(bundlerImage),
-    analyticsImage: readonly(analyticsImage),
-    testsImage: readonly(testsImage),
     hasIntegrations: readonly(hasIntegrations)
   };
 }

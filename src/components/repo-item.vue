@@ -22,39 +22,56 @@
         <icon-grip-vertical class="repo__header-actions-handler" />
       </div>
     </header>
-    <section class="repo__body">
-      <div>
-        <div>{{ repo.language }}</div>
-        <div v-if="repo.license && repo.license.spdx_id !== 'NOASSERTION'">
+    <div class="repo__body">
+      <ul class="repo__body-list">
+        <li>
+          <icon-alphabet-latin />
+          {{ repo.language }}
+        </li>
+        <li v-if="repo.license && repo.license.spdx_id !== 'NOASSERTION'">
+          <icon-license />
           {{ repo.license.spdx_id }}
+        </li>
+        <li v-if="repo.integrations.bundler">
+          <icon-box />
+          {{ repo.integrations.bundler }}
+        </li>
+        <li v-if="repo.integrations.tests">
+          <icon-list-check />
+          {{ repo.integrations.tests }}
+        </li>
+        <li v-if="repo.integrations.analytics">
+          <icon-timeline />
+          {{ repo.integrations.analytics }}
+        </li>
+        <li v-if="repo.homepage">
+          <a :href="repo.homepage">
+            <icon-external-link />
+            {{ hostingName ?? "Homepage" }}
+          </a>
+        </li>
+      </ul>
+      <footer class="repo__body-footer">
+        <div>
+          <a :href="`https://github.com/${repo.full_name}/stargazers`" title="stars">
+            <icon-star />
+            {{ repo.stargazers_count }}
+          </a>
+          <a :href="`https://github.com/${repo.full_name}/forks`" title="forks">
+            <icon-git-fork />
+            {{ repo.forks_count }}
+          </a>
+          <a :href="`https://github.com/${repo.full_name}/issues`" title="open issues">
+            <icon-circle-dot />
+            {{ repo.open_issues_count }}
+          </a>
         </div>
-        <a v-if="repo.homepage" :href="repo.homepage">
-          {{ hostingName ?? "Homepage" }}
-          <icon-external-link />
-        </a>
-      </div>
-      <div>
-        <a :href="`https://github.com/${repo.full_name}/stargazers`" title="stars">
-          <icon-star />
-          {{ repo.stargazers_count }}
-        </a>
-        <a :href="`https://github.com/${repo.full_name}/forks`" title="forks">
-          <icon-git-fork />
-          {{ repo.forks_count }}
-        </a>
-        <a :href="`https://github.com/${repo.full_name}/issues`" title="open issues">
-          <icon-circle-dot />
-          {{ repo.open_issues_count }}
-        </a>
-      </div>
-      <footer v-if="hasIntegrations">
-        <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio" />
-        <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status" />
-        <img v-if="bundlerImage" :src="bundlerImage" alt="bundler" />
-        <img v-if="analyticsImage" :src="analyticsImage" alt="analytics" />
-        <img v-if="testsImage" :src="testsImage" alt="tests" />
+        <div v-if="hasIntegrations">
+          <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status" />
+          <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio" />
+        </div>
       </footer>
-    </section>
+    </div>
   </li>
 </template>
 <script setup lang="ts">
@@ -68,7 +85,12 @@ import {
   IconLock,
   IconStar,
   IconTemplate,
-  IconTrash
+  IconTrash,
+  IconBox,
+  IconLicense,
+  IconAlphabetLatin,
+  IconListCheck,
+  IconTimeline
 } from "@tabler/icons-vue";
 import EditRepo from "@/components/modals/edit-repo.vue";
 import { settings } from "@/store/settings";
@@ -79,8 +101,7 @@ defineEmits(["delete"]);
 
 // Watch deep changes
 const repo = computed(() => props.repo);
-const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, bundlerImage, analyticsImage, testsImage } =
-  useRepository(repo);
+const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage } = useRepository(repo);
 </script>
 <style lang="scss">
 .repo {
@@ -126,26 +147,31 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, bund
     }
   }
   &__body {
-    display: grid;
-    grid-template-columns: auto auto;
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem;
-    align-items: flex-end;
-    justify-content: space-between;
-    > div {
-      display: flex;
-      gap: 0.375rem;
-      &:first-of-type {
-        flex-direction: column;
-      }
-      &:last-of-type {
-        justify-content: flex-end;
-      }
-    }
-    footer {
+    > * {
       display: flex;
       flex-wrap: wrap;
-      grid-column: 1 / -1;
-      gap: 0.5rem;
+      gap: 0.25rem;
+    }
+    &-list {
+      flex-direction: column;
+      justify-content: space-between;
+      max-height: 100px;
+      li {
+        display: inline-flex;
+        gap: 0.375rem;
+        align-items: center;
+        white-space: nowrap;
+      }
+    }
+    &-footer {
+      justify-content: space-between;
+      div {
+        display: flex;
+        gap: 0.375rem;
+      }
     }
   }
 }
