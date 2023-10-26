@@ -35,7 +35,7 @@ export async function updateRepository(fullName: Repository["full_name"], integr
   storage.value.repositories[entryIndex] = { ...repo, integrations: newIntegrations };
 }
 export function updateRepositories() {
-  if (dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) {
+  if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) {
     for (const repo of storage.value.repositories) updateRepository(repo.full_name);
     storage.value.lastUpdate = dayjs().toISOString();
   }
