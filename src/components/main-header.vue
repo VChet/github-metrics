@@ -10,6 +10,10 @@
       <settings-modal />
     </div>
     <div>
+      <button title="update repositories" type="button" @click="updateRepositories">
+        <icon-refresh />
+        Update Repos
+      </button>
       <import-export />
       <add-repo />
     </div>
@@ -17,12 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { IconActivityHeartbeat } from "@tabler/icons-vue";
+import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
 import HeaderSummary from "@/components/header-summary.vue";
 import SettingsModal from "@/components/modals/settings-modal.vue";
 import ImportExport from "@/components/modals/import-export.vue";
 import AddRepo from "@/components/modals/add-repo.vue";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
+import { updateRepositories } from "@/store/repositories";
 </script>
 
 <style lang="scss">

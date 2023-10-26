@@ -10,6 +10,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import RepoItem from "@/components/repo-item.vue";
 import { storage, updateRepositories, deleteRepository } from "@/store/repositories";
@@ -24,7 +25,10 @@ const items = computed(() => {
 
 const reposRef = ref<HTMLElement | null>(null);
 useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler", animate: true });
-updateRepositories();
+
+if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) {
+  updateRepositories();
+}
 </script>
 <style lang="scss">
 .repo-grid {
