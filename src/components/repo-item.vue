@@ -28,9 +28,9 @@
           <icon-alphabet-latin />
           {{ repo.language }}
         </li>
-        <li v-if="repo.license && repo.license.spdx_id !== 'NOASSERTION'">
+        <li :class="{ error: !license }">
           <icon-license />
-          {{ repo.license.spdx_id }}
+          {{ license ?? "N/A" }}
         </li>
         <li v-if="repo.integrations.bundler">
           <icon-box />
@@ -101,7 +101,7 @@ defineEmits(["delete"]);
 
 // Watch deep changes
 const repo = computed(() => props.repo);
-const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage } = useRepository(repo);
+const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, license } = useRepository(repo);
 </script>
 <style lang="scss">
 .repo {
@@ -164,6 +164,9 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage } = u
         gap: 0.375rem;
         align-items: center;
         white-space: nowrap;
+        &.error {
+          color: #a10000;
+        }
       }
     }
     &-footer {

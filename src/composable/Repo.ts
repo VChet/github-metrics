@@ -35,11 +35,16 @@ export function useRepository(data: Ref<Repository>) {
       return `https://img.shields.io/netlify/${data.value.integrations.hostingProjectId}?color=00C7B7`;
     return null;
   });
+  const license = computed<string | null>(() => {
+    if (!data.value.license || data.value.license.spdx_id === "NOASSERTION") return null;
+    return data.value.license.spdx_id;
+  });
   const hasIntegrations = computed<boolean>(() => !!Object.values(data.value.integrations).filter(Boolean).length);
   return {
     hostingName: readonly(hostingName),
     uptimerobotImage: readonly(uptimerobotImage),
     hostingStatusImage: readonly(hostingStatusImage),
+    license: readonly(license),
     hasIntegrations: readonly(hasIntegrations)
   };
 }
