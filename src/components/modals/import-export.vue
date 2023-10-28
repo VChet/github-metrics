@@ -26,7 +26,6 @@ whenever(files, async (payload) => {
     if (!data) throw new Error("Invalid JSON");
     importRepositories(data);
     reset();
-    close();
   }
 });
 
