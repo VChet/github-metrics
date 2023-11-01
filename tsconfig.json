@@ -7,6 +7,7 @@
     "useDefineForClassFields": true,
     "strict": true,
     "noUnusedLocals": true,
+    "importHelpers": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
