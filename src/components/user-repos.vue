@@ -7,6 +7,7 @@
         <label>
           <input v-model="selectedRepos" type="checkbox" :value="repo" />
           <span class="text-truncate">
+            <icon-git-fork v-if="repo.fork" />
             <icon-template v-if="repo.is_template" />
             <icon-lock v-if="repo.private" />
             <icon-archive v-if="repo.archived" />
@@ -22,7 +23,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
-import { IconArchive, IconLock, IconTemplate } from "@tabler/icons-vue";
+import { IconArchive, IconLock, IconTemplate, IconGitFork } from "@tabler/icons-vue";
 import { fetchCurrentUserRepos } from "@/service/octokit";
 import { settings } from "@/store/settings";
 import type { UserRepositoriesResponse } from "@/types/repo";

@@ -2,6 +2,7 @@
   <li class="repo">
     <header class="repo__header">
       <h1 class="repo__header-name">
+        <icon-git-fork v-if="repo.fork" />
         <icon-template v-if="repo.is_template" />
         <icon-lock v-if="repo.private" />
         <icon-archive v-if="repo.archived" />
