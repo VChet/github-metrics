@@ -1,5 +1,7 @@
 <template>
   <div class="summary">
+    <icon-book2 />
+    {{ storage.repositories.length }}
     <icon-star />
     {{ summary.stars }}
     <icon-git-fork />
@@ -11,7 +13,7 @@
 
 <script setup lang="ts">
 import { useArrayReduce } from "@vueuse/core";
-import { IconCircleDot, IconGitFork, IconStar } from "@tabler/icons-vue";
+import { IconCircleDot, IconGitFork, IconStar, IconBook2 } from "@tabler/icons-vue";
 import { storage } from "@/store/repositories";
 
 const summary = useArrayReduce(
