@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { Octokit } from "@octokit/core";
 import { settings } from "@/store/settings";
-import { RepositoryResponse } from "@/types/repo";
+import { RepositoryResponse, UserRepositoriesResponse } from "@/types/repo";
 
 export const rateLimit = ref("-");
 
@@ -20,6 +20,13 @@ export async function fetchRateLimit() {
 
 export async function fetchRepo(fullName: string): Promise<RepositoryResponse | void> {
   const response = await octokit.request(`GET /repos/${fullName}`);
+  rateLimit.value = response.headers["x-ratelimit-remaining"] ?? "-";
+  return response.data;
+}
+
+export async function fetchCurrentUserRepos(): Promise<UserRepositoriesResponse | void> {
+  if (!settings.value.authToken) return console.warn("empty authToken");
+  const response = await octokit.request("GET /user/repos", { affiliation: "owner" });
   rateLimit.value = response.headers["x-ratelimit-remaining"] ?? "-";
   return response.data;
 }
