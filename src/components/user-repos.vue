@@ -1,6 +1,8 @@
 <template>
   <form class="user-repos-form" @submit.prevent="$emit('submit', selectedRepos)">
-    <ul>
+    <div v-if="isLoading" class="user-repos-form__placeholder">Loading...</div>
+    <div v-else-if="!isLoading && !userRepos.length" class="user-repos-form__placeholder">No repos</div>
+    <ul v-else class="user-repos-form__list">
       <li v-for="repo in userRepos" :key="repo.id">
         <label>
           <input v-model="selectedRepos" type="checkbox" :value="repo" />
@@ -27,9 +29,13 @@ import type { UserRepositoriesResponse } from "@/types/repo";
 import type { Repository } from "@/composable/Repo";
 
 const userRepos = ref<UserRepositoriesResponse>([]);
+const isLoading = ref(false);
 onBeforeMount(async () => {
   if (settings.value.authToken) {
-    const data = await fetchCurrentUserRepos();
+    isLoading.value = true;
+    const data = await fetchCurrentUserRepos().finally(() => {
+      isLoading.value = false;
+    });
     if (data) userRepos.value = data;
   }
 });
@@ -45,7 +51,12 @@ defineEmits(["submit"]);
   gap: 1rem;
   max-height: 50vh;
   overflow: hidden;
-  ul {
+  &__placeholder {
+    padding: 2rem;
+    margin: auto;
+    font-size: 1.5rem;
+  }
+  &__list {
     margin: 0;
     overflow: auto;
     li {
