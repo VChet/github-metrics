@@ -28,16 +28,7 @@ const { element: dialogRef, open, close } = useDialog();
 const tab = ref<"url" | "token">("url");
 
 // Form
-const formDefaults = {
-  full_name: "",
-  integrations: {
-    uptimerobotKey: "",
-    hostingProjectId: "",
-    bundler: "",
-    analytics: "",
-    tests: ""
-  }
-} as const;
+const formDefaults = { full_name: "", integrations: {} } as const;
 Object.freeze(formDefaults);
 
 const form = ref(JSON.parse(JSON.stringify(formDefaults)));

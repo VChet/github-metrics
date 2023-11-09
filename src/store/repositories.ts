@@ -1,6 +1,6 @@
 import { useStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import { fetchRepo } from "@/service/octokit";
+import { fetchRepo, fetchRepositoryPackages } from "@/service/octokit";
 import type { Repository } from "@/composable/Repo";
 
 type RepositoriesStore = {
@@ -17,25 +17,48 @@ function isRepoExists(id: Repository["id"]) {
   return storage.value.repositories.some(({ id: repoId }) => repoId === id);
 }
 
+function parseDependencies(
+  dependencies: Record<string, string>
+): Pick<Repository["integrations"], "bundler" | "tests"> {
+  let bundler;
+  let tests;
+  for (const lib in dependencies) {
+    if (!bundler && ["vite", "rollup", "webpack"].some((name) => name === lib)) {
+      bundler = lib;
+    } else if (!tests && ["jest", "mocha", "vitest"].some((name) => name === lib)) {
+      tests = lib;
+    }
+  }
+  return { bundler, tests };
+}
+
 export async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]) {
   const repo = await fetchRepo(fullName);
   if (!repo) throw new Error("Repo not found");
-  if (!isRepoExists(repo.id)) storage.value.repositories.push({ ...repo, integrations });
+  if (isRepoExists(repo.id)) return;
+
+  const dependencies = await fetchRepositoryPackages(fullName);
+  if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
+  storage.value.repositories.push({ ...repo, integrations });
 }
 
 export function deleteRepository(id: Repository["id"]) {
   storage.value.repositories = storage.value.repositories.filter((repo) => repo.id !== id);
 }
 
-export async function updateRepository(fullName: Repository["full_name"], integrations?: Repository["integrations"]) {
+export async function updateRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]) {
   const repo = await fetchRepo(fullName);
   if (!repo) throw new Error("Repo not found");
+
+  const dependencies = await fetchRepositoryPackages(fullName);
+  if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
+
   const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
   const newIntegrations = integrations ?? storage.value.repositories[entryIndex].integrations;
   storage.value.repositories[entryIndex] = { ...repo, integrations: newIntegrations };
 }
 export function updateRepositories() {
-  for (const repo of storage.value.repositories) updateRepository(repo.full_name);
+  for (const repo of storage.value.repositories) updateRepository(repo.full_name, repo.integrations);
   storage.value.lastUpdate = dayjs().toISOString();
 }
 
