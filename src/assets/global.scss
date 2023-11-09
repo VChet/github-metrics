@@ -92,14 +92,15 @@ button {
   outline: none;
   transition: transform .3s;
   &:hover,
-    &:focus-visible {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-    &:disabled {
-      pointer-events: none;
-      border-color: var(--base-dimmed);
-    }
+  &:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  &:disabled {
+    color: var(--base-dimmed);
+    pointer-events: none;
+    border-color: var(--base-dimmed);
+  }
   &:active {
     transform: scale(.95);
   }

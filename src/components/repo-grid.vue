@@ -1,11 +1,14 @@
 <template>
   <section class="repo-grid">
-    <div class="repo-grid__filters">
-      <input v-model.trim="searchQuery" placeholder="Search by name..." />
-    </div>
-    <ul ref="reposRef" class="repo-grid__list">
-      <repo-item v-for="repo in items" :key="repo.id" :repo="repo" @delete="deleteRepository" />
-    </ul>
+    <div v-if="!items.length" class="repo-grid__placeholder">No repos</div>
+    <template v-else>
+      <div class="repo-grid__filters">
+        <input v-model.trim="searchQuery" placeholder="Search by name..." />
+      </div>
+      <ul ref="reposRef" class="repo-grid__list">
+        <repo-item v-for="repo in items" :key="repo.id" :repo="repo" @delete="deleteRepository" />
+      </ul>
+    </template>
   </section>
 </template>
 <script setup lang="ts">

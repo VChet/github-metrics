@@ -1,5 +1,5 @@
 <template>
-  <button title="export repositories" type="button" @click="exportFile">
+  <button title="export repositories" type="button" :disabled="noData" @click="exportFile">
     <icon-file-download />
     Export
   </button>
@@ -15,6 +15,7 @@ import { IconFileDownload, IconFileUpload } from "@tabler/icons-vue";
 import { downloadFile, readFile } from "@/service/file";
 import { importRepositories, exportRepositories } from "@/store/repositories";
 
+defineProps<{ noData: boolean }>();
 const { files, open: importFile, reset } = useFileDialog({ multiple: false, accept: "application/json" });
 
 onUnmounted(reset);
