@@ -137,8 +137,7 @@ textarea {
   }
 }
 label:has([type="checkbox"]) {
-  display: grid;
-  grid-template-columns: min-content 1fr;
+  display: flex;
   gap: 0.25rem;
   align-items: center;
   cursor: pointer;

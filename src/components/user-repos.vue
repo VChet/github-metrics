@@ -1,9 +1,31 @@
 <template>
   <form class="user-repos-form" @submit.prevent="$emit('submit', selectedRepos)">
+    <fieldset v-if="userRepos.length" class="user-repos-form__filters">
+      <legend>Filter out</legend>
+      <label v-if="hasPrivate">
+        <input v-model="filters.private" type="checkbox" />
+        <icon-lock /> private
+      </label>
+      <label v-if="hasArchived">
+        <input v-model="filters.archived" type="checkbox" />
+        <icon-archive /> archived
+      </label>
+      <label v-if="hasForks">
+        <input v-model="filters.forks" type="checkbox" />
+        <icon-git-fork /> forks
+      </label>
+      <label v-if="hasTemplates">
+        <input v-model="filters.templates" type="checkbox" />
+        <icon-template /> templates
+      </label>
+    </fieldset>
     <div v-if="isLoading" class="user-repos-form__placeholder">Loading...</div>
     <div v-else-if="!isLoading && !userRepos.length" class="user-repos-form__placeholder">No repos</div>
+    <div v-else-if="!isLoading && !filteredRepos.length" class="user-repos-form__placeholder">
+      No repos. Try disabling the filters
+    </div>
     <ul v-else class="user-repos-form__list">
-      <li v-for="repo in userRepos" :key="repo.id">
+      <li v-for="repo in filteredRepos" :key="repo.id">
         <label>
           <input v-model="selectedRepos" type="checkbox" :value="repo" />
           <span class="text-truncate">
@@ -22,10 +44,11 @@
   </form>
 </template>
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
+import { computed, reactive, ref, onBeforeMount } from "vue";
 import { IconArchive, IconLock, IconTemplate, IconGitFork } from "@tabler/icons-vue";
 import { fetchCurrentUserRepos } from "@/service/octokit";
 import { settings } from "@/store/settings";
+import { storage } from "@/store/repositories";
 import type { UserRepositoriesResponse } from "@/types/repo";
 import type { Repository } from "@/composable/Repo";
 
@@ -37,10 +60,30 @@ onBeforeMount(async () => {
     const data = await fetchCurrentUserRepos().finally(() => {
       isLoading.value = false;
     });
-    if (data) userRepos.value = data;
+    if (data) userRepos.value = data.filter(({ id }) => !storage.value.repositories.some((repo) => repo.id === id));
   }
 });
 
+const filters = reactive({
+  private: false,
+  archived: false,
+  forks: false,
+  templates: false
+});
+const hasPrivate = computed(() => userRepos.value.some((repo) => repo.private));
+const hasArchived = computed(() => userRepos.value.some((repo) => repo.archived));
+const hasForks = computed(() => userRepos.value.some((repo) => repo.fork));
+const hasTemplates = computed(() => userRepos.value.some((repo) => repo.is_template));
+const filteredRepos = computed(() => {
+  let result = userRepos.value;
+  if (Object.values(filters).some(Boolean)) {
+    if (filters.private) result = result.filter((repo) => !repo.private);
+    if (filters.archived) result = result.filter((repo) => !repo.archived);
+    if (filters.forks) result = result.filter((repo) => !repo.fork);
+    if (filters.templates) result = result.filter((repo) => !repo.is_template);
+  }
+  return result;
+});
 const selectedRepos = ref<Repository[]>([]);
 
 defineEmits(["submit"]);
@@ -56,6 +99,11 @@ defineEmits(["submit"]);
     padding: 2rem;
     margin: auto;
     font-size: 1.5rem;
+  }
+  &__filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
   }
   &__list {
     margin: 0;
