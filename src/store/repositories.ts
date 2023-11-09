@@ -37,8 +37,10 @@ export async function addRepository(fullName: Repository["full_name"], integrati
   if (!repo) throw new Error("Repo not found");
   if (isRepoExists(repo.id)) return;
 
-  const dependencies = await fetchRepositoryPackages(fullName);
-  if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
+  if (repo.language) {
+    const dependencies = await fetchRepositoryPackages(fullName);
+    if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
+  }
   storage.value.repositories.push({ ...repo, integrations });
 }
 
@@ -50,8 +52,10 @@ export async function updateRepository(fullName: Repository["full_name"], integr
   const repo = await fetchRepo(fullName);
   if (!repo) throw new Error("Repo not found");
 
-  const dependencies = await fetchRepositoryPackages(fullName);
-  if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
+  if (repo.language) {
+    const dependencies = await fetchRepositoryPackages(fullName);
+    if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
+  }
 
   const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
   const newIntegrations = integrations ?? storage.value.repositories[entryIndex].integrations;

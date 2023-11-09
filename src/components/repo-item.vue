@@ -25,7 +25,7 @@
     </header>
     <div class="repo__body">
       <ul class="repo__body-list">
-        <li>
+        <li v-if="repo.language">
           <icon-alphabet-latin />
           {{ repo.language }}
         </li>

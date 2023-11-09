@@ -33,7 +33,6 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Record<
     const content = JSON.parse(atob(response.data.content));
     return { ...content.dependencies, ...content.devDependencies };
   } catch (error) {
-    console.error(error);
     return null;
   }
 }
