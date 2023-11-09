@@ -6,13 +6,21 @@
   --base-dimmed: #363e4a;
   --accent: #b9b384;
 }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 *::selection {
   color: var(--background);
   background: var(--accent);
 }
 body {
   margin: 0;
+  font-family: "Exo 2", "Open Sans", sans-serif;
+  font-size: 16px;
   font-variant-numeric: tabular-nums;
+  color: var(--base);
   background-color: var(--background);
 }
 #app {
@@ -20,9 +28,6 @@ body {
   flex-direction: column;
   gap: 3rem;
   margin: 1rem 0;
-  font-family: "Exo 2", "Open Sans", sans-serif;
-  font-size: 16px;
-  color: var(--base);
 }
 legend,
 summary {

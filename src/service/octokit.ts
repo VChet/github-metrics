@@ -4,8 +4,8 @@ import { settings } from "@/store/settings";
 import { RepositoryResponse, UserRepositoriesResponse } from "@/types/repo";
 
 export const rateLimit = ref("-");
-export async function setAuthToken(auth: string) {
-  settings.value.authToken = auth;
+export async function setAuthToken(auth: string | null) {
+  settings.value.authToken = auth ?? "";
   octokit = new Octokit({ auth });
   octokit.hook.after("request", (response) => {
     rateLimit.value = response.headers["x-ratelimit-remaining"] ?? "-";
