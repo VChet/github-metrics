@@ -9,11 +9,16 @@ interface SettingsStore {
   theme: Theme;
 }
 
-export const settings = useStorage<SettingsStore>("settings", {
-  showOwner: true,
-  theme: "github",
-  authToken: ""
-});
+export const settings = useStorage<SettingsStore>(
+  "settings",
+  {
+    showOwner: true,
+    theme: "github",
+    authToken: ""
+  },
+  localStorage,
+  { mergeDefaults: true }
+);
 
 watch(
   () => settings.value.authToken,
