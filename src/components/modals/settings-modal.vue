@@ -8,11 +8,12 @@
       <header>Settings</header>
       <form class="settings__form" @submit.prevent="update">
         <label>
-          <input v-model="showOwner" type="checkbox" />
+          <input v-model="form.showOwner" type="checkbox" />
           Show repository owner
         </label>
+        <input-select v-model="form.theme" :items="themes" label="theme:" />
         <label for="authToken">GitHub Token</label>
-        <textarea id="authToken" v-model.trim="authTokenInput" placeholder="authToken" />
+        <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
         <ol>
           <li>
             Go to
@@ -30,19 +31,29 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive } from "vue";
 import { IconSettings } from "@tabler/icons-vue";
+import InputSelect from "@/components/input-select.vue";
 import { settings } from "@/store/settings";
 import { useDialog } from "@/service/modal";
-import { setAuthToken } from "@/service/octokit";
+
+const themes = [
+  { name: "github", value: "github" },
+  { name: "beige", value: "beige" },
+  { name: "blue", value: "blue" },
+  { name: "green", value: "green" },
+  { name: "red", value: "red" }
+] as const;
 
 const { element: dialogRef, open, close } = useDialog();
-const authTokenInput = ref<string>(settings.value.authToken);
-const showOwner = ref<boolean>(settings.value.showOwner);
+const form = reactive({
+  showOwner: settings.value.showOwner,
+  theme: settings.value.theme,
+  authToken: settings.value.authToken
+});
 
 async function update() {
-  setAuthToken(authTokenInput.value);
-  settings.value.showOwner = showOwner.value;
+  settings.value = { ...form };
   close();
 }
 </script>
@@ -53,8 +64,11 @@ async function update() {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    a {
-      text-decoration: underline;
+    ol {
+      margin: 0 0 1rem 1.5rem;
+      a {
+        text-decoration: underline;
+      }
     }
   }
 }
