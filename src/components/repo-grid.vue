@@ -1,12 +1,12 @@
 <template>
   <section class="repo-grid">
-    <div v-if="!items.length" class="repo-grid__placeholder">No repos</div>
+    <div v-if="!storage.repositories.length" class="repo-grid__placeholder">No repos</div>
     <template v-else>
       <div class="repo-grid__filters">
         <input v-model.trim="searchQuery" placeholder="Search by name..." />
       </div>
       <ul ref="reposRef" class="repo-grid__list">
-        <repo-item v-for="repo in items" :key="repo.id" :repo="repo" @delete="deleteRepository" />
+        <repo-item v-for="repo in filteredItems" :key="repo.id" :repo="repo" @delete="deleteRepository" />
       </ul>
     </template>
   </section>
@@ -19,7 +19,7 @@ import RepoItem from "@/components/repo-item.vue";
 import { storage, updateRepositories, deleteRepository } from "@/store/repositories";
 
 const searchQuery = ref("");
-const items = computed(() => {
+const filteredItems = computed(() => {
   if (!searchQuery.value) return storage.value.repositories;
   return storage.value.repositories.filter((repo) => {
     return repo.full_name.toLowerCase().includes(searchQuery.value.toLowerCase());
