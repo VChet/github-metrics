@@ -37,7 +37,7 @@ if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "
 .repo-grid {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
   &__list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));

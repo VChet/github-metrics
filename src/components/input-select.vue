@@ -41,7 +41,6 @@ const model = useVModel(props, "modelValue", emit);
   align-items: center;
   select {
     padding: 0.5rem;
-    font: inherit;
     color: var(--base);
     appearance: none;
     cursor: pointer;
