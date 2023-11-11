@@ -53,6 +53,9 @@ async function update() {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    a {
+      text-decoration: underline;
+    }
   }
 }
 </style>
