@@ -183,16 +183,19 @@ label:has([type="checkbox"]) {
 }
 dialog {
   position: fixed;
-  top: 0;
+  top: 30%;
   left: 0;
   width: 100%;
   max-width: 350px;
   padding: 0;
-  margin: auto;
+  margin: 0 auto;
   color: var(--base);
   background-color: var(--background);
   border: 1px solid var(--base-dimmed);
   border-radius: 0.25rem;
+  &::backdrop {
+    background-color: rgba(0 0 0 / 35%)
+  }
   &[open] {
     animation: fade-in .3s ease;
   }
