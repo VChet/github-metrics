@@ -3,26 +3,36 @@
     <div v-if="!storage.repositories.length" class="repo-grid__placeholder">No repos</div>
     <template v-else>
       <div class="repo-grid__filters">
-        <input v-model.trim="searchQuery" placeholder="Search by name..." />
+        <input v-model.trim="searchQueryInput" placeholder="Search by name..." />
       </div>
       <ul ref="reposRef" class="repo-grid__list">
-        <repo-item v-for="repo in filteredItems" :key="repo.id" :repo="repo" @delete="deleteRepository" />
+        <repo-item
+          v-for="repo in filteredItems"
+          :key="repo.id"
+          :repo="repo"
+          :query="searchQuery"
+          @delete="deleteRepository"
+        />
       </ul>
     </template>
   </section>
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { refDebounced } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import RepoItem from "@/components/repo-item.vue";
 import { storage, updateRepositories, deleteRepository } from "@/store/repositories";
+import { settings } from "@/store/settings";
 
-const searchQuery = ref("");
+const searchQueryInput = ref("");
+const searchQuery = refDebounced(searchQueryInput, 300);
 const filteredItems = computed(() => {
   if (!searchQuery.value) return storage.value.repositories;
   return storage.value.repositories.filter((repo) => {
-    return repo.full_name.toLowerCase().includes(searchQuery.value.toLowerCase());
+    const name = settings.value.showOwner ? repo.full_name : repo.name;
+    return name.toLowerCase().includes(searchQuery.value.toLowerCase());
   });
 });
 

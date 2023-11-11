@@ -64,6 +64,9 @@ ol {
 ul {
   list-style: none;
 }
+mark {
+  background-color: var(--accent);
+}
 svg {
   width: 1rem;
   height: 1rem;

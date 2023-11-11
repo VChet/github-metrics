@@ -6,9 +6,7 @@
         <icon-template v-if="repo.is_template" />
         <icon-lock v-if="repo.private" />
         <icon-archive v-if="repo.archived" />
-        <a :href="repo.html_url" class="text-truncate icon-button">
-          {{ settings.showOwner ? repo.full_name : repo.name }}
-        </a>
+        <a v-dompurify-html="repoName" :href="repo.html_url" class="text-truncate icon-button" />
       </h1>
       <div class="repo__header-actions">
         <edit-repo :repo="repo" />
@@ -97,11 +95,16 @@ import EditRepo from "@/components/modals/edit-repo.vue";
 import { settings } from "@/store/settings";
 import { Repository, useRepository } from "@/composable/Repo";
 
-const props = defineProps<{ repo: Repository }>();
+const props = defineProps<{ repo: Repository; query: string }>();
 defineEmits(["delete"]);
 
 // Watch deep changes
 const repo = computed(() => props.repo);
+const repoName = computed<string>(() => {
+  let name = settings.value.showOwner ? repo.value.full_name : repo.value.name;
+  if (!props.query) return name;
+  return name.replace(new RegExp(props.query, "gi"), (match) => `<mark>${match}</mark>`);
+});
 const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, license } = useRepository(repo);
 </script>
 <style lang="scss">
