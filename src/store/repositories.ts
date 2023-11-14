@@ -8,10 +8,12 @@ type RepositoriesStore = {
   repositories: Repository[];
 };
 
-export const storage = useStorage<RepositoriesStore>("repositories", {
-  lastUpdate: dayjs().toISOString(),
-  repositories: []
-});
+export const storage = useStorage<RepositoriesStore>(
+  "repositories",
+  { lastUpdate: dayjs().toISOString(), repositories: [] },
+  localStorage,
+  { mergeDefaults: true }
+);
 
 function isRepoExists(id: Repository["id"]) {
   return storage.value.repositories.some(({ id: repoId }) => repoId === id);

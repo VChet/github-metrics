@@ -11,11 +11,7 @@ interface SettingsStore {
 
 export const settings = useStorage<SettingsStore>(
   "settings",
-  {
-    showOwner: true,
-    theme: "github",
-    authToken: ""
-  },
+  { showOwner: true, theme: "github", authToken: "" },
   localStorage,
   { mergeDefaults: true }
 );
