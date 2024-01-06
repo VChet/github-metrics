@@ -4,8 +4,8 @@ import { fetchRepo, fetchRepositoryPackages } from "@/service/octokit";
 import type { Repository } from "@/composable/Repo";
 
 type RepositoriesStore = {
-  lastUpdate: string;
-  repositories: Repository[];
+  lastUpdate: string
+  repositories: Repository[]
 };
 
 export const storage = useStorage<RepositoriesStore>(
@@ -25,9 +25,9 @@ function parseDependencies(
   let bundler;
   let tests;
   for (const lib in dependencies) {
-    if (!bundler && ["vite", "rollup", "webpack"].some((name) => name === lib)) {
+    if (!bundler && ["vite", "rollup", "webpack"].includes(lib)) {
       bundler = lib;
-    } else if (!tests && ["jest", "mocha", "vitest"].some((name) => name === lib)) {
+    } else if (!tests && ["jest", "mocha", "vitest"].includes(lib)) {
       tests = lib;
     }
   }
@@ -70,9 +70,9 @@ export function updateRepositories() {
 
 export function importRepositories(repositories: Repository[]) {
   for (const repo of repositories) {
-    isRepoExists(repo.id)
-      ? updateRepository(repo.full_name, repo.integrations)
-      : addRepository(repo.full_name, repo.integrations);
+    isRepoExists(repo.id) ?
+      updateRepository(repo.full_name, repo.integrations) :
+      addRepository(repo.full_name, repo.integrations);
   }
 }
 

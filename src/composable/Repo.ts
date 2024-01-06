@@ -1,16 +1,16 @@
-import { computed, readonly, type Ref } from "vue";
-import { RepositoryResponse } from "@/types/repo";
+import { type Ref, computed, readonly } from "vue";
+import type { RepositoryResponse } from "@/types/repo";
 
 interface Integrations {
-  uptimerobotKey?: string;
-  hostingProjectId?: string;
-  bundler?: string;
-  analytics?: string;
-  tests?: string;
+  uptimerobotKey?: string
+  hostingProjectId?: string
+  bundler?: string
+  analytics?: string
+  tests?: string
 }
 
 export interface Repository extends RepositoryResponse {
-  integrations: Integrations;
+  integrations: Integrations
 }
 
 export function useRepository(data: Ref<Repository>) {
@@ -31,8 +31,9 @@ export function useRepository(data: Ref<Repository>) {
   });
   const hostingStatusImage = computed<string | null>(() => {
     if (!data.value.integrations?.hostingProjectId) return null;
-    if (hostingName.value === "Netlify")
+    if (hostingName.value === "Netlify") {
       return `https://img.shields.io/netlify/${data.value.integrations.hostingProjectId}?color=00C7B7`;
+    }
     return null;
   });
   const license = computed<string | null>(() => {

@@ -66,8 +66,8 @@
           </a>
         </div>
         <div v-if="hasIntegrations">
-          <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status" />
-          <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio" />
+          <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status">
+          <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio">
         </div>
       </footer>
     </div>
@@ -76,32 +76,33 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import {
+  IconAlphabetLatin,
   IconArchive,
+  IconBox,
   IconCircleDot,
   IconExternalLink,
   IconGitFork,
   IconGripVertical,
+  IconLicense,
+  IconListCheck,
   IconLock,
   IconStar,
   IconTemplate,
-  IconTrash,
-  IconBox,
-  IconLicense,
-  IconAlphabetLatin,
-  IconListCheck,
-  IconTimeline
+  IconTimeline,
+  IconTrash
 } from "@tabler/icons-vue";
 import EditRepo from "@/components/modals/edit-repo.vue";
 import { settings } from "@/store/settings";
-import { Repository, useRepository } from "@/composable/Repo";
+import type { Repository } from "@/composable/Repo";
+import { useRepository } from "@/composable/Repo";
 
-const props = defineProps<{ repo: Repository; query: string }>();
+const props = defineProps<{ repo: Repository, query: string }>();
 defineEmits(["delete"]);
 
 // Watch deep changes
 const repo = computed(() => props.repo);
 const repoName = computed<string>(() => {
-  let name = settings.value.showOwner ? repo.value.full_name : repo.value.name;
+  const name = settings.value.showOwner ? repo.value.full_name : repo.value.name;
   if (!props.query) return name;
   return name.replace(new RegExp(props.query, "gi"), (match) => `<mark>${match}</mark>`);
 });

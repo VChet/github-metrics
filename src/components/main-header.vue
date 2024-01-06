@@ -19,7 +19,6 @@
     </div>
   </header>
 </template>
-
 <script setup lang="ts">
 import { computed } from "vue";
 import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
@@ -32,7 +31,6 @@ import { storage, updateRepositories } from "@/store/repositories";
 
 const noData = computed(() => !storage.value.repositories.length);
 </script>
-
 <style lang="scss">
 .main-header {
   display: flex;

@@ -1,18 +1,18 @@
 {
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
     "target": "esnext",
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "WebWorker"],
+    "useDefineForClassFields": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "useDefineForClassFields": true,
+    "paths": { "@/*": ["./src/*"] },
+    "resolveJsonModule": true,
+    "types": ["vite/client"],
     "strict": true,
     "noUnusedLocals": true,
     "importHelpers": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["vite/client"],
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "WebWorker"],
-    "paths": { "@/*": ["./src/*"] }
-  }
+    "skipLibCheck": true
+  },
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"]
 }

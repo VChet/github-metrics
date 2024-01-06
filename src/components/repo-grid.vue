@@ -1,9 +1,11 @@
 <template>
   <section class="repo-grid">
-    <div v-if="!storage.repositories.length" class="repo-grid__placeholder">No repos</div>
+    <div v-if="!storage.repositories.length" class="repo-grid__placeholder">
+      No repos
+    </div>
     <template v-else>
       <div class="repo-grid__filters">
-        <input v-model.trim="searchQueryInput" placeholder="Search by name..." />
+        <input v-model.trim="searchQueryInput" placeholder="Search by name...">
       </div>
       <ul ref="reposRef" class="repo-grid__list">
         <repo-item
@@ -23,7 +25,7 @@ import { refDebounced } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import RepoItem from "@/components/repo-item.vue";
-import { storage, updateRepositories, deleteRepository } from "@/store/repositories";
+import { deleteRepository, storage, updateRepositories } from "@/store/repositories";
 import { settings } from "@/store/settings";
 
 const searchQueryInput = ref("");
@@ -39,9 +41,7 @@ const filteredItems = computed(() => {
 const reposRef = ref<HTMLElement | null>(null);
 useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler", animate: true });
 
-if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) {
-  updateRepositories();
-}
+if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) updateRepositories();
 </script>
 <style lang="scss">
 .repo-grid {

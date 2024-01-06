@@ -3,31 +3,35 @@
     <fieldset v-if="userRepos.length" class="user-repos-form__filters">
       <legend>Filter out</legend>
       <label v-if="hasPrivate">
-        <input v-model="filters.private" type="checkbox" />
+        <input v-model="filters.private" type="checkbox">
         <icon-lock /> private
       </label>
       <label v-if="hasArchived">
-        <input v-model="filters.archived" type="checkbox" />
+        <input v-model="filters.archived" type="checkbox">
         <icon-archive /> archived
       </label>
       <label v-if="hasForks">
-        <input v-model="filters.forks" type="checkbox" />
+        <input v-model="filters.forks" type="checkbox">
         <icon-git-fork /> forks
       </label>
       <label v-if="hasTemplates">
-        <input v-model="filters.templates" type="checkbox" />
+        <input v-model="filters.templates" type="checkbox">
         <icon-template /> templates
       </label>
     </fieldset>
-    <div v-if="isLoading" class="user-repos-form__placeholder">Loading...</div>
-    <div v-else-if="!isLoading && !userRepos.length" class="user-repos-form__placeholder">No repos</div>
+    <div v-if="isLoading" class="user-repos-form__placeholder">
+      Loading...
+    </div>
+    <div v-else-if="!isLoading && !userRepos.length" class="user-repos-form__placeholder">
+      No repos
+    </div>
     <div v-else-if="!isLoading && !filteredRepos.length" class="user-repos-form__placeholder">
       No repos. Try disabling the filters
     </div>
     <ul v-else class="user-repos-form__list">
       <li v-for="repo in filteredRepos" :key="repo.id">
         <label>
-          <input v-model="selectedRepos" type="checkbox" :value="repo" />
+          <input v-model="selectedRepos" type="checkbox" :value="repo">
           <span class="text-truncate">
             <icon-git-fork v-if="repo.fork" />
             <icon-template v-if="repo.is_template" />
@@ -44,13 +48,15 @@
   </form>
 </template>
 <script setup lang="ts">
-import { computed, reactive, ref, onBeforeMount } from "vue";
-import { IconArchive, IconLock, IconTemplate, IconGitFork } from "@tabler/icons-vue";
+import { computed, onBeforeMount, reactive, ref } from "vue";
+import { IconArchive, IconGitFork, IconLock, IconTemplate } from "@tabler/icons-vue";
 import { fetchCurrentUserRepos } from "@/service/octokit";
 import { settings } from "@/store/settings";
 import { storage } from "@/store/repositories";
 import type { UserRepositoriesResponse } from "@/types/repo";
 import type { Repository } from "@/composable/Repo";
+
+defineEmits(["submit"]);
 
 const userRepos = ref<UserRepositoriesResponse>([]);
 const isLoading = ref(false);
@@ -85,8 +91,6 @@ const filteredRepos = computed(() => {
   return result;
 });
 const selectedRepos = ref<Repository[]>([]);
-
-defineEmits(["submit"]);
 </script>
 <style lang="scss">
 .user-repos-form {

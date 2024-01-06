@@ -8,7 +8,7 @@
       <header>Settings</header>
       <form class="settings__form" @submit.prevent="update">
         <label>
-          <input v-model="form.showOwner" type="checkbox" />
+          <input v-model="form.showOwner" type="checkbox">
           Show repository owner
         </label>
         <input-select v-model="form.theme" :items="themes" label="theme:" />
@@ -25,7 +25,9 @@
           <li>Give access to repository metadata and contents</li>
           <li>Click "Generate Token" and paste it here</li>
         </ol>
-        <button title="set auth token" type="submit">Update</button>
+        <button title="set auth token" type="submit">
+          Update
+        </button>
       </form>
     </dialog>
   </teleport>

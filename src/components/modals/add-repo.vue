@@ -7,8 +7,12 @@
     <dialog ref="dialogRef" class="add-repo" :class="{ invalid: hasError }">
       <header>Add GitHub repo</header>
       <div v-if="settings.authToken" class="add-repo__tabs">
-        <button :class="{ active: tab === 'url' }" @click="tab = 'url'">via URL</button>
-        <button :class="{ active: tab === 'token' }" @click="tab = 'token'">via current user</button>
+        <button :class="{ active: tab === 'url' }" @click="tab = 'url'">
+          via URL
+        </button>
+        <button :class="{ active: tab === 'token' }" @click="tab = 'token'">
+          via current user
+        </button>
       </div>
       <repo-form v-if="tab === 'url'" :repo="form" submit-text="Add" @submit="addRepo" />
       <user-repos v-else-if="tab === 'token'" @submit="addRepos" />
@@ -23,7 +27,7 @@ import UserRepos from "@/components/user-repos.vue";
 import { addRepository } from "@/store/repositories";
 import { settings } from "@/store/settings";
 import { useDialog } from "@/service/modal";
-import { Repository } from "@/composable/Repo";
+import type { Repository } from "@/composable/Repo";
 
 const { element: dialogRef, open, close } = useDialog();
 

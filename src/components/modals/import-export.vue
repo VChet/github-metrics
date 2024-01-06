@@ -10,10 +10,10 @@
 </template>
 <script setup lang="ts">
 import { onUnmounted } from "vue";
-import { whenever, useFileDialog } from "@vueuse/core";
+import { useFileDialog, whenever } from "@vueuse/core";
 import { IconFileDownload, IconFileUpload } from "@tabler/icons-vue";
 import { downloadFile, readFile } from "@/service/file";
-import { importRepositories, exportRepositories } from "@/store/repositories";
+import { exportRepositories, importRepositories } from "@/store/repositories";
 
 defineProps<{ noData: boolean }>();
 const { files, open: importFile, reset } = useFileDialog({ multiple: false, accept: "application/json" });

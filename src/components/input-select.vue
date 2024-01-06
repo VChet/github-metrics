@@ -9,17 +9,16 @@
     </select>
   </label>
 </template>
-
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
 
 const props = withDefaults(
   defineProps<{
-    label?: string | null;
-    modelValue: string | number;
-    items: readonly Record<string, any>[];
-    itemValue?: string;
-    itemText?: string;
+    label?: string | null
+    modelValue: string | number
+    items: readonly Record<string, any>[]
+    itemValue?: string
+    itemText?: string
   }>(),
   {
     label: null,
@@ -32,7 +31,6 @@ const props = withDefaults(
 const emit = defineEmits<(e: "update:modelValue", value: number) => void>();
 const model = useVModel(props, "modelValue", emit);
 </script>
-
 <style lang="scss">
 .input-select {
   display: inline-grid;

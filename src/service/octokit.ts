@@ -1,9 +1,13 @@
 import { ref } from "vue";
 import { Octokit } from "@octokit/core";
 import { settings } from "@/store/settings";
-import { RepositoryResponse, UserRepositoriesResponse } from "@/types/repo";
+import type { RepositoryResponse, UserRepositoriesResponse } from "@/types/repo";
 
+let octokit: Octokit;
 export const rateLimit = ref("-");
+
+setAuthToken(settings.value.authToken);
+
 export async function setAuthToken(auth: string | null) {
   settings.value.authToken = auth ?? "";
   octokit = new Octokit({ auth });
@@ -12,9 +16,6 @@ export async function setAuthToken(auth: string | null) {
   });
   await fetchRateLimit();
 }
-
-export let octokit: Octokit;
-setAuthToken(settings.value.authToken);
 
 export async function fetchRateLimit() {
   const response = await octokit.request("GET /rate_limit");

@@ -1,4 +1,4 @@
-import { ref, type Ref } from "vue";
+import { type Ref, ref } from "vue";
 import { useEventListener } from "@vueuse/core";
 
 export function useDialog(elementRef?: Ref<HTMLDialogElement | null>) {

@@ -15,7 +15,7 @@ import { IconPencil } from "@tabler/icons-vue";
 import RepoForm from "@/components/repo-form.vue";
 import { updateRepository } from "@/store/repositories";
 import { useDialog } from "@/service/modal";
-import { Repository } from "@/composable/Repo";
+import type { Repository } from "@/composable/Repo";
 
 const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations"> }>();
 

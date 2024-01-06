@@ -5,15 +5,15 @@ import { storage } from "@/store/repositories";
 import { deepCopy, deepEqual } from "@/service/object";
 
 interface Summary {
-  repos: number;
-  stars: number;
-  forks: number;
-  issues: number;
+  repos: number
+  stars: number
+  forks: number
+  issues: number
 }
 interface SummaryStore {
-  previous: Summary;
-  current: Summary;
-  lastUpdate: string;
+  previous: Summary
+  current: Summary
+  lastUpdate: string
 }
 
 const defaultSummary: Summary = { repos: 0, stars: 0, forks: 0, issues: 0 };

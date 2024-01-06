@@ -4,9 +4,9 @@ import { setAuthToken } from "@/service/octokit";
 
 type Theme = "github" | "blue" | "beige" | "green" | "red";
 interface SettingsStore {
-  authToken: string;
-  showOwner: boolean;
-  theme: Theme;
+  authToken: string
+  showOwner: boolean
+  theme: Theme
 }
 
 export const settings = useStorage<SettingsStore>(

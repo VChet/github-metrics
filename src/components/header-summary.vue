@@ -33,15 +33,14 @@
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import {
+  IconArrowBigDownFilled,
+  IconArrowBigUpFilled,
+  IconBook2,
   IconCircleDot,
   IconGitFork,
-  IconStar,
-  IconBook2,
-  IconArrowBigUpFilled,
-  IconArrowBigDownFilled
+  IconStar
 } from "@tabler/icons-vue";
 import { computed } from "vue";
 import { storage } from "@/store/repositories";
@@ -53,7 +52,6 @@ const diff = computed(() => ({
   issues: summary.value.current.issues - summary.value.previous.issues
 }));
 </script>
-
 <style lang="scss">
 .summary {
   display: inline-flex;
