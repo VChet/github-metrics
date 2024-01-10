@@ -3,19 +3,19 @@
     <fieldset v-if="userRepos.length" class="user-repos-form__filters">
       <legend>Filter out</legend>
       <label v-if="hasPrivate">
-        <input v-model="filters.private" type="checkbox">
+        <input v-model="filters.private" name="private" type="checkbox">
         <icon-lock /> private
       </label>
       <label v-if="hasArchived">
-        <input v-model="filters.archived" type="checkbox">
+        <input v-model="filters.archived" name="archived" type="checkbox">
         <icon-archive /> archived
       </label>
       <label v-if="hasForks">
-        <input v-model="filters.forks" type="checkbox">
+        <input v-model="filters.forks" name="forks" type="checkbox">
         <icon-git-fork /> forks
       </label>
       <label v-if="hasTemplates">
-        <input v-model="filters.templates" type="checkbox">
+        <input v-model="filters.templates" name="templates" type="checkbox">
         <icon-template /> templates
       </label>
     </fieldset>
@@ -31,7 +31,7 @@
     <ul v-else class="user-repos-form__list">
       <li v-for="repo in filteredRepos" :key="repo.id">
         <label>
-          <input v-model="selectedRepos" type="checkbox" :value="repo">
+          <input v-model="selectedRepos" name="selectedRepos" type="checkbox" :value="repo">
           <span class="text-truncate">
             <icon-git-fork v-if="repo.fork" />
             <icon-template v-if="repo.is_template" />

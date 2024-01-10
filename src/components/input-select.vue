@@ -1,7 +1,7 @@
 <template>
   <label class="input-select">
     <div class="input-select__label">{{ label }}</div>
-    <select v-model="model">
+    <select v-model="model" :name="name">
       <option value="">N/A</option>
       <option v-for="(item, index) in items" :key="index" :value="item[itemValue]">
         {{ item[itemText] }}
@@ -19,6 +19,7 @@ const props = withDefaults(
     items: readonly Record<string, any>[]
     itemValue?: string
     itemText?: string
+    name: HTMLSelectElement["name"]
   }>(),
   {
     label: null,

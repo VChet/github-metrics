@@ -8,10 +8,10 @@
       <header>Settings</header>
       <form class="settings__form" @submit.prevent="update">
         <label>
-          <input v-model="form.showOwner" type="checkbox">
+          <input v-model="form.showOwner" name="showOwner" type="checkbox">
           Show repository owner
         </label>
-        <input-select v-model="form.theme" :items="themes" label="theme:" />
+        <input-select v-model="form.theme" name="theme" :items="themes" label="theme:" />
         <label for="authToken">GitHub Token</label>
         <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
         <ol>

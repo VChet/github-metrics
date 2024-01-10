@@ -12,7 +12,7 @@
     </div>
     <template v-else>
       <div class="repo-grid__filters">
-        <input v-model.trim="searchQueryInput" placeholder="Search by name...">
+        <input v-model.trim="searchQueryInput" name="searchQuery" placeholder="Search by name...">
         <div class="repo-grid__filters-sort">
           Sort:
           <button class="icon" type="button" @click="sortAZ">
