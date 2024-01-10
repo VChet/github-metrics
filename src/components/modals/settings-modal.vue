@@ -61,7 +61,6 @@ async function update() {
 </script>
 <style lang="scss">
 .settings {
-  max-width: 400px;
   &__form {
     display: flex;
     flex-direction: column;

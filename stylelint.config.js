@@ -6,7 +6,8 @@ export default {
   plugins: [
     "@stylistic/stylelint-plugin",
     "stylelint-order",
-    "stylelint-declaration-block-no-ignored-properties"
+    "stylelint-declaration-block-no-ignored-properties",
+    "stylelint-rem-over-px"
   ],
   customSyntax: "postcss-scss",
   overrides: [
@@ -20,6 +21,7 @@ export default {
   ],
   rules: {
     "@stylistic/color-hex-case": "lower",
+    "rem-over-px/rem-over-px": [true, { ignore: ["1px", "font-size 16px"] }],
     "rule-empty-line-before": "never",
     "selector-class-pattern": "[a-z]([a-z-]+)?(__([a-z]+-?)+)?(--([a-z]+-?)+){0,2}"
   }

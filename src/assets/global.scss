@@ -159,7 +159,7 @@ input {
   }
 }
 textarea {
-  min-height: 100px;
+  min-height: 6.25rem;
   padding: .5rem;
   color: inherit;
   caret-color: var(--base);
@@ -196,8 +196,8 @@ label:has([type="checkbox"]) {
     }
     &:checked::before {
       position: absolute;
-      top: 2px;
-      left: 2px;
+      top: 0.125rem;
+      left: 0.125rem;
       width: 0.875rem;
       height: 0.875rem;
       content: "";
@@ -221,7 +221,7 @@ dialog {
   top: 15%;
   left: 0;
   width: 100%;
-  max-width: 350px;
+  max-width: 25rem;
   padding: 0;
   margin: 0 auto;
   color: var(--base);
@@ -238,9 +238,10 @@ dialog {
     border-color: #a10000;
   }
   > * {
-    padding: 1rem;
+    padding: 1.5rem;
   }
-  header {
+  > header {
+    padding: 1rem 1.5rem;
     font-size: 1.5rem;
     border-bottom: 1px solid var(--base-dimmed);
   }

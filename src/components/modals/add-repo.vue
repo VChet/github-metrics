@@ -79,7 +79,6 @@ async function addRepos(payload: Repository[]) {
 </script>
 <style lang="scss">
 .add-repo {
-  max-width: 450px;
   &__tabs {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

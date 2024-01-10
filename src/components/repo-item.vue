@@ -163,7 +163,7 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, lice
     &-list {
       flex-direction: column;
       justify-content: space-between;
-      max-height: 100px;
+      max-height: 6.25rem;
       li {
         display: inline-flex;
         gap: 0.375rem;

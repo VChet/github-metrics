@@ -57,7 +57,7 @@ if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "
   gap: 2rem;
   &__list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     gap: 1rem;
   }
 }

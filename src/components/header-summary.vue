@@ -67,8 +67,8 @@ const diff = computed(() => ({
       display: inline-flex;
       place-items: center;
       svg {
-        width: 12px;
-        height: 12px;
+        width: 0.75rem;
+        height: 0.75rem;
       }
     }
     &--positive {
