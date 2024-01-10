@@ -35,7 +35,7 @@ const noData = computed(() => !storage.value.repositories.length);
 .main-header {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
+  gap: 0.5rem;
   align-items: center;
   justify-content: space-between;
   > div {
@@ -43,6 +43,11 @@ const noData = computed(() => !storage.value.repositories.length);
     flex-wrap: wrap;
     gap: inherit;
     align-items: center;
+    > * {
+      @media (width <= 600px) {
+        flex: 1;
+      }
+    }
   }
 }
 </style>

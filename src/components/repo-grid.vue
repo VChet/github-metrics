@@ -15,10 +15,10 @@
         <input v-model.trim="searchQueryInput" placeholder="Search by name...">
         <div class="repo-grid__filters-sort">
           Sort:
-          <button @click="sortAZ">
+          <button class="icon" type="button" @click="sortAZ">
             <icon-sort-a-z />
           </button>
-          <button @click="sortByStars">
+          <button class="icon" type="button" @click="sortByStars">
             <icon-star />
           </button>
         </div>
@@ -73,9 +73,12 @@ if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "
   flex-direction: column;
   gap: 2rem;
   &__filters {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto;
     gap: 1rem;
+    @media (width <= 600px) {
+      grid-template-columns: 1fr;
+    }
     &-sort {
       display: flex;
       gap: 0.5rem;
@@ -86,6 +89,9 @@ if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     gap: 1rem;
+    @media (width <= 600px) {
+      grid-template-columns: 1fr;
+    }
   }
 }
 </style>

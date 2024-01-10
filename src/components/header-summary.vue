@@ -56,6 +56,7 @@ const diff = computed(() => ({
 .summary {
   display: inline-flex;
   gap: 0.75rem;
+  justify-content: center;
   padding: 0.5rem;
   border: 1px solid var(--base);
   border-radius: var(--radius);

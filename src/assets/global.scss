@@ -139,6 +139,14 @@ button {
   &:active {
     transform: scale(.95);
   }
+  &.icon {
+    padding: 0;
+    border: none;
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
 }
 input {
   width: 100%;
@@ -205,7 +213,6 @@ label:has([type="checkbox"]) {
     }
   }
 }
-
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -249,6 +256,10 @@ dialog {
 .container {
   margin-right: 3rem;
   margin-left: 3rem;
+  @media (width <= 600px) {
+    margin-right: 1rem;
+    margin-left: 1rem;
+  }
 }
 .icon-button {
   padding: 0;
