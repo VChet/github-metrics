@@ -68,14 +68,16 @@ export function updateRepositories() {
   storage.value.lastUpdate = dayjs().toISOString();
 }
 
-export function importRepositories(repositories: Repository[]) {
-  for (const repo of repositories) {
-    isRepoExists(repo.id) ?
-      updateRepository(repo.full_name, repo.integrations) :
-      addRepository(repo.full_name, repo.integrations);
+type ExportedRepository = Pick<Repository, "id" | "full_name" | "integrations">;
+
+export function importRepositories(repositories: ExportedRepository[]) {
+  for (const { id, full_name, integrations } of repositories) {
+    isRepoExists(id) ? updateRepository(full_name, integrations) : addRepository(full_name, integrations);
   }
 }
-
 export function exportRepositories() {
-  return JSON.stringify(storage.value.repositories, null, 2);
+  const repos: ExportedRepository[] = storage.value.repositories.map(
+    ({ id, full_name, integrations }) => ({ id, full_name, integrations })
+  );
+  return JSON.stringify(repos, null, 2);
 }
