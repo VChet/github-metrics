@@ -13,6 +13,15 @@
     <template v-else>
       <div class="repo-grid__filters">
         <input v-model.trim="searchQueryInput" placeholder="Search by name...">
+        <div class="repo-grid__filters-sort">
+          Sort:
+          <button @click="sortAZ">
+            <icon-sort-a-z />
+          </button>
+          <button @click="sortByStars">
+            <icon-star />
+          </button>
+        </div>
       </div>
       <ul ref="reposRef" class="repo-grid__list">
         <repo-item
@@ -31,6 +40,7 @@ import { computed, ref } from "vue";
 import { refDebounced } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
+import { IconSortAZ, IconStar } from "@tabler/icons-vue";
 import RepoItem from "@/components/repo-item.vue";
 import { deleteRepository, storage, updateRepositories } from "@/store/repositories";
 import { settings } from "@/store/settings";
@@ -48,6 +58,13 @@ const filteredItems = computed(() => {
 const reposRef = ref<HTMLElement | null>(null);
 useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler", animate: true });
 
+function sortAZ() {
+  storage.value.repositories.sort((a, b) => a.name.localeCompare(b.name));
+}
+function sortByStars() {
+  storage.value.repositories.sort((a, b) => b.stargazers_count - a.stargazers_count);
+}
+
 if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) updateRepositories();
 </script>
 <style lang="scss">
@@ -55,6 +72,16 @@ if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  &__filters {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    &-sort {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+  }
   &__list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
