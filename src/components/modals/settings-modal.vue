@@ -62,8 +62,7 @@ async function update() {
 <style lang="scss">
 .settings {
   &__form {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 1rem;
     ol {
       margin: 0 0 1rem 1.5rem;

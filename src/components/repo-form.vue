@@ -26,8 +26,7 @@ const form = ref(JSON.parse(JSON.stringify(props.repo)));
 </script>
 <style lang="scss">
 .repo-form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 1rem;
 }
 </style>

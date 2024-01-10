@@ -51,8 +51,7 @@ body {
   background-color: var(--background);
 }
 #app {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 3rem;
   margin: 1rem 0;
 }

@@ -69,8 +69,7 @@ if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "
 </script>
 <style lang="scss">
 .repo-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 2rem;
   &__filters {
     display: grid;
