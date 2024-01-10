@@ -21,71 +21,68 @@
         <icon-grip-vertical class="repo__header-actions-handler" />
       </div>
     </header>
-    <div class="repo__body">
-      <ul class="repo__body-list">
-        <li v-if="repo.language">
-          <icon-alphabet-latin />
+    <ul class="repo__body">
+      <li v-if="repo.integrations.bundler">
+        <icon-box />
+        {{ repo.integrations.bundler }}
+      </li>
+      <li v-if="repo.integrations.tests">
+        <icon-list-check />
+        {{ repo.integrations.tests }}
+      </li>
+      <li v-if="repo.integrations.analytics">
+        <icon-timeline />
+        {{ repo.integrations.analytics }}
+      </li>
+      <li v-if="repo.homepage">
+        <a :href="repo.homepage">
+          <icon-external-link />
+          {{ hostingName ?? "Homepage" }}
+        </a>
+      </li>
+    </ul>
+    <footer class="repo__footer">
+      <div>
+        <span v-if="repo.language">
+          <span class="repo__footer-language" :class="`bg-color-${repo.language.toLowerCase()}`" />
           {{ repo.language }}
-        </li>
-        <li :class="{ error: !license }">
-          <icon-license />
+        </span>
+        <a :href="`https://github.com/${repo.full_name}/stargazers`" title="stars">
+          <icon-star />
+          {{ repo.stargazers_count }}
+        </a>
+        <a :href="`https://github.com/${repo.full_name}/forks`" title="forks">
+          <icon-git-fork />
+          {{ repo.forks_count }}
+        </a>
+        <a :href="`https://github.com/${repo.full_name}/issues`" title="open issues">
+          <icon-circle-dot />
+          {{ repo.open_issues_count }}
+        </a>
+        <span :class="{ error: !license }">
+          <icon-scale />
           {{ license ?? "N/A" }}
-        </li>
-        <li v-if="repo.integrations.bundler">
-          <icon-box />
-          {{ repo.integrations.bundler }}
-        </li>
-        <li v-if="repo.integrations.tests">
-          <icon-list-check />
-          {{ repo.integrations.tests }}
-        </li>
-        <li v-if="repo.integrations.analytics">
-          <icon-timeline />
-          {{ repo.integrations.analytics }}
-        </li>
-        <li v-if="repo.homepage">
-          <a :href="repo.homepage">
-            <icon-external-link />
-            {{ hostingName ?? "Homepage" }}
-          </a>
-        </li>
-      </ul>
-      <footer class="repo__body-footer">
-        <div>
-          <a :href="`https://github.com/${repo.full_name}/stargazers`" title="stars">
-            <icon-star />
-            {{ repo.stargazers_count }}
-          </a>
-          <a :href="`https://github.com/${repo.full_name}/forks`" title="forks">
-            <icon-git-fork />
-            {{ repo.forks_count }}
-          </a>
-          <a :href="`https://github.com/${repo.full_name}/issues`" title="open issues">
-            <icon-circle-dot />
-            {{ repo.open_issues_count }}
-          </a>
-        </div>
-        <div v-if="hasIntegrations">
-          <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status">
-          <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio">
-        </div>
-      </footer>
-    </div>
+        </span>
+      </div>
+      <div v-if="hasIntegrations">
+        <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status">
+        <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio">
+      </div>
+    </footer>
   </li>
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
 import {
-  IconAlphabetLatin,
   IconArchive,
   IconBox,
   IconCircleDot,
   IconExternalLink,
   IconGitFork,
   IconGripVertical,
-  IconLicense,
   IconListCheck,
   IconLock,
+  IconScale,
   IconStar,
   IconTemplate,
   IconTimeline,
@@ -112,7 +109,7 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, lice
 .repo {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 0.75rem;
   padding: 1rem;
   font-size: 0.875rem;
   border: 1px solid var(--base-dimmed);
@@ -126,7 +123,6 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, lice
     display: flex;
     gap: 1rem;
     justify-content: space-between;
-    margin-bottom: 0.75rem;
     &-name {
       display: inline-flex;
       gap: 0.125rem;
@@ -153,33 +149,38 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, lice
   }
   &__body {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 0.5rem;
-    > * {
+    li {
+      display: inline-flex;
+      gap: 0.375rem;
+      align-items: center;
+      white-space: nowrap;
+      &.error {
+        color: #a10000;
+      }
+    }
+  }
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: space-between;
+    margin-top: auto;
+    div {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-    }
-    &-list {
-      flex-direction: column;
-      justify-content: space-between;
-      max-height: 6.25rem;
-      li {
-        display: inline-flex;
-        gap: 0.375rem;
-        align-items: center;
-        white-space: nowrap;
-        &.error {
-          color: #a10000;
-        }
+      gap: 0.5rem;
+      align-items: center;
+      span {
+        display: inherit;
+        gap: 0.25rem;
+        align-items: inherit;
       }
     }
-    &-footer {
-      justify-content: space-between;
-      div {
-        display: flex;
-        gap: 0.375rem;
-      }
+    &-language {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
     }
   }
 }

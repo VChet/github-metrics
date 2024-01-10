@@ -32,7 +32,7 @@ export function useRepository(data: Ref<Repository>) {
   const hostingStatusImage = computed<string | null>(() => {
     if (!data.value.integrations?.hostingProjectId) return null;
     if (hostingName.value === "Netlify") {
-      return `https://img.shields.io/netlify/${data.value.integrations.hostingProjectId}?color=00C7B7`;
+      return `https://api.netlify.com/api/v1/badges/${data.value.integrations.hostingProjectId}/deploy-status`;
     }
     return null;
   });
