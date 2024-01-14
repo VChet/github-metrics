@@ -54,7 +54,7 @@ const filteredItems = computed(() => {
   if (!searchQuery.value) return storage.value.repositories;
   return storage.value.repositories.filter((repo) => {
     const name = settings.value.showOwner ? repo.full_name : repo.name;
-    return name.toLowerCase().includes(searchQuery.value.toLowerCase());
+    return RegExp(searchQuery.value, "i").test(name);
   });
 });
 
