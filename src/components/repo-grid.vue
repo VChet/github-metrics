@@ -15,11 +15,14 @@
         <input v-model.trim="searchQueryInput" name="searchQuery" placeholder="Search by name...">
         <div class="repo-grid__filters-sort">
           Sort:
-          <button class="icon" type="button" @click="sortAZ">
+          <button class="icon" type="button" @click="sort('alphabetic')">
             <icon-sort-a-z />
           </button>
-          <button class="icon" type="button" @click="sortByStars">
+          <button class="icon" type="button" @click="sort('stars')">
             <icon-star />
+          </button>
+          <button class="icon" type="button" @click="sort('forks')">
+            <icon-git-fork />
           </button>
         </div>
       </div>
@@ -40,7 +43,7 @@ import { computed, ref } from "vue";
 import { refDebounced } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
-import { IconSortAZ, IconStar } from "@tabler/icons-vue";
+import { IconGitFork, IconSortAZ, IconStar } from "@tabler/icons-vue";
 import RepoItem from "@/components/repo-item.vue";
 import { deleteRepository, storage, updateRepositories } from "@/store/repositories";
 import { settings } from "@/store/settings";
@@ -58,11 +61,15 @@ const filteredItems = computed(() => {
 const reposRef = ref<HTMLElement | null>(null);
 useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler", animate: true });
 
-function sortAZ() {
-  storage.value.repositories.sort((a, b) => a.name.localeCompare(b.name));
-}
-function sortByStars() {
-  storage.value.repositories.sort((a, b) => b.stargazers_count - a.stargazers_count);
+function sort(option: "alphabetic" | "stars" | "forks") {
+  storage.value.repositories.sort((a, b) => {
+    switch (option) {
+      case "alphabetic": return a.name.localeCompare(b.name);
+      case "stars": return b.stargazers_count - a.stargazers_count;
+      case "forks": return b.forks_count - a.forks_count;
+      default: return 0;
+    }
+  });
 }
 
 if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) updateRepositories();
