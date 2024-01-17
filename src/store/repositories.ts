@@ -1,6 +1,6 @@
 import { useStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import { fetchRepo, fetchRepositoryPackages } from "@/service/octokit";
+import { fetchRepo, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/Repo";
 
 type RepositoriesStore = {
@@ -43,6 +43,12 @@ export async function addRepository(fullName: Repository["full_name"], integrati
     const dependencies = await fetchRepositoryPackages(fullName);
     if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
   }
+  const workflowsData = await fetchRepositoryWorkflows(fullName);
+  if (workflowsData.total_count) {
+    const main = workflowsData.workflows[0];
+    if (main.state === "active") integrations = { ...integrations, workflowBadge: main.badge_url };
+  }
+
   storage.value.repositories.push({ ...repo, integrations });
 }
 
@@ -58,10 +64,15 @@ export async function updateRepository(fullName: Repository["full_name"], integr
     const dependencies = await fetchRepositoryPackages(fullName);
     if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
   }
+  const workflowsData = await fetchRepositoryWorkflows(fullName);
+  if (workflowsData.total_count) {
+    const main = workflowsData.workflows[0];
+    if (main.state === "active") integrations = { ...integrations, workflowBadge: main.badge_url };
+  }
 
   const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
-  const newIntegrations = integrations ?? storage.value.repositories[entryIndex].integrations;
-  storage.value.repositories[entryIndex] = { ...repo, integrations: newIntegrations };
+  const initialIntegrations = storage.value.repositories[entryIndex].integrations;
+  storage.value.repositories[entryIndex] = { ...repo, integrations: integrations ?? initialIntegrations };
 }
 export function updateRepositories() {
   for (const repo of storage.value.repositories) updateRepository(repo.full_name, repo.integrations);

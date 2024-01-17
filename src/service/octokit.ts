@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { Octokit } from "@octokit/core";
 import { settings } from "@/store/settings";
-import type { RepositoryResponse, UserRepositoriesResponse } from "@/types/repo";
+import type { RepositoryResponse, UserRepositoriesResponse, WorkflowsResponse } from "@/types/repo";
 
 let octokit: Octokit;
 export const rateLimit = ref("-");
@@ -41,5 +41,10 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Record<
 export async function fetchCurrentUserRepos(): Promise<UserRepositoriesResponse | void> {
   if (!settings.value.authToken) return console.warn("empty authToken");
   const { data } = await octokit.request("GET /user/repos", { affiliation: "owner" });
+  return data;
+}
+
+export async function fetchRepositoryWorkflows(fullName: string): Promise<WorkflowsResponse> {
+  const { data } = await octokit.request(`GET /repos/${fullName}/actions/workflows`);
   return data;
 }
