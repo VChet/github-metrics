@@ -1,12 +1,14 @@
-import { type Ref, computed, readonly } from "vue";
+import { type Ref, computed } from "vue";
 import type { RepositoryResponse } from "@/types/repo";
 
 interface Integrations {
   uptimerobotKey?: string
   hostingProjectId?: string
+  // Auto-detected
   bundler?: string
   analytics?: string
   tests?: string
+  workflowBadge?: string
 }
 
 export interface Repository extends RepositoryResponse {
@@ -36,16 +38,20 @@ export function useRepository(data: Ref<Repository>) {
     }
     return null;
   });
+  const workflowBadge = computed<string | null>(() => data.value.integrations.workflowBadge ?? null);
   const license = computed<string | null>(() => {
     if (!data.value.license || data.value.license.spdx_id === "NOASSERTION") return null;
     return data.value.license.spdx_id;
   });
+
   const hasIntegrations = computed<boolean>(() => !!Object.values(data.value.integrations).filter(Boolean).length);
+
   return {
-    hostingName: readonly(hostingName),
-    uptimerobotImage: readonly(uptimerobotImage),
-    hostingStatusImage: readonly(hostingStatusImage),
-    license: readonly(license),
-    hasIntegrations: readonly(hasIntegrations)
+    hostingName,
+    uptimerobotImage,
+    hostingStatusImage,
+    workflowBadge,
+    license,
+    hasIntegrations
   };
 }

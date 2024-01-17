@@ -67,6 +67,7 @@
       <div v-if="hasIntegrations">
         <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status">
         <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio">
+        <img v-if="workflowBadge" :src="workflowBadge" alt="workflow badge">
       </div>
     </footer>
   </li>
@@ -103,7 +104,7 @@ const repoName = computed<string>(() => {
   if (!props.query) return name;
   return name.replace(new RegExp(props.query, "gi"), (match) => `<mark>${match}</mark>`);
 });
-const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, license } = useRepository(repo);
+const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, workflowBadge, license } = useRepository(repo);
 </script>
 <style lang="scss">
 .repo {
