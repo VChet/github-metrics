@@ -170,6 +170,7 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, work
     margin-top: auto;
     div {
       display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
       align-items: center;
       span {
