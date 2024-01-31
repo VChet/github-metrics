@@ -1,12 +1,14 @@
 import { ref } from "vue";
 import { Octokit } from "@octokit/core";
-import { settings } from "@/store/settings";
+import { useSettingsStore } from "@/store/settings";
 import type {
   RepositoryResponse,
   UserReceivedEventsResponse,
   UserRepositoriesResponse,
   WorkflowsResponse
 } from "@/types/repo";
+
+const { settings } = useSettingsStore();
 
 let octokit: Octokit;
 export const rateLimit = ref("-");

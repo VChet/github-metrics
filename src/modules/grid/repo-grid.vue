@@ -44,9 +44,12 @@ import { refDebounced } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { IconGitFork, IconSortAZ, IconStar } from "@tabler/icons-vue";
-import RepoItem from "@/components/repo-item.vue";
-import { deleteRepository, storage, updateRepositories } from "@/store/repositories";
-import { settings } from "@/store/settings";
+import RepoItem from "@/modules/grid/repo-item.vue";
+import { useRepositoriesStore } from "@/store/repositories";
+import { useSettingsStore } from "@/store/settings";
+
+const { storage, deleteRepository, updateRepositories } = useRepositoriesStore();
+const { settings } = useSettingsStore();
 
 const searchQueryInput = ref("");
 const searchQuery = refDebounced(searchQueryInput, 300);

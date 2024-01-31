@@ -12,27 +12,24 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { IconPencil } from "@tabler/icons-vue";
-import RepoForm from "@/components/repo-form.vue";
-import { updateRepository } from "@/store/repositories";
-import { useDialog } from "@/service/modal";
-import type { Repository } from "@/composable/Repo";
+import RepoForm from "@/modules/header/repo-form.vue";
+import { useRepositoriesStore } from "@/store/repositories";
+import { useDialog } from "@/composable/useDialog";
+import type { Repository } from "@/composable/useRepo";
 
 const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations"> }>();
 
 const { element: dialogRef, open, close } = useDialog();
 
 // Form
-
 const form = ref(JSON.parse(JSON.stringify(props.repo)));
 
 const hasError = ref<boolean>(false);
-watch(
-  () => form.value.full_name,
-  () => {
-    hasError.value = false;
-  }
-);
+watch(() => form.value.full_name, () => {
+  hasError.value = false;
+});
 
+const { updateRepository } = useRepositoriesStore();
 async function editRepo(payload: Repository) {
   if (!payload.full_name) return;
   try {

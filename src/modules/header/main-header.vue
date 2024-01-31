@@ -22,13 +22,15 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
-import HeaderSummary from "@/components/header-summary.vue";
-import SettingsModal from "@/components/modals/settings-modal.vue";
-import ImportExport from "@/components/modals/import-export.vue";
-import AddRepo from "@/components/modals/add-repo.vue";
+import HeaderSummary from "@/modules/header/header-summary.vue";
+import SettingsModal from "@/modules/header/modals/settings-modal.vue";
+import ImportExport from "@/modules/header/modals/import-export.vue";
+import AddRepo from "@/modules/header/modals/add-repo.vue";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
-import { storage, updateRepositories } from "@/store/repositories";
+import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
+
+const { storage, updateRepositories } = useRepositoriesStore();
 
 const noData = computed(() => !storage.value.repositories.length);
 

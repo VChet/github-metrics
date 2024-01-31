@@ -43,8 +43,11 @@ import {
   IconStar
 } from "@tabler/icons-vue";
 import { computed } from "vue";
-import { storage } from "@/store/repositories";
-import { summary } from "@/store/summary";
+import { useRepositoriesStore } from "@/store/repositories";
+import { useSummaryStorage } from "@/store/summary";
+
+const { storage } = useRepositoriesStore();
+const { summary } = useSummaryStorage();
 
 const diff = computed(() => ({
   stars: summary.value.current.stars - summary.value.previous.stars,

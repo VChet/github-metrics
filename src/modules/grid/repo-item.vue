@@ -89,13 +89,15 @@ import {
   IconTimeline,
   IconTrash
 } from "@tabler/icons-vue";
-import EditRepo from "@/components/modals/edit-repo.vue";
-import { settings } from "@/store/settings";
-import type { Repository } from "@/composable/Repo";
-import { useRepository } from "@/composable/Repo";
+import EditRepo from "@/modules/header/modals/edit-repo.vue";
+import { useSettingsStore } from "@/store/settings";
+import type { Repository } from "@/composable/useRepo";
+import { useRepository } from "@/composable/useRepo";
 
 const props = defineProps<{ repo: Repository, query: string }>();
 defineEmits(["delete"]);
+
+const { settings } = useSettingsStore();
 
 // Watch deep changes
 const repo = computed(() => props.repo);
