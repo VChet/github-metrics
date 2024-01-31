@@ -7,25 +7,36 @@
     <dialog ref="dialogRef" class="settings">
       <header>Settings</header>
       <form class="settings__form" @submit.prevent="update">
-        <label>
-          <input v-model="form.showOwner" name="showOwner" type="checkbox">
-          Show repository owner
-        </label>
-        <input-select v-model="form.theme" name="theme" :items="themes" label="theme:" />
-        <label for="authToken">GitHub Token</label>
-        <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
-        <ol>
-          <li>
-            Go to
-            <a href="https://github.com/settings/tokens?type=beta" title="github tokens page">
-              github.com/settings/tokens
-            </a>
-          </li>
-          <li>Click "Generate new token"</li>
-          <li>Give access to repository metadata and contents</li>
-          <li>Click "Generate Token" and paste it here</li>
-        </ol>
-        <button title="set auth token" type="submit">
+        <fieldset>
+          <legend>Appearance</legend>
+          <label>
+            <input v-model="form.showOwner" name="showOwner" type="checkbox">
+            Show repository owner
+          </label>
+          <input-select v-model="form.theme" name="theme" :items="themes" label="theme:" />
+        </fieldset>
+        <fieldset>
+          <legend>GitHub API</legend>
+          <label for="authToken">Token</label>
+          <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
+          <ol>
+            <li>
+              Go to
+              <a href="https://github.com/settings/tokens?type=beta" title="github tokens page">
+                github.com/settings/tokens
+              </a>
+            </li>
+            <li>Click "Generate new token"</li>
+            <li>Give access to repository metadata and contents</li>
+            <li>Click "Generate Token" and paste it here</li>
+          </ol>
+        </fieldset>
+        <fieldset>
+          <legend>User Feed</legend>
+          <label for="username">GitHub Username</label>
+          <input id="username" v-model="form.username" type="text" placeholder="username" :disabled="!form.authToken">
+        </fieldset>
+        <button title="apply settings" type="submit">
           Update
         </button>
       </form>
@@ -49,9 +60,10 @@ const themes = [
 
 const { element: dialogRef, open, close } = useDialog();
 const form = reactive({
+  authToken: settings.value.authToken,
+  username: settings.value.username,
   showOwner: settings.value.showOwner,
-  theme: settings.value.theme,
-  authToken: settings.value.authToken
+  theme: settings.value.theme
 });
 
 async function update() {
@@ -64,10 +76,15 @@ async function update() {
   &__form {
     display: grid;
     gap: 1rem;
-    ol {
-      margin: 0 0 1rem 1.5rem;
-      a {
-        text-decoration: underline;
+    fieldset {
+      display: grid;
+      gap: 1rem;
+      padding: .75rem;
+      ol {
+        margin: 0 0 1rem 1.5rem;
+        a {
+          text-decoration: underline;
+        }
       }
     }
   }

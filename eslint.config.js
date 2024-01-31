@@ -13,6 +13,7 @@ export default antfu({
     "style/quotes": ["error", "double"],
     "style/semi": ["error", "always"],
     "ts/consistent-type-definitions": "off",
+    "unicorn/prefer-includes": "off",
     "vue/block-order": ["error", { order: ["template", "script", "style"] }],
     "vue/component-name-in-template-casing": ["error", "kebab-case"],
     "vue/padding-line-between-blocks": ["error", "never"],

@@ -52,7 +52,7 @@ body {
 }
 #app {
   display: grid;
-  gap: 3rem;
+  gap: 1.5rem;
   margin: 1rem 0;
 }
 input,
@@ -165,6 +165,10 @@ input {
   &:hover,
   &:focus-visible {
     border-color: var(--base);
+  }
+  &:disabled {
+    pointer-events: none;
+    opacity: .5;
   }
 }
 textarea {
