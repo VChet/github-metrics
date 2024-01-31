@@ -59,7 +59,7 @@ const filteredItems = computed(() => {
 });
 
 const reposRef = ref<HTMLElement | null>(null);
-useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler", animate: true });
+useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler" });
 
 function sort(option: "alphabetic" | "stars" | "forks") {
   storage.value.repositories.sort((a, b) => {
