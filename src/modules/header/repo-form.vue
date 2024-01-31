@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import InputSelect from "@/components/input-select.vue";
-import type { Repository } from "@/composable/Repo";
+import type { Repository } from "@/composable/useRepo";
 
 const props = defineProps<{ repo: Pick<Repository, "full_name" | "integrations">, submitText: string }>();
 defineEmits(["submit"]);

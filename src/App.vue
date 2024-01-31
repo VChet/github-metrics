@@ -5,10 +5,11 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import MainHeader from "@/components/main-header.vue";
-import RepoGrid from "@/components/repo-grid.vue";
-import UserFeed from "@/components/user-feed.vue";
-import { settings } from "@/store/settings";
+import MainHeader from "@/modules/header/main-header.vue";
+import RepoGrid from "@/modules/grid/repo-grid.vue";
+import UserFeed from "@/modules/feed/user-feed.vue";
+import { useSettingsStore } from "@/store/settings";
 
+const { settings } = useSettingsStore();
 const isFeedAvailable = computed<boolean>(() => !!settings.value.authToken && !!settings.value.username);
 </script>

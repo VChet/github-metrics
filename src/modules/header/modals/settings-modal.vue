@@ -47,8 +47,8 @@
 import { reactive } from "vue";
 import { IconSettings } from "@tabler/icons-vue";
 import InputSelect from "@/components/input-select.vue";
-import { settings } from "@/store/settings";
-import { useDialog } from "@/service/modal";
+import { useSettingsStore } from "@/store/settings";
+import { useDialog } from "@/composable/useDialog";
 
 const themes = [
   { name: "github", value: "github" },
@@ -58,6 +58,7 @@ const themes = [
   { name: "red", value: "red" }
 ] as const;
 
+const { settings } = useSettingsStore();
 const { element: dialogRef, open, close } = useDialog();
 const form = reactive({
   authToken: settings.value.authToken,

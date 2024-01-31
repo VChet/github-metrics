@@ -10,23 +10,27 @@ interface SettingsStore {
   theme: Theme
 }
 
-export const settings = useStorage<SettingsStore>(
-  "settings",
-  { authToken: "", username: "", showOwner: true, theme: "github" },
-  localStorage,
-  { mergeDefaults: true }
-);
+const DEFAULT_STORE: SettingsStore = {
+  authToken: "",
+  username: "",
+  showOwner: true,
+  theme: "github"
+};
 
-watch(
-  () => settings.value.authToken,
-  (token) => {
+export function useSettingsStore() {
+  const settings = useStorage<SettingsStore>(
+    "settings",
+    DEFAULT_STORE,
+    localStorage,
+    { mergeDefaults: true }
+  );
+
+  watch(() => settings.value.authToken, (token) => {
     setAuthToken(token);
-  }
-);
-watch(
-  () => settings.value.theme,
-  (theme) => {
+  });
+  watch(() => settings.value.theme, (theme) => {
     document.documentElement.setAttribute("data-theme", theme);
-  },
-  { immediate: true }
-);
+  }, { immediate: true });
+
+  return { settings };
+}

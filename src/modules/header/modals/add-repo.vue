@@ -22,13 +22,14 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { IconPlus } from "@tabler/icons-vue";
-import RepoForm from "@/components/repo-form.vue";
-import UserRepos from "@/components/user-repos.vue";
-import { addRepository } from "@/store/repositories";
-import { settings } from "@/store/settings";
-import { useDialog } from "@/service/modal";
-import type { Repository } from "@/composable/Repo";
+import RepoForm from "@/modules/header/repo-form.vue";
+import UserRepos from "@/modules/header/user-repos.vue";
+import { useRepositoriesStore } from "@/store/repositories";
+import { useSettingsStore } from "@/store/settings";
+import { useDialog } from "@/composable/useDialog";
+import type { Repository } from "@/composable/useRepo";
 
+const { settings } = useSettingsStore();
 const { element: dialogRef, open, close } = useDialog();
 
 const tab = ref<"url" | "token">("url");
@@ -44,12 +45,11 @@ function resetForm() {
 }
 
 const hasError = ref(false);
-watch(
-  () => form.value.full_name,
-  () => {
-    hasError.value = false;
-  }
-);
+watch(() => form.value.full_name, () => {
+  hasError.value = false;
+});
+
+const { addRepository } = useRepositoriesStore();
 
 async function addRepo(payload: Repository) {
   if (!payload.full_name) return;

@@ -1,8 +1,8 @@
 import { useArrayReduce, useStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { watch } from "vue";
-import { storage } from "@/store/repositories";
-import { deepCopy, deepEqual } from "@/service/object";
+import { useRepositoriesStore } from "@/store/repositories";
+import { deepCopy, deepEqual } from "@/helpers/object";
 
 interface Summary {
   repos: number
@@ -15,33 +15,33 @@ interface SummaryStore {
   current: Summary
   lastUpdate: string
 }
+const DEFAULT_SUMMARY: Summary = { repos: 0, stars: 0, forks: 0, issues: 0 };
+const DEFAULT_STORE: SummaryStore = {
+  previous: deepCopy(DEFAULT_SUMMARY),
+  current: deepCopy(DEFAULT_SUMMARY),
+  lastUpdate: dayjs().toISOString()
+};
 
-const defaultSummary: Summary = { repos: 0, stars: 0, forks: 0, issues: 0 };
+export function useSummaryStorage() {
+  const summary = useStorage<SummaryStore>(
+    "summary",
+    DEFAULT_STORE,
+    localStorage,
+    { mergeDefaults: true }
+  );
 
-export const summary = useStorage<SummaryStore>(
-  "summary",
-  {
-    previous: deepCopy(defaultSummary),
-    current: deepCopy(defaultSummary),
-    lastUpdate: dayjs().toISOString()
-  },
-  localStorage,
-  { mergeDefaults: true }
-);
-
-const currentSummary = useArrayReduce(
-  () => storage.value.repositories,
-  (acc, repo) => ({
-    repos: storage.value.repositories.length,
-    stars: acc.stars + repo.stargazers_count,
-    forks: acc.forks + repo.forks_count,
-    issues: acc.issues + repo.open_issues_count
-  }),
-  { repos: 0, stars: 0, forks: 0, issues: 0 }
-);
-watch(
-  currentSummary,
-  (current, previous) => {
+  const { storage } = useRepositoriesStore();
+  const currentSummary = useArrayReduce(
+    () => storage.value.repositories,
+    (acc, repo) => ({
+      repos: storage.value.repositories.length,
+      stars: acc.stars + repo.stargazers_count,
+      forks: acc.forks + repo.forks_count,
+      issues: acc.issues + repo.open_issues_count
+    }),
+    { repos: 0, stars: 0, forks: 0, issues: 0 }
+  );
+  watch(currentSummary, (current, previous) => {
     if (!previous || current.repos !== previous.repos) {
       summary.value.previous = deepCopy(current);
       summary.value.current = deepCopy(current);
@@ -51,6 +51,9 @@ watch(
       summary.value.current = deepCopy(current);
       summary.value.lastUpdate = dayjs().toISOString();
     }
-  },
-  { deep: true, immediate: true }
-);
+  }, { deep: true, immediate: true });
+
+  return {
+    summary
+  };
+}

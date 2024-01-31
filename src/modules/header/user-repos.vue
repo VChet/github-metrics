@@ -51,12 +51,15 @@
 import { computed, onBeforeMount, reactive, ref } from "vue";
 import { IconArchive, IconGitFork, IconLock, IconTemplate } from "@tabler/icons-vue";
 import { fetchCurrentUserRepos } from "@/service/octokit";
-import { settings } from "@/store/settings";
-import { storage } from "@/store/repositories";
+import { useSettingsStore } from "@/store/settings";
+import { useRepositoriesStore } from "@/store/repositories";
 import type { UserRepositoriesResponse } from "@/types/repo";
-import type { Repository } from "@/composable/Repo";
+import type { Repository } from "@/composable/useRepo";
 
 defineEmits(["submit"]);
+
+const { storage } = useRepositoriesStore();
+const { settings } = useSettingsStore();
 
 const userRepos = ref<UserRepositoriesResponse>([]);
 const isLoading = ref(false);
