@@ -10,9 +10,9 @@
       <settings-modal />
     </div>
     <div>
-      <button title="update repositories" type="button" :disabled="noData" @click="updateRepositories">
+      <button title="update" type="button" :disabled="noData" @click="update">
         <icon-refresh />
-        Update Repos
+        Update
       </button>
       <import-export :no-data="noData" />
       <add-repo />
@@ -28,8 +28,14 @@ import ImportExport from "@/components/modals/import-export.vue";
 import AddRepo from "@/components/modals/add-repo.vue";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
 import { storage, updateRepositories } from "@/store/repositories";
+import { useEventsStore } from "@/store/events";
 
 const noData = computed(() => !storage.value.repositories.length);
+
+const { fetch: updateEvents } = useEventsStore();
+async function update() {
+  await Promise.all([updateRepositories(), updateEvents()]);
+}
 </script>
 <style lang="scss">
 .main-header {
