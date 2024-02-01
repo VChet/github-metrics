@@ -5,7 +5,12 @@
   </button>
   <teleport to="body">
     <dialog ref="dialogRef" class="add-repo" :class="{ invalid: hasError }">
-      <header>Add GitHub repo</header>
+      <header>
+        Add GitHub repo
+        <button type="button" name="close" class="icon" @click="close">
+          <icon-x />
+        </button>
+      </header>
       <div v-if="settings.authToken" class="add-repo__tabs">
         <button :class="{ active: tab === 'url' }" @click="tab = 'url'">
           via URL
@@ -21,7 +26,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { IconPlus } from "@tabler/icons-vue";
+import { IconPlus, IconX } from "@tabler/icons-vue";
 import RepoForm from "@/modules/header/repo-form.vue";
 import UserRepos from "@/modules/header/user-repos.vue";
 import { useRepositoriesStore } from "@/store/repositories";
