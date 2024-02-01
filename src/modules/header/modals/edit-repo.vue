@@ -4,14 +4,19 @@
   </button>
   <teleport to="body">
     <dialog v-if="form" ref="dialogRef" :class="{ invalid: hasError }">
-      <header>Edit &laquo;{{ form.name }}&raquo;</header>
+      <header>
+        Edit &laquo;{{ form.name }}&raquo;
+        <button type="button" name="close" class="icon" @click="close">
+          <icon-x />
+        </button>
+      </header>
       <repo-form :repo="form" submit-text="Update" @submit="editRepo" />
     </dialog>
   </teleport>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { IconPencil } from "@tabler/icons-vue";
+import { IconPencil, IconX } from "@tabler/icons-vue";
 import RepoForm from "@/modules/header/repo-form.vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useDialog } from "@/composable/useDialog";

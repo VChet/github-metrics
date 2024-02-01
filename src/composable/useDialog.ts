@@ -11,13 +11,11 @@ export function useDialog(elementRef?: Ref<HTMLDialogElement | null>) {
   function close() {
     if (!element.value) return;
     element.value.close();
+    document.body.classList.remove("disable-scroll");
   }
   // Close on click outside
   useEventListener(element, "mousedown", (event) => {
-    if (event.target === element.value) {
-      element.value?.close();
-      document.body.classList.remove("disable-scroll");
-    }
+    if (event.target === element.value) close();
   });
 
   return { element, open, close };

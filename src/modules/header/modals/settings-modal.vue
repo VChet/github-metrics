@@ -5,7 +5,12 @@
   </button>
   <teleport to="body">
     <dialog ref="dialogRef" class="settings">
-      <header>Settings</header>
+      <header>
+        Settings
+        <button type="button" name="close" class="icon" @click="close">
+          <icon-x />
+        </button>
+      </header>
       <form class="settings__form" @submit.prevent="update">
         <fieldset>
           <legend>Appearance</legend>
@@ -45,7 +50,7 @@
 </template>
 <script setup lang="ts">
 import { reactive } from "vue";
-import { IconSettings } from "@tabler/icons-vue";
+import { IconSettings, IconX } from "@tabler/icons-vue";
 import InputSelect from "@/components/input-select.vue";
 import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
