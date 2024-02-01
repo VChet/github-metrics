@@ -1,9 +1,9 @@
 <template>
-  <fieldset v-if="!isLoading" class="user-feed">
+  <fieldset class="user-feed">
     <legend>Recent events</legend>
-    <div v-if="!items.length">
+    <span v-if="!items.length">
       No recent events
-    </div>
+    </span>
     <ul v-else>
       <li v-for="{ date, username, action, repo, id } in items" :key="id">
         {{ date }}:
@@ -18,7 +18,7 @@
 import { onBeforeMount } from "vue";
 import { useEventsStore } from "@/store/events";
 
-const { fetch, isLoading, items } = useEventsStore();
+const { fetch, items } = useEventsStore();
 
 onBeforeMount(fetch);
 </script>
