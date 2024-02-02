@@ -51,6 +51,7 @@ body {
   font-variant-numeric: tabular-nums;
   color: var(--base);
   background-color: var(--background);
+  scrollbar-gutter: stable;
   *.disable-scroll {
     overflow-y: hidden;
   }
@@ -236,10 +237,9 @@ label:has([type="checkbox"]) {
 dialog {
   position: fixed;
   top: 15vh;
-  left: 0;
   width: 100%;
   max-width: 25rem;
-  max-height: 80vh;
+  max-height: 80dvh;
   padding: 0;
   margin: 0 auto;
   color: var(--base);
@@ -267,6 +267,11 @@ dialog {
     button[name="close"] {
       margin-left: auto;
     }
+  }
+  @media (width <= 600px) {
+    top: 0;
+    max-width: 100dvw;
+    max-height: 100dvh;
   }
 }
 .container {
