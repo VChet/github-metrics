@@ -54,6 +54,7 @@ import { IconSettings, IconX } from "@tabler/icons-vue";
 import InputSelect from "@/components/input-select.vue";
 import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
+import { fetchCurrentUser } from "@/service/octokit";
 
 const themes = [
   { name: "github", value: "github" },
@@ -72,7 +73,13 @@ const form = reactive({
   theme: settings.value.theme
 });
 
+async function getUsername() {
+  const user = await fetchCurrentUser();
+  if (user) form.username = user.login;
+}
+
 async function update() {
+  if (form.authToken && !form.username) await getUsername();
   settings.value = { ...form };
   close();
 }
