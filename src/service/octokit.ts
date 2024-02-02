@@ -3,6 +3,7 @@ import { Octokit } from "@octokit/core";
 import { useSettingsStore } from "@/store/settings";
 import type {
   RepositoryResponse,
+  User,
   UserReceivedEventsResponse,
   UserRepositoriesResponse,
   WorkflowsResponse
@@ -47,6 +48,12 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Record<
 
 export async function fetchRepositoryWorkflows(fullName: string): Promise<WorkflowsResponse> {
   const { data } = await octokit.request(`GET /repos/${fullName}/actions/workflows`);
+  return data;
+}
+
+export async function fetchCurrentUser(): Promise<User | void> {
+  if (!settings.value.authToken) return console.warn("empty authToken");
+  const { data } = await octokit.request("GET /user");
   return data;
 }
 
