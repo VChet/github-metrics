@@ -42,13 +42,19 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Record<
     const content = JSON.parse(atob(response.data.content));
     return { ...content.dependencies, ...content.devDependencies };
   } catch (error) {
+    console.error(error);
     return null;
   }
 }
 
-export async function fetchRepositoryWorkflows(fullName: string): Promise<WorkflowsResponse> {
-  const { data } = await octokit.request(`GET /repos/${fullName}/actions/workflows`);
-  return data;
+export async function fetchRepositoryWorkflows(fullName: string): Promise<WorkflowsResponse | null> {
+  try {
+    const { data } = await octokit.request(`GET /repos/${fullName}/actions/workflows`);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 export async function fetchCurrentUser(): Promise<User | void> {
