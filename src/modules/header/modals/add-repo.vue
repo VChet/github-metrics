@@ -20,12 +20,12 @@
         </button>
       </div>
       <repo-form v-if="tab === 'url'" :repo="form" submit-text="Add" @submit="addRepo" />
-      <user-repos v-else-if="tab === 'token'" @submit="addRepos" />
+      <user-repos v-else-if="tab === 'token'" :progress="progress" @submit="addRepos" />
     </dialog>
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { IconPlus, IconX } from "@tabler/icons-vue";
 import RepoForm from "@/modules/header/repo-form.vue";
 import UserRepos from "@/modules/header/user-repos.vue";
@@ -37,9 +37,9 @@ import type { Repository } from "@/composable/useRepo";
 const { settings } = useSettingsStore();
 const { element: dialogRef, open, close } = useDialog();
 
-const tab = ref<"url" | "token">("url");
-
 // Form
+const tab = ref<"url" | "token">("url");
+const progress = reactive({ current: 0, total: 0 });
 const formDefaults = { full_name: "", integrations: {} } as const;
 Object.freeze(formDefaults);
 
@@ -47,6 +47,8 @@ const form = ref(JSON.parse(JSON.stringify(formDefaults)));
 function resetForm() {
   Object.assign(form, JSON.parse(JSON.stringify(formDefaults)));
   tab.value = "url";
+  progress.current = 0;
+  progress.total = 0;
 }
 
 const hasError = ref(false);
@@ -69,11 +71,14 @@ async function addRepo(payload: Repository) {
 }
 async function addRepos(payload: Repository[]) {
   if (!payload.length) return;
+
   try {
     hasError.value = false;
+    progress.total = payload.length;
     for (const repo of payload) {
       if (!repo.full_name) return;
       await addRepository(repo.full_name, {});
+      progress.current += 1;
     }
     resetForm();
     close();
