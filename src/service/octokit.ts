@@ -41,8 +41,8 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Record<
     if (!("content" in response.data)) return null;
     const content = JSON.parse(atob(response.data.content));
     return { ...content.dependencies, ...content.devDependencies };
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    if (error.status !== 404) console.error(error);
     return null;
   }
 }
@@ -51,8 +51,8 @@ export async function fetchRepositoryWorkflows(fullName: string): Promise<Workfl
   try {
     const { data } = await octokit.request(`GET /repos/${fullName}/actions/workflows`);
     return data;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    if (error.status !== 404) console.error(error);
     return null;
   }
 }
