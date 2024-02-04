@@ -80,6 +80,7 @@ fieldset {
   margin: 0;
   border: 1px solid var(--base-dimmed);
   border-radius: var(--radius);
+  &:hover,
   &:focus-within {
     color: var(--base);
     border-color: var(--base);
@@ -168,7 +169,6 @@ input {
     color: inherit;
     opacity: .6;
   }
-  &:hover,
   &:focus-visible {
     border-color: var(--base);
   }
@@ -191,7 +191,6 @@ textarea {
     color: inherit;
     opacity: .6;
   }
-  &:hover,
   &:focus-visible {
     border-color: var(--base);
   }

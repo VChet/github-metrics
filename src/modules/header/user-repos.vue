@@ -1,7 +1,7 @@
 <template>
   <form class="user-repos-form" @submit.prevent="$emit('submit', selectedRepos)">
     <fieldset v-if="userRepos.length" class="user-repos-form__filters">
-      <legend>Filter out</legend>
+      <legend>Filters</legend>
       <label v-if="hasPrivate">
         <input v-model="filters.private" name="private" type="checkbox">
         <icon-lock /> private
@@ -18,15 +18,17 @@
         <input v-model="filters.templates" name="templates" type="checkbox">
         <icon-template /> templates
       </label>
+      <input v-model="filters.searchQuery" placeholder="Search by name">
     </fieldset>
     <div v-if="isLoading" class="user-repos-form__placeholder">
       Loading...
     </div>
-    <div v-else-if="!isLoading && !userRepos.length" class="user-repos-form__placeholder">
+    <div v-else-if="!userRepos.length" class="user-repos-form__placeholder">
       No repos
     </div>
-    <div v-else-if="!isLoading && !filteredRepos.length" class="user-repos-form__placeholder">
-      No repos. Try disabling the filters
+    <div v-else-if="!filteredRepos.length" class="user-repos-form__placeholder">
+      No repos
+      <div>Try enabling the filters</div>
     </div>
     <ul v-else class="user-repos-form__list">
       <li v-for="repo in filteredRepos" :key="repo.id">
@@ -74,6 +76,7 @@ onBeforeMount(async () => {
 });
 
 const filters = reactive({
+  searchQuery: "",
   private: false,
   archived: false,
   forks: false,
@@ -85,13 +88,15 @@ const hasForks = computed(() => userRepos.value.some((repo) => repo.fork));
 const hasTemplates = computed(() => userRepos.value.some((repo) => repo.is_template));
 const filteredRepos = computed(() => {
   let result = userRepos.value;
-  if (Object.values(filters).some(Boolean)) {
-    if (filters.private) result = result.filter((repo) => !repo.private);
-    if (filters.archived) result = result.filter((repo) => !repo.archived);
-    if (filters.forks) result = result.filter((repo) => !repo.fork);
-    if (filters.templates) result = result.filter((repo) => !repo.is_template);
-  }
-  return result;
+  if (!filters.private) result = result.filter((repo) => !repo.private);
+  if (!filters.archived) result = result.filter((repo) => !repo.archived);
+  if (!filters.forks) result = result.filter((repo) => !repo.fork);
+  if (!filters.templates) result = result.filter((repo) => !repo.is_template);
+  if (!filters.searchQuery) return result;
+  return result.filter((repo) => {
+    const name = settings.value.showOwner ? repo.full_name : repo.name;
+    return RegExp(filters.searchQuery, "i").test(name);
+  });
 });
 const selectedRepos = ref<Repository[]>([]);
 </script>
@@ -100,17 +105,21 @@ const selectedRepos = ref<Repository[]>([]);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-height: 50vh;
+  max-height: 60vh;
   overflow: hidden;
   &__placeholder {
     padding: 2rem;
     margin: auto;
     font-size: 1.5rem;
+    text-align: center;
   }
   &__filters {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
+    input {
+      grid-column: 1 / -1;
+    }
   }
   &__list {
     margin: 0;
