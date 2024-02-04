@@ -72,9 +72,7 @@ const isLoading = ref(false);
 onBeforeMount(async () => {
   if (settings.value.authToken) {
     isLoading.value = true;
-    const data = await fetchCurrentUserRepos().finally(() => {
-      isLoading.value = false;
-    });
+    const data = await fetchCurrentUserRepos().finally(() => { isLoading.value = false; });
     if (data) userRepos.value = data.filter(({ id }) => !storage.value.repositories.some((repo) => repo.id === id));
   }
 });
