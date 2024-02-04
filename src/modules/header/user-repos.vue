@@ -44,8 +44,11 @@
         </label>
       </li>
     </ul>
-    <button v-show="selectedRepos.length" title="add repo" type="submit">
-      Add {{ selectedRepos.length }} {{ selectedRepos.length === 1 ? "repo" : "repos" }}
+    <button v-show="selectedRepos.length" title="add repo" type="submit" :disabled="progress.current < progress.total ">
+      <span v-if="progress.total">Adding: {{ progress.current }}/{{ progress.total }}</span>
+      <span v-else>
+        Add {{ selectedRepos.length }} {{ selectedRepos.length === 1 ? "repo" : "repos" }}
+      </span>
     </button>
   </form>
 </template>
@@ -58,6 +61,7 @@ import { useRepositoriesStore } from "@/store/repositories";
 import type { UserRepositoriesResponse } from "@/types/repo";
 import type { Repository } from "@/composable/useRepo";
 
+defineProps<{ progress: { current: number, total: number } }>();
 defineEmits(["submit"]);
 
 const { storage } = useRepositoriesStore();

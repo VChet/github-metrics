@@ -140,9 +140,8 @@ button {
     border-color: var(--accent);
   }
   &:disabled {
-    color: var(--base-dimmed);
     pointer-events: none;
-    border-color: var(--base-dimmed);
+    opacity: .5;
   }
   &:active {
     transform: scale(.95);
