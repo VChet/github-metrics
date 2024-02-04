@@ -10,21 +10,6 @@ type RepositoriesStore = {
 
 type ExportedRepository = Pick<Repository, "id" | "full_name" | "integrations">;
 
-function parseDependencies(
-  dependencies: Record<string, string>
-): Pick<Repository["integrations"], "bundler" | "tests"> {
-  let bundler;
-  let tests;
-  for (const lib in dependencies) {
-    if (!bundler && ["vite", "rollup", "webpack"].includes(lib)) {
-      bundler = lib;
-    } else if (!tests && ["jest", "mocha", "vitest"].includes(lib)) {
-      tests = lib;
-    }
-  }
-  return { bundler, tests };
-}
-
 const DEFAULT_STORE: RepositoriesStore = {
   lastUpdate: dayjs().toISOString(),
   repositories: []
@@ -41,21 +26,46 @@ export function useRepositoriesStore() {
   function _isRepoExists(id: Repository["id"]): boolean {
     return storage.value.repositories.some(({ id: repoId }) => repoId === id);
   }
+  function _parseDependencies(
+    dependencies: Record<string, string>
+  ): Pick<Repository["integrations"], "bundler" | "tests"> {
+    let bundler;
+    let tests;
+    for (const lib in dependencies) {
+      if (!bundler && ["vite", "rollup", "webpack"].includes(lib)) {
+        bundler = lib;
+      } else if (!tests && ["jest", "mocha", "vitest"].includes(lib)) {
+        tests = lib;
+      }
+    }
+    return { bundler, tests };
+  }
+  async function _parseIntegrations(
+    { language, private: isPrivate }: Pick<Repository, "language" | "private">,
+    fullName: Repository["full_name"]
+  ): Promise<Repository["integrations"]> {
+    let integrations: Repository["integrations"] = {};
+    if (language) {
+      const dependencies = await fetchRepositoryPackages(fullName);
+      if (dependencies) integrations = { ...integrations, ..._parseDependencies(dependencies) };
+    }
+    if (!isPrivate) {
+      const workflowsData = await fetchRepositoryWorkflows(fullName);
+      if (workflowsData?.workflows[0]) {
+        const { state, badge_url: workflowBadge } = workflowsData.workflows[0];
+        if (state === "active") integrations = { ...integrations, workflowBadge };
+      }
+    }
+    return integrations;
+  }
 
   async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]) {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
     if (_isRepoExists(repo.id)) return;
 
-    if (repo.language) {
-      const dependencies = await fetchRepositoryPackages(fullName);
-      if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
-    }
-    const workflowsData = await fetchRepositoryWorkflows(fullName);
-    if (workflowsData.total_count) {
-      const main = workflowsData.workflows[0];
-      if (main.state === "active") integrations = { ...integrations, workflowBadge: main.badge_url };
-    }
+    const parsedIntegrations = await _parseIntegrations(repo, fullName);
+    integrations = { ...integrations, ...parsedIntegrations };
 
     storage.value.repositories.push({ ...repo, integrations });
   }
@@ -68,19 +78,12 @@ export function useRepositoriesStore() {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
 
-    if (repo.language) {
-      const dependencies = await fetchRepositoryPackages(fullName);
-      if (dependencies) integrations = { ...integrations, ...parseDependencies(dependencies) };
-    }
-    const workflowsData = await fetchRepositoryWorkflows(fullName);
-    if (workflowsData.total_count) {
-      const main = workflowsData.workflows[0];
-      if (main.state === "active") integrations = { ...integrations, workflowBadge: main.badge_url };
-    }
-
     const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
     const initialIntegrations = storage.value.repositories[entryIndex].integrations;
-    storage.value.repositories[entryIndex] = { ...repo, integrations: integrations ?? initialIntegrations };
+    const parsedIntegrations = await _parseIntegrations(repo, fullName);
+    integrations = { ...initialIntegrations, ...integrations, ...parsedIntegrations };
+
+    storage.value.repositories[entryIndex] = { ...repo, integrations };
   }
   function updateRepositories() {
     for (const repo of storage.value.repositories) updateRepository(repo.full_name, repo.integrations);
