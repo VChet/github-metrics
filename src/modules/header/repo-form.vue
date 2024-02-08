@@ -20,7 +20,13 @@ import type { Repository } from "@/composable/useRepo";
 const props = defineProps<{ repo: Pick<Repository, "full_name" | "integrations">, submitText: string }>();
 defineEmits(["submit"]);
 // Form
-const analyticsOptions = [{ name: "counter.dev", value: "counter.dev" }] as const;
+const analyticsOptions = [
+  { name: "counter.dev", value: "counter.dev" },
+  { name: "Google Analytics", value: "google_analytics" },
+  { name: "Yandex.Metrika", value: "yandex_metrika" },
+  { name: "Hotjar", value: "hotjar" },
+  { name: "Umami", value: "umami" }
+] as const;
 
 const form = ref(JSON.parse(JSON.stringify(props.repo)));
 </script>
