@@ -7,9 +7,9 @@
     <ul v-else>
       <li v-for="{ date, username, action, repo, id } in items" :key="id">
         {{ date }}:
-        <b>{{ username }}</b>
+        <a :href="`https://github.com/${username}`">{{ username }}</a>
         {{ action }}
-        <b>{{ repo }}</b>
+        <a :href="`https://github.com/${repo}`">{{ repo }}</a>
       </li>
     </ul>
   </fieldset>
@@ -28,5 +28,8 @@ onBeforeMount(fetch);
   font-size: 0.875rem;
   border: 1px solid var(--base-dimmed);
   border-radius: var(--radius);
+  li a {
+    font-weight: bold;
+  }
 }
 </style>
