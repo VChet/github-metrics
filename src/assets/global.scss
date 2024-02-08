@@ -80,8 +80,8 @@ fieldset {
   margin: 0;
   border: 1px solid var(--base-dimmed);
   border-radius: var(--radius);
-  &:hover,
-  &:focus-within {
+  &:has(input, textarea):hover,
+  &:has(input, textarea):focus-within {
     color: var(--base);
     border-color: var(--base);
   }
