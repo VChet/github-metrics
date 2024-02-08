@@ -15,13 +15,13 @@
         <input v-model.trim="searchQueryInput" name="searchQuery" placeholder="Search by name...">
         <div class="repo-grid__filters-sort">
           Sort:
-          <button class="icon" type="button" @click="sort('alphabetic')">
+          <button class="icon" type="button" title="sort alphabetically" @click="sort('alphabetic')">
             <icon-sort-a-z />
           </button>
-          <button class="icon" type="button" @click="sort('stars')">
+          <button class="icon" type="button" title="sort by stars" @click="sort('stars')">
             <icon-star />
           </button>
-          <button class="icon" type="button" @click="sort('forks')">
+          <button class="icon" type="button" title="sort by forks" @click="sort('forks')">
             <icon-git-fork />
           </button>
         </div>
