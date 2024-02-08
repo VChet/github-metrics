@@ -8,6 +8,7 @@
         {{ rateLimit }}
       </button>
       <settings-modal />
+      <about-modal />
     </div>
     <div>
       <button title="update" type="button" :disabled="noData" @click="update">
@@ -22,6 +23,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
+import AboutModal from "./modals/about-modal.vue";
 import HeaderSummary from "@/modules/header/header-summary.vue";
 import SettingsModal from "@/modules/header/modals/settings-modal.vue";
 import ImportExport from "@/modules/header/modals/import-export.vue";
