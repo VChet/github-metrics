@@ -18,14 +18,13 @@ export interface Repository extends RepositoryResponse {
 export function useRepository(data: Ref<Repository>) {
   const hostingName = computed<string | null>(() => {
     if (!data.value.homepage) return null;
-    if (data.value.homepage.includes("vercel.app")) {
-      return "Vercel";
-    } else if (data.value.homepage.includes("netlify.app")) {
-      return "Netlify";
-    } else if (data.value.homepage.includes("github.io")) {
-      return "GitHub";
+    try {
+      const hostname = new URL(data.value.homepage).hostname;
+      const match = /\w+\.\w+$/.exec(hostname); // Match top-level domain
+      return match ? match[0] : null;
+    } catch (error) {
+      return null;
     }
-    return null;
   });
   const uptimerobotImage = computed<string | null>(() => {
     if (!data.value.integrations?.uptimerobotKey) return null;
@@ -33,7 +32,7 @@ export function useRepository(data: Ref<Repository>) {
   });
   const hostingStatusImage = computed<string | null>(() => {
     if (!data.value.integrations?.hostingProjectId) return null;
-    if (hostingName.value === "Netlify") {
+    if (hostingName.value?.includes("netlify")) {
       return `https://api.netlify.com/api/v1/badges/${data.value.integrations.hostingProjectId}/deploy-status`;
     }
     return null;
