@@ -37,7 +37,7 @@
       <li v-if="repo.homepage">
         <a :href="repo.homepage">
           <icon-external-link />
-          {{ hostingName ?? "Homepage" }}
+          {{ hostingName ?? "Website" }}
         </a>
       </li>
     </ul>
