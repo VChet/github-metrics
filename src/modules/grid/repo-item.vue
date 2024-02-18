@@ -122,6 +122,9 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, work
   &:focus-within {
     border-color: var(--base);
   }
+  .error {
+    color: var(--negative);
+  }
   &__header {
     display: flex;
     gap: 1rem;
@@ -159,9 +162,6 @@ const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, work
       gap: 0.375rem;
       align-items: center;
       white-space: nowrap;
-      &.error {
-        color: #a10000;
-      }
     }
   }
   &__footer {
