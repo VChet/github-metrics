@@ -76,10 +76,10 @@ const diff = computed(() => ({
       }
     }
     &--positive {
-      color: #008000;
+      color: var(--positive);
     }
     &--negative {
-      color: #a10000;
+      color: var(--negative);
     }
   }
 }
