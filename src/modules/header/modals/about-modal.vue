@@ -19,7 +19,7 @@
           All data is stored locally in your browser's localStorage.
         </p>
         <p>
-          <a href="https://github.com/VChet/repo-tracker">
+          <a href="https://github.com/VChet/github-metrics">
             <icon-brand-github />
             Source code
           </a>
