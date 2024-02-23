@@ -1,5 +1,5 @@
 {
-  "name": "repo-tracker",
+  "name": "github-metrics",
   "type": "module",
   "version": "0.3.0",
   "private": true,
