@@ -64,7 +64,7 @@
           {{ license ?? "N/A" }}
         </span>
       </div>
-      <div v-if="hasIntegrations">
+      <div v-if="settings.showBadges && hasIntegrations">
         <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status">
         <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio">
         <img v-if="workflowBadge" :src="workflowBadge" alt="workflow badge">
