@@ -7,6 +7,7 @@ interface SettingsStore {
   authToken: string
   username: string
   showOwner: boolean
+  showBadges: boolean
   theme: Theme
 }
 
@@ -14,6 +15,7 @@ const DEFAULT_STORE: SettingsStore = {
   authToken: "",
   username: "",
   showOwner: true,
+  showBadges: true,
   theme: "github"
 };
 
