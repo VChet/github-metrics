@@ -91,6 +91,8 @@ async function update() {
 </script>
 <style lang="scss">
 .settings {
+  top: unset;
+  max-height: 100dvh;
   &__form {
     display: grid;
     gap: 1rem;
