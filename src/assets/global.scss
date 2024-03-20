@@ -77,6 +77,14 @@ summary {
 summary {
   cursor: pointer;
 }
+ul,
+ol {
+  padding: 0;
+  margin: 0;
+}
+ul {
+  list-style: none;
+}
 fieldset {
   padding: 1rem;
   margin: 0;
@@ -87,14 +95,9 @@ fieldset {
     color: var(--base);
     border-color: var(--base);
   }
-}
-ul,
-ol {
-  padding: 0;
-  margin: 0;
-}
-ul {
-  list-style: none;
+  ol {
+    margin: 0 0 1rem 1.5rem;
+  }
 }
 mark {
   background-color: var(--accent);
@@ -114,6 +117,9 @@ a {
     gap: 0.125rem;
     align-items: center;
     min-width: 0;
+  }
+  fieldset & {
+    text-decoration: underline;
   }
   &:hover,
   &:focus-visible {

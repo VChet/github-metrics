@@ -100,12 +100,6 @@ async function update() {
       display: grid;
       gap: 1rem;
       padding: .75rem;
-      ol {
-        margin: 0 0 1rem 1.5rem;
-        a {
-          text-decoration: underline;
-        }
-      }
     }
   }
 }
