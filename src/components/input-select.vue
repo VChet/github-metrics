@@ -11,34 +11,29 @@
 </template>
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
+import type { SelectHTMLAttributes } from "vue";
 
-const props = withDefaults(
-  defineProps<{
-    label?: string | null
-    modelValue: string | number
-    items: readonly Record<string, any>[]
-    itemValue?: string
-    itemText?: string
-    name: HTMLSelectElement["name"]
-  }>(),
-  {
-    label: null,
-    modelValue: "",
-    itemValue: "value",
-    itemText: "name"
-  }
-);
+interface InputSelectProps {
+  modelValue: string | number
+  items: readonly Record<string, any>[]
+  name: SelectHTMLAttributes["name"]
+  itemValue?: string
+  itemText?: string
+  label?: string | null
+}
 
-const emit = defineEmits<(e: "update:modelValue", value: number) => void>();
-const model = useVModel(props, "modelValue", emit);
+const props = withDefaults(defineProps<InputSelectProps>(), { label: null, itemValue: "value", itemText: "name" });
+
+const emit = defineEmits<{ "update:modelValue": [value: number] }>();
+const model = useVModel(props, "modelValue", emit, { defaultValue: "" });
 </script>
 <style lang="scss">
 .input-select {
-  display: inline-grid;
-  grid-template-columns: min-content 1fr;
+  display: flex;
   gap: 0.5rem;
   align-items: center;
   select {
+    flex: 1;
     padding: 0.5rem;
     color: var(--base);
     appearance: none;
