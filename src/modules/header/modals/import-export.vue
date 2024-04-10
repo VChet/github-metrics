@@ -12,6 +12,7 @@
 import { onUnmounted } from "vue";
 import { useFileDialog, whenever } from "@vueuse/core";
 import { IconFileDownload, IconFileUpload } from "@tabler/icons-vue";
+import dayjs from "dayjs";
 import { downloadFile, readFile } from "@/helpers/file";
 import { useRepositoriesStore } from "@/store/repositories";
 
@@ -32,6 +33,7 @@ whenever(files, async (payload) => {
 });
 
 function exportFile() {
-  downloadFile(exportRepositories(), "repositories.json", "application/json");
+  const name = `github-metrics-${dayjs().format("YYYY-MM-DD")}.json`;
+  downloadFile(exportRepositories(), name, "application/json");
 }
 </script>
