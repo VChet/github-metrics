@@ -32,6 +32,7 @@ import UserRepos from "@/modules/header/user-repos.vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
+import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
 
 const { settings } = useSettingsStore();
@@ -40,12 +41,12 @@ const { element: dialogRef, open, close } = useDialog();
 // Form
 const tab = ref<"url" | "token">("url");
 const progress = reactive({ current: 0, total: 0 });
-const formDefaults = { full_name: "", integrations: {} } as const;
+const formDefaults = { full_name: "", name: "", integrations: {} } as const;
 Object.freeze(formDefaults);
 
-const form = ref(JSON.parse(JSON.stringify(formDefaults)));
+const form = ref(deepCopy(formDefaults));
 function resetForm() {
-  Object.assign(form, JSON.parse(JSON.stringify(formDefaults)));
+  Object.assign(form, deepCopy(formDefaults));
   tab.value = "url";
   progress.current = 0;
   progress.total = 0;

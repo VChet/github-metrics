@@ -20,14 +20,13 @@
       </ol>
       <input v-model.trim="form.integrations.uptimerobotKey" name="uptimerobotKey" placeholder="uptimerobot monitor key">
     </fieldset>
-    <fieldset>
+    <fieldset v-if="form.name">
       <legend>Netlify Deploy Status</legend>
-      <ol v-if="form.name && !form.integrations.hostingProjectId">
+      <ol v-if="!form.integrations.hostingProjectId">
         <li>
           Go to
           <a
             :href="`https://app.netlify.com/sites/${form.name}/configuration/general#site-information`"
-            :disabled="!form.name"
             target="_blank"
           >
             Site Details
@@ -46,9 +45,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import InputSelect from "@/components/input-select.vue";
+import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
 
-const props = defineProps<{ repo: Pick<Repository, "full_name" | "integrations">, submitText: string }>();
+const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations">, submitText: string }>();
 defineEmits(["submit"]);
 // Form
 const analyticsOptions = [
@@ -59,7 +59,7 @@ const analyticsOptions = [
   { name: "Umami", value: "umami" }
 ] as const;
 
-const form = ref(JSON.parse(JSON.stringify(props.repo)));
+const form = ref(deepCopy(props.repo));
 </script>
 <style lang="scss">
 .repo-form {

@@ -14,9 +14,9 @@ import { useVModel } from "@vueuse/core";
 import type { SelectHTMLAttributes } from "vue";
 
 interface InputSelectProps {
-  modelValue: string | number
-  items: readonly Record<string, any>[]
+  modelValue: SelectHTMLAttributes["value"]
   name: SelectHTMLAttributes["name"]
+  items: readonly Record<string, unknown>[]
   itemValue?: string
   itemText?: string
   label?: string | null
@@ -24,7 +24,7 @@ interface InputSelectProps {
 
 const props = withDefaults(defineProps<InputSelectProps>(), { label: null, itemValue: "value", itemText: "name" });
 
-const emit = defineEmits<{ "update:modelValue": [value: number] }>();
+const emit = defineEmits<{ "update:modelValue": [value: InputSelectProps["modelValue"]] }>();
 const model = useVModel(props, "modelValue", emit, { defaultValue: "" });
 </script>
 <style lang="scss">
