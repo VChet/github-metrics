@@ -20,6 +20,7 @@ import { IconPencil, IconX } from "@tabler/icons-vue";
 import RepoForm from "@/modules/header/repo-form.vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useDialog } from "@/composable/useDialog";
+import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
 
 const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations"> }>();
@@ -27,7 +28,7 @@ const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integ
 const { element: dialogRef, open, close } = useDialog();
 
 // Form
-const form = ref(JSON.parse(JSON.stringify(props.repo)));
+const form = ref(deepCopy(props.repo));
 
 const hasError = ref<boolean>(false);
 watch(() => form.value.full_name, () => {

@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { Octokit } from "@octokit/core";
+import type { RequestError } from "@octokit/types";
 import { useSettingsStore } from "@/store/settings";
 import type {
   RepositoryResponse,
@@ -41,8 +42,8 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Record<
     if (!("content" in response.data)) return null;
     const content = JSON.parse(atob(response.data.content));
     return { ...content.dependencies, ...content.devDependencies };
-  } catch (error: any) {
-    if (error.status !== 404) console.error(error);
+  } catch (error: unknown) {
+    if ((error as RequestError).status !== 404) console.error(error);
     return null;
   }
 }
@@ -51,8 +52,8 @@ export async function fetchRepositoryWorkflows(fullName: string): Promise<Workfl
   try {
     const { data } = await octokit.request(`GET /repos/${fullName}/actions/workflows`);
     return data;
-  } catch (error: any) {
-    if (error.status !== 404) console.error(error);
+  } catch (error: unknown) {
+    if ((error as RequestError).status !== 404) console.error(error);
     return null;
   }
 }
