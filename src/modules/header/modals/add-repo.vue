@@ -1,5 +1,5 @@
 <template>
-  <button title="add repo" type="button" @click="open">
+  <button v-bind="$attrs" title="add repo" type="button" @click="open">
     <icon-plus />
     Add GitHub repo
   </button>
@@ -34,6 +34,8 @@ import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
+
+defineOptions({ inheritAttrs: false });
 
 const { settings } = useSettingsStore();
 const { element: dialogRef, open, close } = useDialog();

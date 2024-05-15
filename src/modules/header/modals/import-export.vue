@@ -1,17 +1,17 @@
 <template>
   <button title="export repositories" type="button" :disabled="noData" @click="exportFile">
-    <icon-file-download />
+    <icon-download />
     Export
   </button>
   <button title="import repositories" type="button" @click="importFile()">
-    <icon-file-upload />
+    <icon-upload />
     Import
   </button>
 </template>
 <script setup lang="ts">
 import { onUnmounted } from "vue";
 import { useFileDialog, whenever } from "@vueuse/core";
-import { IconFileDownload, IconFileUpload } from "@tabler/icons-vue";
+import { IconDownload, IconUpload } from "@tabler/icons-vue";
 import dayjs from "dayjs";
 import { downloadFile, readFile } from "@/helpers/file";
 import { useRepositoriesStore } from "@/store/repositories";

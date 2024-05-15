@@ -11,12 +11,12 @@
       <about-modal />
     </div>
     <div>
-      <button title="update" type="button" :disabled="noData" @click="update">
+      <import-export :no-data="noData" />
+      <button class="main-header__block-button" title="update" type="button" :disabled="noData" @click="update">
         <icon-refresh />
         Update
       </button>
-      <import-export :no-data="noData" />
-      <add-repo />
+      <add-repo class="main-header__block-button" />
     </div>
   </header>
 </template>
@@ -55,8 +55,14 @@ async function update() {
     align-items: center;
     > * {
       @media (width <= 600px) {
-        flex: 1;
+        flex-grow: 1;
+        flex-shrink: 1;
       }
+    }
+  }
+  &__block-button {
+    @media (width <= 600px) {
+      flex-basis: 100%;
     }
   }
 }
