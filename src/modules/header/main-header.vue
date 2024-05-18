@@ -13,7 +13,7 @@
     <div>
       <import-export :no-data="noData" />
       <button class="main-header__block-button" title="update" type="button" :disabled="noData" @click="update">
-        <icon-refresh />
+        <icon-refresh ref="refreshIcon" />
         Update
       </button>
       <add-repo class="main-header__block-button" />
@@ -21,7 +21,8 @@
   </header>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import { useAnimate } from "@vueuse/core";
 import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
 import AboutModal from "./modals/about-modal.vue";
 import HeaderSummary from "@/modules/header/header-summary.vue";
@@ -33,12 +34,20 @@ import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
 
 const { storage, updateRepositories } = useRepositoriesStore();
-
 const noData = computed(() => !storage.value.repositories.length);
 
 const { fetch: updateEvents } = useEventsStore();
+
+const refreshIcon = ref<SVGElement | null>(null);
+const { play, finish } = useAnimate(refreshIcon, { transform: "rotate(360deg)" }, 1000);
 async function update() {
-  await Promise.all([updateRepositories(), updateEvents()]);
+  if (!refreshIcon.value) return;
+  refreshIcon.value.style.setProperty("will-change", "transform");
+  play();
+  await Promise.all([updateRepositories(), updateEvents()]).finally(() => {
+    finish();
+    refreshIcon.value!.style.removeProperty("will-change");
+  });
 }
 </script>
 <style lang="scss">
