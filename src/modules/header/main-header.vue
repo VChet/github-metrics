@@ -2,20 +2,20 @@
   <header class="main-header">
     <div>
       <header-summary />
+      <settings-modal />
+      <about-modal />
       <button title="get rate limit" type="button" @click="fetchRateLimit">
         Rate Limit
         <icon-activity-heartbeat />
         {{ rateLimit }}
       </button>
-      <settings-modal />
-      <about-modal />
-    </div>
-    <div>
-      <import-export :no-data="noData" />
       <button class="main-header__block-button" title="update" type="button" :disabled="noData" @click="update">
         <icon-refresh ref="refreshIcon" />
         Update
       </button>
+    </div>
+    <div>
+      <import-export :no-data="noData" />
       <add-repo class="main-header__block-button" />
     </div>
   </header>
@@ -62,10 +62,10 @@ async function update() {
     flex-wrap: wrap;
     gap: inherit;
     align-items: center;
-    > * {
-      @media (width <= 600px) {
+    @media (width <= 600px) {
+    flex-basis: 100%;
+      > * {
         flex-grow: 1;
-        flex-shrink: 1;
       }
     }
   }
