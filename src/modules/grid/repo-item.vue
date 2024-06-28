@@ -22,13 +22,13 @@
       </div>
     </header>
     <ul class="repo__body">
-      <li v-if="repo.integrations.bundler">
+      <li v-if="bundler">
         <icon-box />
-        {{ repo.integrations.bundler }}
+        {{ bundler }}
       </li>
-      <li v-if="repo.integrations.tests">
+      <li v-if="testFramework">
         <icon-list-check />
-        {{ repo.integrations.tests }}
+        {{ testFramework }}
       </li>
       <li v-if="repo.integrations.analytics">
         <icon-timeline />
@@ -106,7 +106,16 @@ const repoName = computed<string>(() => {
   if (!props.query) return name;
   return name.replace(new RegExp(props.query, "gi"), (match) => `<mark>${match}</mark>`);
 });
-const { hasIntegrations, hostingName, uptimerobotImage, hostingStatusImage, workflowBadge, license } = useRepository(repo);
+const {
+  bundler,
+  testFramework,
+  hasIntegrations,
+  hostingName,
+  uptimerobotImage,
+  hostingStatusImage,
+  workflowBadge,
+  license
+} = useRepository(repo);
 </script>
 <style lang="scss">
 .repo {

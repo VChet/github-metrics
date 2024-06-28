@@ -4,14 +4,13 @@ import type { RepositoryResponse } from "@/types/repo";
 interface Integrations {
   uptimerobotKey?: string
   hostingProjectId?: string
-  // Auto-detected
-  bundler?: string
   analytics?: string
-  tests?: string
+  // Auto-detected
   workflowBadge?: string
 }
 
 export interface Repository extends RepositoryResponse {
+  dependencies: Record<string, string> | null
   integrations: Integrations
 }
 
@@ -45,12 +44,23 @@ export function useRepository(data: Ref<Repository>) {
 
   const hasIntegrations = computed<boolean>(() => !!Object.values(data.value.integrations).filter(Boolean).length);
 
+  const bundler = computed<string | null>(() => {
+    if (!data.value.dependencies) { return null; }
+    return Object.keys(data.value.dependencies).find((dep) => ["vite", "rollup", "webpack"].includes(dep)) ?? null;
+  });
+  const testFramework = computed<string | null>(() => {
+    if (!data.value.dependencies) { return null; }
+    return Object.keys(data.value.dependencies).find((dep) => ["jest", "mocha", "vitest"].includes(dep)) ?? null;
+  });
+
   return {
     hostingName,
     uptimerobotImage,
     hostingStatusImage,
     workflowBadge,
     license,
-    hasIntegrations
+    hasIntegrations,
+    bundler,
+    testFramework
   };
 }
