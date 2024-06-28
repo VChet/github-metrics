@@ -8,6 +8,7 @@ interface SettingsStore {
   username: string
   showOwner: boolean
   showBadges: boolean
+  showDependencies: boolean
   theme: Theme
 }
 
@@ -16,6 +17,7 @@ const DEFAULT_STORE: SettingsStore = {
   username: "",
   showOwner: true,
   showBadges: true,
+  showDependencies: false,
   theme: "github"
 };
 

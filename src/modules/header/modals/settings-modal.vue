@@ -22,6 +22,10 @@
             <input v-model="form.showBadges" name="showBadges" type="checkbox">
             Show badges
           </label>
+          <label>
+            <input v-model="form.showDependencies" name="showDependencies" type="checkbox">
+            Show dependencies table
+          </label>
           <input-select v-model="form.theme" name="theme" :items="themes" label="theme:" />
         </fieldset>
         <fieldset>
@@ -59,6 +63,7 @@ import InputSelect from "@/components/input-select.vue";
 import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
 import { fetchCurrentUser } from "@/service/octokit";
+import { deepCopy } from "@/helpers/object";
 
 const themes = [
   { name: "github", value: "github" },
@@ -70,13 +75,7 @@ const themes = [
 
 const { settings } = useSettingsStore();
 const { element: dialogRef, open, close } = useDialog();
-const form = reactive({
-  authToken: settings.value.authToken,
-  username: settings.value.username,
-  showOwner: settings.value.showOwner,
-  showBadges: settings.value.showBadges,
-  theme: settings.value.theme
-});
+const form = reactive(deepCopy(settings.value));
 
 async function getUsername() {
   const user = await fetchCurrentUser();
