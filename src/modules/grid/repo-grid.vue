@@ -1,41 +1,29 @@
 <template>
   <section class="repo-grid">
-    <div v-if="!storage.repositories.length" class="repo-grid__placeholder">
-      <b>No repositories added yet.</b>
-      <p>
-        To&nbsp;add a&nbsp;repository manually, use the &laquo;Add GitHub repo&raquo; button above and enter it's owner and name.
-      </p>
-      <p>
-        Alternatively, visit &laquo;Settings&raquo; to&nbsp;add your token and then press &laquo;Add GitHub repo&raquo;,
-        where you could selectively choose repositories to&nbsp;add.
-      </p>
-    </div>
-    <template v-else>
-      <div class="repo-grid__filters">
-        <input v-model.trim="searchQueryInput" name="searchQuery" placeholder="Search by name...">
-        <div class="repo-grid__filters-sort">
-          Sort:
-          <button class="icon" type="button" title="sort alphabetically" @click="sort('alphabetic')">
-            <icon-sort-a-z />
-          </button>
-          <button class="icon" type="button" title="sort by stars" @click="sort('stars')">
-            <icon-star />
-          </button>
-          <button class="icon" type="button" title="sort by forks" @click="sort('forks')">
-            <icon-git-fork />
-          </button>
-        </div>
+    <div class="repo-grid__filters">
+      <input v-model.trim="searchQueryInput" name="searchQuery" placeholder="Search by name...">
+      <div class="repo-grid__filters-sort">
+        Sort:
+        <button class="icon" type="button" title="sort alphabetically" @click="sort('alphabetic')">
+          <icon-sort-a-z />
+        </button>
+        <button class="icon" type="button" title="sort by stars" @click="sort('stars')">
+          <icon-star />
+        </button>
+        <button class="icon" type="button" title="sort by forks" @click="sort('forks')">
+          <icon-git-fork />
+        </button>
       </div>
-      <ul ref="reposRef" class="repo-grid__list">
-        <repo-item
-          v-for="repo in filteredItems"
-          :key="repo.id"
-          :repo="repo"
-          :query="searchQuery"
-          @delete="deleteRepository"
-        />
-      </ul>
-    </template>
+    </div>
+    <ul ref="reposRef" class="repo-grid__list">
+      <repo-item
+        v-for="repo in filteredItems"
+        :key="repo.id"
+        :repo="repo"
+        :query="searchQuery"
+        @delete="deleteRepository"
+      />
+    </ul>
   </section>
 </template>
 <script setup lang="ts">
