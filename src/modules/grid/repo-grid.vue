@@ -13,6 +13,9 @@
         <button class="icon" type="button" title="sort by forks" @click="sort('forks')">
           <icon-git-fork />
         </button>
+        <button class="icon" type="button" title="sort by language" @click="sort('language')">
+          <icon-packages />
+        </button>
       </div>
     </div>
     <ul ref="reposRef" class="repo-grid__list">
@@ -31,7 +34,7 @@ import { computed, ref } from "vue";
 import { refDebounced } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
-import { IconGitFork, IconSortAZ, IconStar } from "@tabler/icons-vue";
+import { IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
 import RepoItem from "@/modules/grid/repo-item.vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
@@ -52,12 +55,16 @@ const filteredItems = computed(() => {
 const reposRef = ref<HTMLElement | null>(null);
 useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler" });
 
-function sort(option: "alphabetic" | "stars" | "forks") {
+function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {
   storage.value.repositories.sort((a, b) => {
     switch (option) {
       case "alphabetic": return a.name.localeCompare(b.name);
       case "stars": return b.stargazers_count - a.stargazers_count;
       case "forks": return b.forks_count - a.forks_count;
+      case "language":
+        return (a.language && b.language) ?
+          a.language.localeCompare(b.language) :
+          a.name.localeCompare(b.name);
       default: return 0;
     }
   });
