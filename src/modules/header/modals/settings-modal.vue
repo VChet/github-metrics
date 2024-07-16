@@ -43,7 +43,14 @@
         <fieldset>
           <legend>User Feed</legend>
           <label for="username">GitHub Username</label>
-          <input id="username" v-model="form.username" type="text" placeholder="username" :disabled="!form.authToken">
+          <input
+            id="username"
+            v-model="form.username"
+            autocomplete="username"
+            type="text"
+            placeholder="username"
+            :disabled="!form.authToken"
+          >
         </fieldset>
         <button title="apply settings" type="submit">
           Update
