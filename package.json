@@ -24,8 +24,7 @@
     "sortablejs": "^1.15.2",
     "vite": "^5.3.4",
     "vue": "^3.4.31",
-    "vue-dompurify-html": "^5.1.0",
-    "vue-use": "^0.2.0"
+    "vue-dompurify-html": "^5.1.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "2.21.3",
