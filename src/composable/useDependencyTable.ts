@@ -1,30 +1,26 @@
 import { computed } from "vue";
 import type { Repository } from "./useRepo";
+import { useRepositoriesStore } from "@/store/repositories";
 
-export function useDependencyTable(repositories: Repository[]) {
-  const hasDependencies = computed<boolean>(() => {
-    return repositories.some(({ dependencies }) => dependencies && Object.keys(dependencies).length);
-  });
+export function useDependencyTable() {
+  const { storage } = useRepositoriesStore();
+  const repositories = computed<Repository[]>(() => storage.value.repositories);
 
-  const repos = computed(() => {
-    return repositories.reduce((acc: (Partial<Repository>)[], { id, name, full_name, dependencies }) => {
-      if (!dependencies) return acc;
-      return [...acc, { id, dependencies, name, full_name }];
-    }, []);
-  });
+  const repositoriesWithDependencies = computed<Repository[]>(() => repositories.value.filter((repo) => !!repo.dependencies));
+  const hasDependencies = computed<boolean>(() => !!repositoriesWithDependencies.value.length);
 
   const dependencies = computed<string[]>(() => {
     if (!hasDependencies.value) return [];
     const set: Set<string> = new Set();
-    for (const { dependencies } of repositories) {
-      dependencies && Object.keys(dependencies).forEach((key) => set.add(key));
+    for (const { dependencies } of repositoriesWithDependencies.value) {
+      for (const key in dependencies) { set.add(key); }
     }
     return [...set].sort((a, b) => a.localeCompare(b));
   });
 
   return {
     hasDependencies,
-    repos,
+    repos: repositoriesWithDependencies,
     dependencies
   };
 }

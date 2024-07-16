@@ -3,11 +3,11 @@
     <table class="dependencies-table">
       <thead>
         <th />
-        <template v-for="repo in repos" :key="repo.id">
-          <th v-if="repo.dependencies">
+        <th v-for="repo in repos" :key="repo.id">
+          <a :href="repo.html_url" target="_blank">
             {{ settings.showOwner ? repo.full_name : repo.name }}
-          </th>
-        </template>
+          </a>
+        </th>
       </thead>
       <tbody>
         <tr v-for="dep in dependencies" :key="dep">
@@ -25,36 +25,38 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRepositoriesStore } from "@/store/repositories";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 import { useSettingsStore } from "@/store/settings";
 import { composeHashColorFromString } from "@/composable/useLibColor";
 
 const { settings } = useSettingsStore();
-const { storage } = useRepositoriesStore();
-const { hasDependencies, repos, dependencies } = useDependencyTable(storage.value.repositories);
+const { hasDependencies, repos, dependencies } = useDependencyTable();
 </script>
 <style lang="scss">
 .dependencies-table {
   width: 100%;
+  cursor: default;
   border-spacing: 0;
   border-collapse: collapse;
   &-wrapper {
     overflow: auto;
   }
-  thead {
-    position: sticky;
-    top: 0;
-    background-color: var(--background);
-  }
-  tr {
-    border-bottom: 1px solid var(--base-dimmed);
-  }
   th, td {
     padding: 0.25rem;
     white-space: nowrap;
-    &:nth-of-type(1) {
+    &:first-of-type {
       max-width: 10rem;
+    }
+    &:not(:first-of-type) {
+      text-align: center;
+    }
+  }
+  tr {
+    border-bottom: 1px solid var(--base-dimmed);
+    transition: background-color 0.1s;
+    &:hover,
+    &:focus-within {
+      background-color: var(--base-dimmed);
     }
   }
 }
