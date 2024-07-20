@@ -60,12 +60,12 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import { IconSettings, IconX } from "@tabler/icons-vue";
 import InputSelect from "@/components/input-select.vue";
 import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
-import { fetchCurrentUser } from "@/service/octokit";
+import { fetchCurrentUser, setAuthToken } from "@/service/octokit";
 import { deepCopy } from "@/helpers/object";
 
 const themes = [
@@ -90,6 +90,11 @@ async function update() {
   settings.value = { ...form };
   close();
 }
+
+watch(() => settings.value.authToken, setAuthToken);
+watch(() => settings.value.theme, (theme) => {
+  document.documentElement.setAttribute("data-theme", theme);
+}, { immediate: true });
 </script>
 <style lang="scss">
 .settings {

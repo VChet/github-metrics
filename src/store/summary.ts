@@ -1,7 +1,7 @@
+import { computed, watch } from "vue";
 import { useArrayReduce, useStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import { watch } from "vue";
-import { useRepositoriesStore } from "@/store/repositories";
+import { useRepositoriesStore } from "./repositories";
 import { deepCopy, deepEqual } from "@/helpers/object";
 
 interface Summary {
@@ -30,18 +30,13 @@ export function useSummaryStorage() {
     { mergeDefaults: true }
   );
 
-  const { storage } = useRepositoriesStore();
-  const currentSummary = useArrayReduce(
-    () => storage.value.repositories,
-    (acc, repo) => ({
-      repos: storage.value.repositories.length,
-      stars: acc.stars + repo.stargazers_count,
-      forks: acc.forks + repo.forks_count,
-      issues: acc.issues + repo.open_issues_count
-    }),
-    { repos: 0, stars: 0, forks: 0, issues: 0 }
-  );
-  watch(currentSummary, (current, previous) => {
+  const diff = computed(() => ({
+    stars: summary.value.current.stars - summary.value.previous.stars,
+    forks: summary.value.current.forks - summary.value.previous.forks,
+    issues: summary.value.current.issues - summary.value.previous.issues
+  }));
+
+  function updateSummary(current: Summary, previous?: Summary) {
     if (!previous || current.repos !== previous.repos) {
       summary.value.previous = deepCopy(current);
       summary.value.current = deepCopy(current);
@@ -51,9 +46,24 @@ export function useSummaryStorage() {
       summary.value.current = deepCopy(current);
       summary.value.lastUpdate = dayjs().toISOString();
     }
-  }, { deep: true, immediate: true });
+  }
+
+  const { storage } = useRepositoriesStore();
+  const latestSummary = useArrayReduce(
+    () => storage.value.repositories,
+    (acc, repo) => ({
+      repos: storage.value.repositories.length,
+      stars: acc.stars + repo.stargazers_count,
+      forks: acc.forks + repo.forks_count,
+      issues: acc.issues + repo.open_issues_count
+    }),
+    { repos: 0, stars: 0, forks: 0, issues: 0 }
+  );
+  watch(latestSummary, updateSummary, { deep: true, immediate: true });
 
   return {
-    summary
+    diff,
+    repoAmount: computed(() => summary.value.current.repos),
+    summary: computed(() => summary.value.current)
   };
 }
