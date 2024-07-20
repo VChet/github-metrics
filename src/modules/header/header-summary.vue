@@ -2,11 +2,11 @@
   <div class="summary">
     <div class="summary__item">
       <icon-book2 />
-      {{ storage.repositories.length }}
+      {{ repoAmount }}
     </div>
     <div class="summary__item">
       <icon-star />
-      {{ summary.current.stars }}
+      {{ summary.stars }}
       <span v-if="diff.stars">
         <icon-arrow-big-up-filled v-if="Math.sign(diff.stars) === 1" class="summary__item--positive" />
         <icon-arrow-big-down-filled v-else class="summary__item--negative" />
@@ -15,7 +15,7 @@
     </div>
     <div class="summary__item">
       <icon-git-fork />
-      {{ summary.current.forks }}
+      {{ summary.forks }}
       <span v-if="diff.forks">
         <icon-arrow-big-up-filled v-if="Math.sign(diff.forks) === 1" class="summary__item--positive" />
         <icon-arrow-big-down-filled v-else class="summary__item--negative" />
@@ -24,7 +24,7 @@
     </div>
     <div class="summary__item">
       <icon-circle-dot />
-      {{ summary.current.issues }}
+      {{ summary.issues }}
       <span v-if="diff.issues">
         <icon-arrow-big-up-filled v-if="Math.sign(diff.issues) === 1" class="summary__item--negative" />
         <icon-arrow-big-down-filled v-else class="summary__item--positive" />
@@ -42,18 +42,9 @@ import {
   IconGitFork,
   IconStar
 } from "@tabler/icons-vue";
-import { computed } from "vue";
-import { useRepositoriesStore } from "@/store/repositories";
 import { useSummaryStorage } from "@/store/summary";
 
-const { storage } = useRepositoriesStore();
-const { summary } = useSummaryStorage();
-
-const diff = computed(() => ({
-  stars: summary.value.current.stars - summary.value.previous.stars,
-  forks: summary.value.current.forks - summary.value.previous.forks,
-  issues: summary.value.current.issues - summary.value.previous.issues
-}));
+const { diff, repoAmount, summary } = useSummaryStorage();
 </script>
 <style lang="scss">
 .summary {
