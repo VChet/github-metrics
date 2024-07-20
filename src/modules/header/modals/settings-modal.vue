@@ -35,9 +35,9 @@
                 github.com/settings/tokens
               </a>
             </li>
-            <li>Click "Generate new token"</li>
-            <li>Give access to repository metadata and contents</li>
-            <li>Click "Generate Token" and paste it here</li>
+            <li>Click <b>Generate new token</b></li>
+            <li>Add Read-only permissions: Actions, Contents, Metadata</li>
+            <li>Click <b>Generate Token</b> and paste it here</li>
           </ol>
         </fieldset>
         <fieldset>
@@ -98,8 +98,7 @@ watch(() => settings.value.theme, (theme) => {
 </script>
 <style lang="scss">
 .settings {
-  top: unset;
-  max-height: 100dvh;
+  max-width: 35rem;
   &__form {
     display: grid;
     gap: 1rem;
