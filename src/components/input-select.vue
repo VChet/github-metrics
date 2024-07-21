@@ -1,7 +1,7 @@
 <template>
   <label class="input-select">
     <div class="input-select__label">{{ label }}</div>
-    <select v-model="model" :name="name">
+    <select v-model="model" :name>
       <option value="">N/A</option>
       <option v-for="(item, index) in items" :key="index" :value="item[itemValue]">
         {{ item[itemText] }}
