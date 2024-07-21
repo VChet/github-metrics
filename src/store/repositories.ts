@@ -30,24 +30,20 @@ export function useRepositoriesStore() {
     const dependencies = await fetchRepositoryPackages(fullName);
     return dependencies ?? null;
   }
-  async function _parseIntegrations(fullName: Repository["full_name"]): Promise<Repository["integrations"]> {
-    let integrations: Repository["integrations"] = {};
+  async function _parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowBadge"]> {
     const workflowsData = await fetchRepositoryWorkflows(fullName);
-    if (workflowsData?.workflows[0]) {
-      const { state, badge_url: workflowBadge } = workflowsData.workflows[0];
-      if (state === "active") integrations = { ...integrations, workflowBadge };
-    }
-    return integrations;
+    const firstWorkflow = workflowsData?.workflows[0];
+    return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
   }
 
   async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]) {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
-    if (_isRepoExists(repo.id)) return;
+    if (_isRepoExists(repo.id)) return updateRepository(fullName, integrations);
 
     const dependencies = repo.language ? await _parseDependencies(fullName) : null;
-    const parsedIntegrations = repo.private ? await _parseIntegrations(fullName) : {};
-    integrations = { ...integrations, ...parsedIntegrations };
+    const workflowBadge = repo.private ? await _parseWorkflows(fullName) : undefined;
+    integrations.workflowBadge = workflowBadge;
 
     storage.value.repositories.push({ ...repo, dependencies, integrations });
   }
@@ -60,12 +56,11 @@ export function useRepositoriesStore() {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
 
-    const dependencies = await _parseDependencies(fullName);
-    const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
-    const initialIntegrations = storage.value.repositories[entryIndex].integrations;
-    const parsedIntegrations = repo.private ? await _parseIntegrations(fullName) : {};
-    integrations = { ...initialIntegrations, ...integrations, ...parsedIntegrations };
+    const dependencies = repo.language ? await _parseDependencies(fullName) : null;
+    const workflowBadge = !repo.private ? await _parseWorkflows(fullName) : undefined;
+    integrations.workflowBadge = workflowBadge;
 
+    const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
     storage.value.repositories[entryIndex] = { ...repo, dependencies, integrations };
   }
   function updateRepositories() {
