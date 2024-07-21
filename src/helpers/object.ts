@@ -1,4 +1,4 @@
-function isObject(object: unknown) {
+function isObject(object: unknown): boolean {
   const type = typeof object;
   return type === "function" || (type === "object" && !!object);
 }

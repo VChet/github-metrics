@@ -17,7 +17,7 @@ export const rateLimit = ref("-");
 
 setAuthToken(settings.value.authToken);
 
-export async function setAuthToken(authToken: string | null) {
+export async function setAuthToken(authToken: string | null): Promise<void> {
   settings.value.authToken = authToken ?? "";
   octokit = new Octokit({ auth: authToken });
   octokit.hook.after("request", (response) => {
@@ -26,7 +26,7 @@ export async function setAuthToken(authToken: string | null) {
   await fetchRateLimit();
 }
 
-function fetch(url: Route, options: RequestParameters = {}) {
+function fetch(url: Route, options: RequestParameters = {}): Promise<any> {
   const bypassCache: boolean = Number(rateLimit.value) > 4000;
   return octokit.request(url, {
     ...options,
@@ -34,7 +34,7 @@ function fetch(url: Route, options: RequestParameters = {}) {
   });
 }
 
-export async function fetchRateLimit() {
+export async function fetchRateLimit(): Promise<void> {
   const response = await fetch("GET /rate_limit");
   rateLimit.value = response.data.rate.remaining.toString() ?? "-";
 }

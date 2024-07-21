@@ -1,4 +1,4 @@
-function getHsla(hue: number, opacity: number | string = 1) {
+function getHsla(hue: number, opacity: number | string = 1): string {
   return `hsla(${hue}, 50%, 60%, ${opacity})`;
 }
 
@@ -13,7 +13,7 @@ const predefinedColorMap = {
   "vue": "#41b883"
 } as Record<string, string>;
 
-export function composeHashColorFromString(name: string) {
+export function composeHashColorFromString(name: string): string {
   let hash = 0;
   const mapKey = Object.keys(predefinedColorMap).find((key) => name.includes(key));
   if (mapKey) return predefinedColorMap[mapKey];

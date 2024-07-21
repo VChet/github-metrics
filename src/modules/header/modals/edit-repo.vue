@@ -36,7 +36,7 @@ watch(() => form.value.full_name, () => {
 });
 
 const { updateRepository } = useRepositoriesStore();
-async function editRepo(payload: Repository) {
+async function editRepo(payload: Repository): Promise<void> {
   if (!payload.full_name) return;
   try {
     hasError.value = false;

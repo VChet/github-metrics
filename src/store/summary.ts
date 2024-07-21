@@ -36,7 +36,7 @@ export function useSummaryStorage() {
     issues: summary.value.current.issues - summary.value.previous.issues
   }));
 
-  function updateSummary(current: Summary, previous?: Summary) {
+  function updateSummary(current: Summary, previous?: Summary): void {
     if (!previous || current.repos !== previous.repos) {
       summary.value.previous = deepCopy(current);
       summary.value.current = deepCopy(current);

@@ -40,7 +40,7 @@ const { fetch: updateEvents } = useEventsStore();
 
 const refreshIcon = ref<SVGElement | null>(null);
 const { play, finish } = useAnimate(refreshIcon, { transform: "rotate(360deg)" }, 1000);
-async function update() {
+async function update(): Promise<void> {
   if (!refreshIcon.value) return;
   refreshIcon.value.style.setProperty("will-change", "transform");
   play();

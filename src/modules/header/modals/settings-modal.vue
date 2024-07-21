@@ -80,12 +80,12 @@ const { settings } = useSettingsStore();
 const { element: dialogRef, open, close } = useDialog();
 const form = reactive(deepCopy(settings.value));
 
-async function getUsername() {
+async function getUsername(): Promise<void> {
   const user = await fetchCurrentUser();
   if (user) form.username = user.login;
 }
 
-async function update() {
+async function update(): Promise<void> {
   if (form.authToken && !form.username) await getUsername();
   settings.value = { ...form };
   close();

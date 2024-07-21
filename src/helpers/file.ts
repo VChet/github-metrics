@@ -3,9 +3,7 @@ export function readFile(file: File): Promise<string | ArrayBuffer> {
     const reader = new FileReader();
     reader.readAsText(file);
 
-    reader.onload = () => {
-      if (reader.result) resolve(reader.result);
-    };
+    reader.onload = (): void => { if (reader.result) resolve(reader.result); };
     reader.onerror = reject;
   });
 }

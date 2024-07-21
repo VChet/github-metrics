@@ -36,7 +36,7 @@ export function useRepositoriesStore() {
     return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
   }
 
-  async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]) {
+  async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]): Promise<void> {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
     if (_isRepoExists(repo.id)) return updateRepository(fullName, integrations);
@@ -48,11 +48,11 @@ export function useRepositoriesStore() {
     storage.value.repositories.push({ ...repo, dependencies, integrations });
   }
 
-  function deleteRepository(id: Repository["id"]) {
+  function deleteRepository(id: Repository["id"]): void {
     storage.value.repositories = storage.value.repositories.filter((repo) => repo.id !== id);
   }
 
-  async function updateRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]) {
+  async function updateRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]): Promise<void> {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
 
@@ -63,17 +63,17 @@ export function useRepositoriesStore() {
     const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
     storage.value.repositories[entryIndex] = { ...repo, dependencies, integrations };
   }
-  function updateRepositories() {
+  function updateRepositories(): void {
     for (const repo of storage.value.repositories) updateRepository(repo.full_name, repo.integrations);
     storage.value.lastUpdate = dayjs().toISOString();
   }
 
-  function importRepositories(repositories: Repository[]) {
+  function importRepositories(repositories: Repository[]): void {
     for (const { id, full_name, integrations } of repositories) {
       _isRepoExists(id) ? updateRepository(full_name, integrations) : addRepository(full_name, integrations);
     }
   }
-  function exportRepositories() {
+  function exportRepositories(): string {
     const repos: ExportedRepository[] = storage.value.repositories.map(
       ({ id, full_name, integrations }) => ({ id, full_name, integrations })
     );
