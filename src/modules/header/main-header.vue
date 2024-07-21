@@ -15,7 +15,7 @@
       </button>
     </div>
     <div>
-      <import-export :no-data="noData" />
+      <import-export :no-data />
       <add-repo class="main-header__block-button" />
     </div>
   </header>

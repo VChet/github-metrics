@@ -20,7 +20,7 @@
         </button>
       </div>
       <repo-form v-if="tab === 'url'" :repo="form" submit-text="Add" @submit="addRepo" />
-      <user-repos v-else-if="tab === 'token'" :progress="progress" @submit="addRepos" />
+      <user-repos v-else-if="tab === 'token'" :progress @submit="addRepos" />
     </dialog>
   </teleport>
 </template>

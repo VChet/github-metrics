@@ -22,7 +22,7 @@
       <repo-item
         v-for="repo in filteredItems"
         :key="repo.id"
-        :repo="repo"
+        :repo
         :query="searchQuery"
         @delete="deleteRepository"
       />

@@ -9,7 +9,7 @@
         <a v-dompurify-html="repoName" :href="repo.html_url" class="text-truncate icon-button" />
       </h1>
       <div class="repo__header-actions">
-        <edit-repo :repo="repo" />
+        <edit-repo :repo />
         <button
           title="delete repo"
           type="button"
