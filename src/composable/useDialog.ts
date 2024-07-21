@@ -3,12 +3,12 @@ import { useEventListener } from "@vueuse/core";
 
 export function useDialog(elementRef?: Ref<HTMLDialogElement | null>) {
   const element = elementRef ?? ref<HTMLDialogElement | null>(null);
-  function open() {
+  function open(): void {
     if (!element.value) return;
     element.value.showModal();
     document.body.classList.add("disable-scroll");
   }
-  function close() {
+  function close(): void {
     if (!element.value) return;
     element.value.close();
     document.body.classList.remove("disable-scroll");

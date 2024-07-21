@@ -52,10 +52,10 @@ const { settings } = useSettingsStore();
 const { hasDependencies, repos, dependencies } = useDependencyTable();
 
 const excludedDependencies = useStorage("excludedDependencies", new Set<string>(), localStorage, { mergeDefaults: true });
-function hideDependency(dep: string) {
+function hideDependency(dep: string): void {
   excludedDependencies.value.add(dep);
 }
-function showDependency(dep: string) {
+function showDependency(dep: string): void {
   excludedDependencies.value.delete(dep);
 }
 </script>

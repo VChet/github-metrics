@@ -47,7 +47,7 @@ const formDefaults = { full_name: "", name: "", integrations: {} } as const;
 Object.freeze(formDefaults);
 
 const form = ref(deepCopy(formDefaults));
-function resetForm() {
+function resetForm(): void {
   Object.assign(form, deepCopy(formDefaults));
   tab.value = "url";
   progress.current = 0;
@@ -61,7 +61,7 @@ watch(() => form.value.full_name, () => {
 
 const { addRepository } = useRepositoriesStore();
 
-async function addRepo(payload: Repository) {
+async function addRepo(payload: Repository): Promise<void> {
   if (!payload.full_name) return;
   try {
     hasError.value = false;
@@ -72,7 +72,7 @@ async function addRepo(payload: Repository) {
     hasError.value = true;
   }
 }
-async function addRepos(payload: Repository[]) {
+async function addRepos(payload: Repository[]): Promise<void> {
   if (!payload.length) return;
 
   try {

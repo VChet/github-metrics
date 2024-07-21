@@ -32,7 +32,7 @@ whenever(files, async (payload) => {
   }
 });
 
-function exportFile() {
+function exportFile(): void {
   const name = `github-metrics-${dayjs().format("YYYY-MM-DD")}.json`;
   downloadFile(exportRepositories(), name, "application/json");
 }

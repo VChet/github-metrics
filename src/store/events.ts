@@ -28,7 +28,7 @@ export const useEventsStore = createGlobalState(() => {
   const events = ref<UserReceivedEventsResponse>([]);
   const isLoading = ref(false);
 
-  async function fetch() {
+  async function fetch(): Promise<void> {
     isLoading.value = true;
     try {
       const response = await fetchCurrentUserReceivedEvents();
