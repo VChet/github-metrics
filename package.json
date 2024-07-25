@@ -1,7 +1,7 @@
 {
   "name": "github-metrics",
   "type": "module",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Discover comprehensive insights into your GitHub repositories' metrics. Track stars, forks, and more, all conveniently stored locally",
   "license": "AGPL-3.0-or-later",
   "scripts": {
