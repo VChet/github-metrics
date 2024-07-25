@@ -1,7 +1,7 @@
 <template>
   <main-header class="container" />
   <user-feed v-if="isFeedAvailable" class="container" />
-  <div v-if="!storage.repositories.length" class="repo-grid__placeholder">
+  <div v-if="!storage.repositories.length" class="container repo-grid__placeholder">
     <b>No repositories added yet.</b>
     <p>
       To&nbsp;add a&nbsp;repository manually, use the &laquo;Add GitHub repo&raquo; button above and enter it's owner and name.
@@ -24,9 +24,9 @@
         </button>
       </li>
     </ul>
+    <repo-grid v-show="selectedTab === 'grid'" class="container" />
+    <dependencies-table v-show="selectedTab === 'table'" class="container" />
   </template>
-  <repo-grid v-show="selectedTab === 'grid'" class="container" />
-  <dependencies-table v-show="selectedTab === 'table'" class="container" />
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
