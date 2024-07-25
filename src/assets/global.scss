@@ -272,8 +272,8 @@ dialog {
     }
   }
   @media (width <= 600px) {
-    max-width: 100dvw;
-    max-height: 100dvh;
+    max-width: 100dvw !important;
+    max-height: 100dvh !important;
   }
 }
 .container {
