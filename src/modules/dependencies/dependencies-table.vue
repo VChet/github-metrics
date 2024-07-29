@@ -91,9 +91,9 @@ function versionDiffClass(packageName: string, version?: string) {
     margin-bottom: 1rem;
   }
   &__excluded {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
     padding: 0.25rem;
   }
   .chip {
