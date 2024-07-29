@@ -4,7 +4,7 @@
       <legend>Excluded dependencies:</legend>
       <div class="dependencies__excluded">
         <button
-          v-for="dep in excludedDependencies"
+          v-for="dep in [...excludedDependencies].sort()"
           :key="dep"
           :style="{ color: composeHashColorFromString(dep) }"
           class="icon chip"
