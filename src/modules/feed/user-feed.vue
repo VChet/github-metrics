@@ -25,7 +25,6 @@ onBeforeMount(fetch);
 <style lang="scss">
 .user-feed {
   padding: 1rem;
-  font-size: 0.875rem;
   border: 1px solid var(--base-dimmed);
   border-radius: var(--radius);
   li a {
