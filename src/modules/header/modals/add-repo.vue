@@ -43,12 +43,14 @@ const { element: dialogRef, open, close } = useDialog();
 // Form
 const tab = ref<"url" | "token">("url");
 const progress = reactive({ current: 0, total: 0 });
-const formDefaults = { full_name: "", name: "", integrations: {} } as const;
-Object.freeze(formDefaults);
+const DEFAULTS = { full_name: "", name: "", integrations: {} } as const;
+Object.freeze(DEFAULTS);
 
-const form = ref(deepCopy(formDefaults));
+const form = ref(deepCopy(DEFAULTS));
 function resetForm(): void {
-  Object.assign(form, deepCopy(formDefaults));
+  form.value.full_name = "";
+  form.value.name = "";
+  form.value.integrations = {};
   tab.value = "url";
   progress.current = 0;
   progress.total = 0;
