@@ -79,7 +79,7 @@ function versionDiffClass(packageName: string, version?: string) {
   if (!version) return null;
   const projectVersion = version.replace(/[^0-9.]/g, "");
   const latestVersion = latestVersions.value[packageName];
-  if (!latestVersion) return null;
+  if (!projectVersion || !latestVersion) return null;
   const diff = semverDiff(projectVersion, latestVersion);
   return diff ?? null;
 }
