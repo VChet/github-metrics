@@ -15,11 +15,17 @@ export default antfu({
     "style/quotes": ["error", "double"],
     "style/semi": ["error", "always"],
     "ts/consistent-type-definitions": "off",
+    "ts/no-unused-expressions": ["error", {
+      allowShortCircuit: true,
+      allowTaggedTemplates: true,
+      allowTernary: true
+    }],
     "unicorn/prefer-includes": "off",
-    "vue/v-bind-style": ["error", "shorthand", { sameNameShorthand: "always" }],
+    "unused-imports/no-unused-vars": "off",
     "vue/block-order": ["error", { order: ["template", "script", "style"] }],
     "vue/component-name-in-template-casing": ["error", "kebab-case"],
     "vue/padding-line-between-blocks": ["error", "never"],
+    "vue/v-bind-style": ["error", "shorthand", { sameNameShorthand: "always" }],
     "yaml/quotes": ["error", { prefer: "double" }]
   }
 });
