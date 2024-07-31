@@ -1,3 +1,5 @@
+import type { Writeable } from "@/types";
+
 function isObject(object: unknown): boolean {
   const type = typeof object;
   return type === "function" || (type === "object" && !!object);
@@ -18,6 +20,6 @@ export function deepEqual<T extends Record<string, any>>(a: T | null, b: T | nul
   return true;
 }
 
-export function deepCopy<T>(object: T): T {
+export function deepCopy<T>(object: T): Writeable<T> {
   return JSON.parse(JSON.stringify(object));
 }
