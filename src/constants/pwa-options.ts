@@ -2,7 +2,7 @@ import type { ManifestOptions, VitePWAOptions } from "vite-plugin-pwa";
 
 const manifest: Partial<ManifestOptions> = {
   name: "GitHub Metrics",
-  short_name: "GitHub Metrics",
+  short_name: "GH Metrics",
   id: "github-metrics",
   description: "Discover comprehensive insights into your GitHub repositories' metrics. Track stars, forks, and more, all conveniently stored locally",
   dir: "ltr",
