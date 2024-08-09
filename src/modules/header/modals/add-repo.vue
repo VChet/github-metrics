@@ -27,13 +27,13 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from "vue";
 import { IconPlus, IconX } from "@tabler/icons-vue";
-import RepoForm from "@/modules/header/repo-form.vue";
-import UserRepos from "@/modules/header/user-repos.vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
+import UserRepos from "@/modules/header/user-repos.vue";
+import RepoForm from "@/modules/header/repo-form.vue";
 
 defineOptions({ inheritAttrs: false });
 
@@ -63,11 +63,11 @@ watch(() => form.value.full_name, () => {
 
 const { addRepository } = useRepositoriesStore();
 
-async function addRepo(payload: Repository): Promise<void> {
-  if (!payload.full_name) return;
+async function addRepo({ full_name, integrations }: Pick<Repository, "full_name" | "integrations">): Promise<void> {
+  if (!full_name) return;
   try {
     hasError.value = false;
-    await addRepository(payload.full_name, payload.integrations);
+    await addRepository(full_name, integrations);
     resetForm();
     close();
   } catch (error) {
@@ -80,11 +80,13 @@ async function addRepos(payload: Repository[]): Promise<void> {
   try {
     hasError.value = false;
     progress.total = payload.length;
+
+    const results = [];
     for (const repo of payload) {
       if (!repo.full_name) return;
-      await addRepository(repo.full_name, {});
-      progress.current += 1;
+      results.push(addRepository(repo.full_name).then(() => { progress.current += 1; }));
     }
+    await Promise.all(results);
     resetForm();
     close();
   } catch (error) {

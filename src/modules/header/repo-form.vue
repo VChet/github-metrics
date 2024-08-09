@@ -44,12 +44,16 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import InputSelect from "@/components/input-select.vue";
 import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
+import InputSelect from "@/components/input-select.vue";
 
-const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations">, submitText: string }>();
-defineEmits(["submit"]);
+interface Props {
+  repo: Pick<Repository, "name" | "full_name" | "integrations">
+  submitText: string
+}
+const props = defineProps<Props>();
+defineEmits<{ submit: [repo: Pick<Repository, "full_name" | "integrations">] }>();
 // Form
 const analyticsOptions = [
   { name: "counter.dev", value: "counter.dev" },

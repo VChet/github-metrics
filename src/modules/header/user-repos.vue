@@ -62,7 +62,7 @@ import type { UserRepositoriesResponse } from "@/types/repo";
 import type { Repository } from "@/composable/useRepo";
 
 defineProps<{ progress: { current: number, total: number } }>();
-defineEmits(["submit"]);
+defineEmits<{ submit: [repos: Repository[]] }>();
 
 const { storage } = useRepositoriesStore();
 const { settings } = useSettingsStore();

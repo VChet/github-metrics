@@ -36,7 +36,7 @@ export function useRepositoriesStore() {
     return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
   }
 
-  async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]): Promise<void> {
+  async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"] = {}): Promise<void> {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
     if (_isRepoExists(repo.id)) return updateRepository(fullName, integrations);

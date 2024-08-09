@@ -35,9 +35,9 @@ import { refDebounced } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
-import RepoItem from "@/modules/grid/repo-item.vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
+import RepoItem from "@/modules/grid/repo-item.vue";
 
 const { storage, deleteRepository, updateRepositories } = useRepositoriesStore();
 const { settings } = useSettingsStore();
@@ -52,7 +52,7 @@ const filteredItems = computed(() => {
   });
 });
 
-const reposRef = ref<HTMLElement | null>(null);
+const reposRef = ref<HTMLUListElement>();
 useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler" });
 
 function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {

@@ -17,11 +17,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { IconPencil, IconX } from "@tabler/icons-vue";
-import RepoForm from "@/modules/header/repo-form.vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
+import RepoForm from "@/modules/header/repo-form.vue";
 
 const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations"> }>();
 
@@ -36,11 +36,11 @@ watch(() => form.value.full_name, () => {
 });
 
 const { updateRepository } = useRepositoriesStore();
-async function editRepo(payload: Repository): Promise<void> {
-  if (!payload.full_name) return;
+async function editRepo({ full_name, integrations }: Pick<Repository, "full_name" | "integrations">): Promise<void> {
+  if (!full_name) return;
   try {
     hasError.value = false;
-    await updateRepository(payload.full_name, payload.integrations);
+    await updateRepository(full_name, integrations);
     close();
   } catch (error) {
     hasError.value = true;

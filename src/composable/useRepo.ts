@@ -18,7 +18,7 @@ export function useRepository(data: Ref<Repository>) {
   const hostingName = computed<string | null>(() => {
     if (!data.value.homepage) return null;
     try {
-      const hostname = new URL(data.value.homepage).hostname;
+      const { hostname } = new URL(data.value.homepage);
       const match = /\w+\.\w+$/.exec(hostname); // Match top-level domain
       return match ? match[0] : null;
     } catch (error) {

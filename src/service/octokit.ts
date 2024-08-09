@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { Octokit } from "@octokit/core";
 import type { RequestError, RequestParameters, Route } from "@octokit/types";
+import { StatusCodes } from "http-status-codes";
 import { useSettingsStore } from "@/store/settings";
 import type {
   RepositoryResponse,
@@ -26,8 +27,9 @@ export async function setAuthToken(authToken: string | null): Promise<void> {
   await fetchRateLimit();
 }
 
+const NO_CACHE_LIMIT = 4000;
 function fetch(url: Route, options: RequestParameters = {}): Promise<any> {
-  const bypassCache: boolean = Number(rateLimit.value) > 4000;
+  const bypassCache: boolean = Number(rateLimit.value) > NO_CACHE_LIMIT;
   return octokit.request(url, {
     ...options,
     headers: bypassCache ? { "If-None-Match": "" } : undefined
@@ -51,7 +53,7 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Record<
     const content = JSON.parse(atob(data.content));
     return { ...content.dependencies, ...content.devDependencies };
   } catch (error: unknown) {
-    if ((error as RequestError).status !== 404) console.error(error);
+    if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
     return null;
   }
 }
@@ -61,7 +63,7 @@ export async function fetchRepositoryWorkflows(fullName: string): Promise<Workfl
     const { data } = await fetch(`GET /repos/${fullName}/actions/workflows`);
     return data;
   } catch (error: unknown) {
-    if ((error as RequestError).status !== 404) console.error(error);
+    if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
     return null;
   }
 }
