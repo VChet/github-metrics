@@ -102,8 +102,10 @@ mark {
 }
 svg {
   flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
+}
+.tabler-icon {
+  width: 1.2em;
+  height: 1.2em;
   stroke-width: 2;
 }
 a {
@@ -156,10 +158,6 @@ button {
   &.icon {
     padding: 0;
     border: none;
-    svg {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
   }
 }
 input {

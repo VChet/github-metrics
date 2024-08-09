@@ -61,9 +61,9 @@ const { diff, repoAmount, summary } = useSummaryStorage();
     span {
       display: inline-flex;
       place-items: center;
-      svg {
-        width: 0.75rem;
-        height: 0.75rem;
+      .tabler-icon {
+        width: 1em;
+        height: 1em;
       }
     }
     &--positive {
