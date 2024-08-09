@@ -24,21 +24,21 @@
 import { computed, ref } from "vue";
 import { useAnimate } from "@vueuse/core";
 import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
+import { fetchRateLimit, rateLimit } from "@/service/octokit";
+import { useRepositoriesStore } from "@/store/repositories";
+import { useEventsStore } from "@/store/events";
 import AboutModal from "./modals/about-modal.vue";
 import HeaderSummary from "@/modules/header/header-summary.vue";
 import SettingsModal from "@/modules/header/modals/settings-modal.vue";
 import ImportExport from "@/modules/header/modals/import-export.vue";
 import AddRepo from "@/modules/header/modals/add-repo.vue";
-import { fetchRateLimit, rateLimit } from "@/service/octokit";
-import { useRepositoriesStore } from "@/store/repositories";
-import { useEventsStore } from "@/store/events";
 
 const { storage, updateRepositories } = useRepositoriesStore();
 const noData = computed(() => !storage.value.repositories.length);
 
 const { fetch: updateEvents } = useEventsStore();
 
-const refreshIcon = ref<SVGElement | null>(null);
+const refreshIcon = ref<SVGElement>();
 const { play, finish } = useAnimate(refreshIcon, { transform: "rotate(360deg)" }, 1000);
 async function update(): Promise<void> {
   if (!refreshIcon.value) return;

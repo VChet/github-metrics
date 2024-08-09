@@ -3,7 +3,6 @@ import { computed, ref } from "vue";
 import dayjs from "dayjs";
 import type { UserReceivedEventsResponse } from "@/types/repo";
 import { fetchCurrentUserReceivedEvents } from "@/service/octokit";
-
 import { useSettingsStore } from "@/store/settings";
 
 const TARGET_EVENTS = ["WatchEvent", "ForkEvent"];

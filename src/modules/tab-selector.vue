@@ -5,7 +5,7 @@
         class="tab-selector__button"
         :class="{
           'tab-selector__button--active': selectedTab === value,
-          'tab-selector__button--badge': badge,
+          'tab-selector__button--badge': badge
         }"
         type="button"
         @click="selectedTab = value"

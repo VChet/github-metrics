@@ -12,8 +12,8 @@ export function useDependencyTable() {
   const dependencies = computed<string[]>(() => {
     if (!hasDependencies.value) return [];
     const set: Set<string> = new Set();
-    for (const { dependencies } of repositoriesWithDependencies.value) {
-      for (const key in dependencies) { set.add(key); }
+    for (const repo of repositoriesWithDependencies.value) {
+      for (const key in repo.dependencies) { set.add(key); }
     }
     return [...set].sort((a, b) => a.localeCompare(b));
   });

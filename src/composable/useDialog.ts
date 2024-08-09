@@ -1,8 +1,8 @@
 import { type Ref, ref } from "vue";
 import { useEventListener } from "@vueuse/core";
 
-export function useDialog(elementRef?: Ref<HTMLDialogElement | null>) {
-  const element = elementRef ?? ref<HTMLDialogElement | null>(null);
+export function useDialog(elementRef?: Ref<HTMLDialogElement>) {
+  const element = elementRef ?? ref<HTMLDialogElement>();
   function open(): void {
     if (!element.value) return;
     element.value.showModal();
