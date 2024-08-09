@@ -3,14 +3,15 @@ function getHsla(hue: number, opacity: number | string = 1): string {
 }
 
 const predefinedColorMap = {
+  "@types/": "#007acc",
   "eslint": "#b7b7ff",
+  "postcss": "#dd3a0a",
   "stylelint": "#d0d5dd",
   "svelte": "#ff3e00",
-  "@types/": "#007acc",
   "typescript": "#007acc",
-  "postcss": "#dd3a0a",
   "vite": "#9499ff",
-  "vue": "#41b883"
+  "vue": "#41b883",
+  "workbox": "#ee810f"
 } as Record<string, string>;
 
 export function composeHashColorFromString(name: string): string {
