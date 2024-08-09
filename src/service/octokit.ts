@@ -27,8 +27,8 @@ export async function setAuthToken(authToken: string | null): Promise<void> {
   await fetchRateLimit();
 }
 
-const NO_CACHE_LIMIT = 4000;
 function fetch(url: Route, options: RequestParameters = {}): Promise<any> {
+  const NO_CACHE_LIMIT = 4000;
   const bypassCache: boolean = Number(rateLimit.value) > NO_CACHE_LIMIT;
   return octokit.request(url, {
     ...options,
