@@ -13,6 +13,6 @@ Track stars, forks, and more, all conveniently stored locally.
 
 ## Development
 
-- Install dependencies: `npm install`
-- Start dev-server: `npm run dev`
-- Build for production: `npm run build`
+- Install dependencies: `pnpm install`
+- Start dev-server: `pnpm run dev`
+- Build for production: `pnpm run build`
