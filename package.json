@@ -48,6 +48,7 @@
     "stylelint-order": "^6.0.4",
     "stylelint-rem-over-px": "^1.0.1",
     "typescript": "^5.5.4",
+    "vue-router": "^4.4.3",
     "vue-tsc": "^2.0.29",
     "workbox-core": "^7.1.0",
     "workbox-precaching": "^7.1.0",

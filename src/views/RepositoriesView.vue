@@ -37,7 +37,7 @@ import { useSortable } from "@vueuse/integrations/useSortable";
 import { IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
-import RepoItem from "@/modules/grid/repo-item.vue";
+import RepoItem from "@/components/repo-item.vue";
 
 const { storage, deleteRepository, updateRepositories } = useRepositoriesStore();
 const { settings } = useSettingsStore();

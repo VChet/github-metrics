@@ -21,7 +21,7 @@ import { useRepositoriesStore } from "@/store/repositories";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
-import RepoForm from "@/modules/header/repo-form.vue";
+import RepoForm from "../header/repo-form.vue";
 
 const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations"> }>();
 

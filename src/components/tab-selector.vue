@@ -1,16 +1,8 @@
 <template>
   <ul class="tab-selector">
-    <li v-for="{ value, text, badge } in items" :key="value">
-      <button
-        class="tab-selector__button"
-        :class="{
-          'tab-selector__button--active': selectedTab === value,
-          'tab-selector__button--badge': badge
-        }"
-        type="button"
-        @click="selectedTab = value"
-      >
-        {{ text }}
+    <li v-for="item in items" :key="item.value">
+      <button :class="getTabClassList(item)" type="button" @click="selectedTab = item.value">
+        {{ item.text }}
       </button>
     </li>
   </ul>
@@ -18,9 +10,24 @@
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
 
-const props = defineProps<{ modelValue: string, items: { value: string, text: string, badge?: boolean }[] }>();
-const emit = defineEmits<{ "update:modelValue": [value: string] }>();
+interface Tab {
+  value: string
+  text: string
+  badge?: boolean
+}
+
+const props = defineProps<{ modelValue: Tab["value"], items: Tab[] }>();
+const emit = defineEmits<{ "update:modelValue": [value: Tab["value"]] }>();
 const selectedTab = useVModel(props, "modelValue", emit);
+
+function getTabClassList(tab: Tab): Record<string, boolean> {
+  const key = "tab-selector__button";
+  return {
+    [key]: true,
+    [`${key}--active`]: tab.value === selectedTab.value,
+    [`${key}--badge`]: !!tab.badge
+  };
+}
 </script>
 <style lang="scss">
 .tab-selector {

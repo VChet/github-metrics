@@ -1,13 +1,13 @@
 <template>
   <li class="repo">
     <header class="repo__header">
-      <h1 class="repo__header-name">
+      <h2 class="repo__header-name">
         <icon-git-fork v-if="repo.fork" />
         <icon-template v-if="repo.is_template" />
         <icon-lock v-if="repo.private" />
         <icon-archive v-if="repo.archived" />
         <a v-dompurify-html="repoName" :href="repo.html_url" class="text-truncate icon-button" />
-      </h1>
+      </h2>
       <div class="repo__header-actions">
         <edit-repo :repo />
         <button
@@ -91,7 +91,7 @@ import {
 } from "@tabler/icons-vue";
 import { useSettingsStore } from "@/store/settings";
 import { type Repository, useRepository } from "@/composable/useRepo";
-import EditRepo from "@/modules/header/modals/edit-repo.vue";
+import EditRepo from "./modals/edit-repo.vue";
 
 const props = defineProps<{ repo: Repository, query: string }>();
 defineEmits<{ delete: [repositoryId: Repository["id"]] }>();

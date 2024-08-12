@@ -32,8 +32,8 @@ import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
 import type { Repository } from "@/composable/useRepo";
-import UserRepos from "@/modules/header/user-repos.vue";
-import RepoForm from "@/modules/header/repo-form.vue";
+import UserRepos from "../header/user-repos.vue";
+import RepoForm from "../header/repo-form.vue";
 
 defineOptions({ inheritAttrs: false });
 

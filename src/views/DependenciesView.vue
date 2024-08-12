@@ -46,6 +46,7 @@
 import { computedAsync, useMemoize, useStorage } from "@vueuse/core";
 import { IconSquareX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
+import type { ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 import { useSettingsStore } from "@/store/settings";
 import { composeHashColorFromString } from "@/composable/useLibColor";
@@ -75,7 +76,7 @@ const latestVersions = computedAsync(() => {
   return map;
 }, {}, { lazy: true });
 
-function versionDiffClass(packageName: string, version?: string) {
+function versionDiffClass(packageName: string, version?: string): ReleaseType | null {
   if (!version) return null;
   const projectVersion = version.replace(/[^0-9.]/g, "");
   const latestVersion = latestVersions.value[packageName];

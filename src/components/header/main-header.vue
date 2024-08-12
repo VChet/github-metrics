@@ -27,11 +27,11 @@ import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
-import AboutModal from "./modals/about-modal.vue";
-import HeaderSummary from "@/modules/header/header-summary.vue";
-import SettingsModal from "@/modules/header/modals/settings-modal.vue";
-import ImportExport from "@/modules/header/modals/import-export.vue";
-import AddRepo from "@/modules/header/modals/add-repo.vue";
+import HeaderSummary from "./header-summary.vue";
+import ImportExport from "./import-export.vue";
+import AboutModal from "../modals/about-modal.vue";
+import AddRepo from "../modals/add-repo.vue";
+import SettingsModal from "../modals/settings-modal.vue";
 
 const { storage, updateRepositories } = useRepositoriesStore();
 const noData = computed(() => !storage.value.repositories.length);
