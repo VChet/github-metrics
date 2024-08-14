@@ -1,18 +1,18 @@
 function getHsla(hue: number, opacity: number | string = 1): string {
-  return `hsla(${hue}, 50%, 60%, ${opacity})`;
+  return `hsla(${hue}, 40%, 70%, ${opacity})`;
 }
 
-const predefinedColorMap = {
-  "@types/": "#007acc",
+const predefinedColorMap: Readonly<Record<string, string>> = {
+  "@types/": "#0086e0",
   "eslint": "#b7b7ff",
-  "postcss": "#dd3a0a",
+  "postcss": "#f44d27",
   "stylelint": "#d0d5dd",
   "svelte": "#ff3e00",
-  "typescript": "#007acc",
+  "typescript": "#0086e0",
   "vite": "#9499ff",
   "vue": "#41b883",
   "workbox": "#ee810f"
-} as Record<string, string>;
+};
 
 export function composeHashColorFromString(name: string): string {
   let hash = 0;

@@ -28,10 +28,10 @@
           <td :title="dep" :style="{ color: composeHashColorFromString(dep) }" class="chip">
             <a :href="`https://npmjs.org/${dep}`" target="_blank" class="text-truncate">
               {{ dep }}
-              <div>{{ latestVersions[dep] }}</div>
+              <div>{{ latestVersions[dep] ?? '???' }}</div>
             </a>
             <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
-              <icon-square-x />
+              <icon-x />
             </button>
           </td>
           <td v-for="repo in repos" :key="repo.id" :class="versionDiffClass(dep, repo.dependencies![dep])">
@@ -44,7 +44,7 @@
 </template>
 <script setup lang="ts">
 import { computedAsync, useMemoize, useStorage } from "@vueuse/core";
-import { IconSquareX } from "@tabler/icons-vue";
+import { IconX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
 import type { ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
@@ -104,10 +104,14 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
     .icon {
       margin-left: auto;
       color: var(--negative);
-      visibility: hidden;
+      @media (hover: hover) and (pointer: fine) {
+        // hide icon only on non-touch devices
+        display: none;
+      }
     }
-    &:hover .icon {
-      visibility: visible;
+    &:hover .icon,
+    &:focus-visible .icon {
+      display: inline-block;
     }
   }
   &-table {
@@ -117,13 +121,13 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
     border-collapse: collapse;
     td {
       &.patch {
-        color: mediumseagreen;
+        color: #3cb371;
       }
       &.minor {
-        color: darkcyan;
+        color: #009595;
       }
       &.major {
-        color: crimson;
+        color: #ff1b46;
       }
     }
     th, td {
