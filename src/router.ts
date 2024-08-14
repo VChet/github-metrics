@@ -16,7 +16,7 @@ const router = createRouter({
       children: [
         { name: "Repositories", path: "/repositories", component: RepositoriesView },
         { name: "Dependencies", path: "/dependencies", component: DependenciesView },
-        { name: "Feed", path: "/feed", component: FeedView }
+        { name: "User Feed", path: "/feed", component: FeedView }
       ]
     },
     {
