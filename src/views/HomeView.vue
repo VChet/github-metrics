@@ -4,7 +4,11 @@
     <main-placeholder v-if="!storage.repositories.length" />
     <template v-else>
       <tab-selector v-model="selectedTab" :items="tabs" />
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </template>
   </main>
 </template>
