@@ -68,11 +68,12 @@ const fetchLatestVersion = useMemoize(async (dependency: string) => {
   return data.version;
 });
 
-const latestVersions = computedAsync(() => {
+const latestVersions = computedAsync(async () => {
   const map: Record<string, string> = {};
-  dependencies.value.forEach(async (dependency) => {
+  const fetchPromises = dependencies.value.map(async (dependency) => {
     if (!map[dependency]) { map[dependency] = await fetchLatestVersion(dependency); }
   });
+  await Promise.all(fetchPromises);
   return map;
 }, {}, { lazy: true });
 
