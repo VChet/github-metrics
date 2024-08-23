@@ -43,17 +43,13 @@ export function useSummaryStorage() {
     }
   }
 
-  const { storage } = useRepositoriesStore();
-  const latestSummary = useArrayReduce(
-    () => storage.value.repositories,
-    (acc, repo) => ({
-      repos: storage.value.repositories.length,
-      stars: acc.stars + repo.stargazers_count,
-      forks: acc.forks + repo.forks_count,
-      issues: acc.issues + repo.open_issues_count
-    }),
-    { repos: 0, stars: 0, forks: 0, issues: 0 }
-  );
+  const { repositories } = useRepositoriesStore();
+  const latestSummary = useArrayReduce(repositories, (acc, repo) => ({
+    repos: repositories.value.length,
+    stars: acc.stars + repo.stargazers_count,
+    forks: acc.forks + repo.forks_count,
+    issues: acc.issues + repo.open_issues_count
+  }), { repos: 0, stars: 0, forks: 0, issues: 0 });
   watch(latestSummary, updateSummary, { deep: true, immediate: true });
 
   return {

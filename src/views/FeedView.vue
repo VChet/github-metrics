@@ -1,11 +1,11 @@
 <template>
   <fieldset class="user-feed">
     <legend>Recent events</legend>
-    <span v-if="!items.length">
+    <span v-if="isEmpty">
       No recent events
     </span>
     <ul v-else>
-      <li v-for="{ date, username, action, repo, id } in items" :key="id">
+      <li v-for="{ date, username, action, repo, id } in events" :key="id">
         {{ date }}:
         <a :href="`https://github.com/${username}`">{{ username }}</a>
         {{ action }}
@@ -15,12 +15,10 @@
   </fieldset>
 </template>
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
 import { useEventsStore } from "@/store/events";
 
-const { fetch, items } = useEventsStore();
-
-onBeforeMount(fetch);
+const { events, isEmpty, updateCheck } = useEventsStore();
+updateCheck();
 </script>
 <style lang="scss">
 .user-feed {

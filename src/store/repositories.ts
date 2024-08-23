@@ -1,26 +1,36 @@
 import { useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import type { PackageJson } from "type-fest";
+import { computed } from "vue";
 import { fetchRepo, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
 
-type RepositoriesStore = {
+interface RepositoriesStore {
   lastUpdate: string
-  repositories: Repository[]
+  data: Repository[]
 };
 
 type ExportedRepository = Pick<Repository, "id" | "full_name" | "integrations">;
 
 const DEFAULT_STORE: RepositoriesStore = {
   lastUpdate: dayjs().toISOString(),
-  repositories: []
+  data: []
 };
 
 export function useRepositoriesStore() {
   const storage = useLocalStorage<RepositoriesStore>("repositories", DEFAULT_STORE, { mergeDefaults: true });
+  const repositories = computed({
+    get: () => storage.value.data,
+    set: (data) => { storage.value.data = data; }
+  });
+  const lastUpdate = computed({
+    get: () => storage.value.lastUpdate,
+    set: (data) => { storage.value.lastUpdate = data; }
+  });
+  const isEmpty = computed(() => !repositories.value.length);
 
   function _isRepoExists(id: Repository["id"]): boolean {
-    return storage.value.repositories.some(({ id: repoId }) => repoId === id);
+    return repositories.value.some(({ id: repoId }) => repoId === id);
   }
   async function _parseDependencies(fullName: Repository["full_name"]): Promise<PackageJson.Dependency | null> {
     const dependencies = await fetchRepositoryPackages(fullName);
@@ -41,11 +51,11 @@ export function useRepositoriesStore() {
     const workflowBadge = repo.private ? await _parseWorkflows(fullName) : undefined;
     integrations.workflowBadge = workflowBadge;
 
-    storage.value.repositories.push({ ...repo, dependencies, integrations });
+    repositories.value.push({ ...repo, dependencies, integrations });
   }
 
   function deleteRepository(id: Repository["id"]): void {
-    storage.value.repositories = storage.value.repositories.filter((repo) => repo.id !== id);
+    repositories.value = repositories.value.filter((repo) => repo.id !== id);
   }
 
   async function updateRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]): Promise<void> {
@@ -56,33 +66,43 @@ export function useRepositoriesStore() {
     const workflowBadge = !repo.private ? await _parseWorkflows(fullName) : undefined;
     integrations.workflowBadge = workflowBadge;
 
-    const entryIndex = storage.value.repositories.findIndex(({ id }) => id === repo.id);
-    storage.value.repositories[entryIndex] = { ...repo, dependencies, integrations };
+    const entryIndex = repositories.value.findIndex(({ id }) => id === repo.id);
+    repositories.value[entryIndex] = { ...repo, dependencies, integrations };
   }
-  function updateRepositories(): void {
-    for (const repo of storage.value.repositories) updateRepository(repo.full_name, repo.integrations);
-    storage.value.lastUpdate = dayjs().toISOString();
+  async function updateRepositories(): Promise<void> {
+    const fetchPromises = repositories.value.map(
+      ({ full_name, integrations }) => updateRepository(full_name, integrations)
+    );
+    await Promise.all(fetchPromises);
+    lastUpdate.value = dayjs().toISOString();
   }
 
-  function importRepositories(repositories: Repository[]): void {
-    for (const { id, full_name, integrations } of repositories) {
+  function importRepositories(payload: Repository[]): void {
+    for (const { id, full_name, integrations } of payload) {
       _isRepoExists(id) ? updateRepository(full_name, integrations) : addRepository(full_name, integrations);
     }
   }
   function exportRepositories(): string {
-    const repos: ExportedRepository[] = storage.value.repositories.map(
+    const repos: ExportedRepository[] = repositories.value.map(
       ({ id, full_name, integrations }) => ({ id, full_name, integrations })
     );
     return JSON.stringify(repos, null, 2);
   }
 
+  function updateCheck() {
+    const isUpdateNeeded = !lastUpdate.value || dayjs().diff(dayjs(lastUpdate.value), "hours") >= 1;
+    if (isUpdateNeeded) return updateRepositories();
+  }
+
   return {
-    storage,
+    repositories,
+    isEmpty,
     addRepository,
     deleteRepository,
     updateRepository,
     updateRepositories,
     importRepositories,
-    exportRepositories
+    exportRepositories,
+    updateCheck
   };
 }

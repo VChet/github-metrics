@@ -9,34 +9,34 @@
         <icon-activity-heartbeat />
         {{ rateLimit }}
       </button>
-      <button class="main-header__block-button" title="update" type="button" :disabled="noData" @click="update">
+      <button class="main-header__block-button" title="update" type="button" :disabled="isEmpty" @click="update">
         <icon-refresh ref="refreshIcon" />
         Update
       </button>
     </div>
     <div>
-      <import-export :no-data />
+      <import-export :no-data="isEmpty" />
       <add-repo class="main-header__block-button" />
     </div>
   </header>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useAnimate } from "@vueuse/core";
 import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
+import { useLatestVersionsStore } from "@/store/latest-versions";
 import HeaderSummary from "./header-summary.vue";
 import ImportExport from "./import-export.vue";
 import AboutModal from "../modals/about-modal.vue";
 import AddRepo from "../modals/add-repo.vue";
 import SettingsModal from "../modals/settings-modal.vue";
 
-const { storage, updateRepositories } = useRepositoriesStore();
-const noData = computed(() => !storage.value.repositories.length);
-
-const { fetch: updateEvents } = useEventsStore();
+const { isEmpty, updateRepositories } = useRepositoriesStore();
+const { updateLatestVersions } = useLatestVersionsStore();
+const { updateEvents } = useEventsStore();
 
 const refreshIcon = ref<SVGElement>();
 const { play, finish } = useAnimate(refreshIcon, { transform: "rotate(360deg)" }, 1000);
@@ -44,10 +44,12 @@ async function update(): Promise<void> {
   if (!refreshIcon.value) return;
   refreshIcon.value.style.setProperty("will-change", "transform");
   play();
-  await Promise.all([updateRepositories(), updateEvents()]).finally(() => {
+  try {
+    await Promise.all([updateRepositories(), updateLatestVersions(), updateEvents()]);
+  } finally {
     finish();
-    refreshIcon.value!.style.removeProperty("will-change");
-  });
+    refreshIcon.value.style.removeProperty("will-change");
+  }
 }
 </script>
 <style lang="scss">

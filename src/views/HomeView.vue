@@ -1,7 +1,7 @@
 <template>
   <main class="container main-container">
     <main-header />
-    <main-placeholder v-if="!storage.repositories.length" />
+    <main-placeholder v-if="!repositories.length" />
     <template v-else>
       <tab-selector v-model="selectedTab" :items="tabs" />
       <router-view v-slot="{ Component }">
@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { RouterView, useRouter } from "vue-router";
-import { useSettingsStore } from "@/store/settings";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
 import MainHeader from "@/components/header/main-header.vue";
@@ -28,17 +27,15 @@ const router = useRouter();
 const pages = computed(() => router.currentRoute.value.matched[0].children.map(({ name }) => name));
 const isTabRoute = (name: string): name is Tab => pages.value.includes(name);
 
-const { storage } = useRepositoriesStore();
-const { settings } = useSettingsStore();
-const isFeedAvailable = computed<boolean>(() => !!settings.value.authToken && !!settings.value.username);
-const { items: feedItems } = useEventsStore();
+const { repositories } = useRepositoriesStore();
+const { isEmpty, isFeedAvailable } = useEventsStore();
 
 const tabs = computed(() => {
   const entries: { value: Tab, text: string, badge?: boolean }[] = [
     { value: "Repositories", text: "Repositories" },
     { value: "Dependencies", text: "Dependencies" }
   ];
-  if (isFeedAvailable.value) entries.push({ value: "User Feed", text: "User Feed", badge: !!feedItems.value.length });
+  if (isFeedAvailable.value) entries.push({ value: "User Feed", text: "User Feed", badge: !isEmpty.value });
   return entries;
 });
 

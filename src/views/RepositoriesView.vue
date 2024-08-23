@@ -32,31 +32,31 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { refDebounced } from "@vueuse/core";
-import dayjs from "dayjs";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import RepoItem from "@/components/repo-item.vue";
 
-const { storage, deleteRepository, updateRepositories } = useRepositoriesStore();
 const { settings } = useSettingsStore();
+const { repositories, deleteRepository, updateCheck } = useRepositoriesStore();
+updateCheck();
 
 const searchQueryInput = ref("");
 const searchQuery = refDebounced(searchQueryInput, 300);
 const filteredItems = computed(() => {
-  if (!searchQuery.value) return storage.value.repositories;
-  return storage.value.repositories.filter((repo) => {
+  if (!searchQuery.value) return repositories.value;
+  return repositories.value.filter((repo) => {
     const name = settings.value.showOwner ? repo.full_name : repo.name;
     return RegExp(searchQuery.value, "i").test(name);
   });
 });
 
 const reposRef = ref<HTMLUListElement>();
-useSortable(reposRef, storage.value.repositories, { handle: ".repo__header-actions-handler" });
+useSortable(reposRef, repositories, { handle: ".repo__header-actions-handler" });
 
 function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {
-  storage.value.repositories.sort((a, b) => {
+  repositories.value.sort((a, b) => {
     switch (option) {
       case "alphabetic": return a.name.localeCompare(b.name);
       case "stars": return b.stargazers_count - a.stargazers_count;
@@ -69,8 +69,6 @@ function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {
     }
   });
 }
-
-if (!storage.value.lastUpdate || dayjs().diff(dayjs(storage.value.lastUpdate), "hours") >= 1) updateRepositories();
 </script>
 <style lang="scss">
 .repo-grid {

@@ -43,43 +43,22 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computedAsync, useLocalStorage, useMemoize } from "@vueuse/core";
 import { IconX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
 import type { ReleaseType } from "semver";
-import type { PackageJson } from "type-fest";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 import { useSettingsStore } from "@/store/settings";
 import { composeHashColorFromString } from "@/composable/useLibColor";
+import { useLatestVersionsStore } from "@/store/latest-versions";
+import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
 
 const { settings } = useSettingsStore();
 const { hasDependencies, repos, dependencies } = useDependencyTable();
 
-const excludedDependencies = useLocalStorage("excludedDependencies", new Set<string>(), { mergeDefaults: true });
-function hideDependency(dep: string): void {
-  excludedDependencies.value.add(dep);
-}
-function showDependency(dep: string): void {
-  excludedDependencies.value.delete(dep);
-}
+const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
 
-const fetchLatestVersion = useMemoize(async (dependency: string) => {
-  const response = await fetch(`https://registry.npmjs.org/${dependency}/latest`);
-  const data: PackageJson = await response.json();
-  return data.version;
-});
-
-const latestVersions = computedAsync(async () => {
-  const map: Record<string, string> = {};
-  const fetchPromises = dependencies.value.map(async (dependency) => {
-    if (!map[dependency]) {
-      const latestVersion = await fetchLatestVersion(dependency);
-      if (latestVersion) map[dependency] = latestVersion;
-    }
-  });
-  await Promise.all(fetchPromises);
-  return map;
-}, {}, { lazy: true });
+const { latestVersions, updateCheck } = useLatestVersionsStore();
+updateCheck();
 
 function versionDiffClass(packageName: string, version?: string): ReleaseType | null {
   if (!version) return null;

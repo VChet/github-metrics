@@ -81,12 +81,10 @@ async function addRepos(payload: Repository[]): Promise<void> {
     hasError.value = false;
     progress.total = payload.length;
 
-    const results = [];
-    for (const repo of payload) {
-      if (!repo.full_name) return;
-      results.push(addRepository(repo.full_name).then(() => { progress.current += 1; }));
-    }
-    await Promise.all(results);
+    const fetchPromises = payload
+      .map(({ full_name }) => full_name ? addRepository(full_name).then(() => { progress.current += 1; }) : null)
+      .filter(Boolean);
+    await Promise.all(fetchPromises);
     resetForm();
     close();
   } catch (error) {

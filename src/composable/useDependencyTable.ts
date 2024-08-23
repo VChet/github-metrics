@@ -3,8 +3,7 @@ import type { Repository } from "./useRepo";
 import { useRepositoriesStore } from "@/store/repositories";
 
 export function useDependencyTable() {
-  const { storage } = useRepositoriesStore();
-  const repositories = computed<Repository[]>(() => storage.value.repositories);
+  const { repositories } = useRepositoriesStore();
 
   const repositoriesWithDependencies = computed<Repository[]>(() => repositories.value.filter((repo) => !!repo.dependencies));
   const hasDependencies = computed<boolean>(() => !!repositoriesWithDependencies.value.length);

@@ -64,7 +64,7 @@ import type { Repository } from "@/composable/useRepo";
 defineProps<{ progress: { current: number, total: number } }>();
 defineEmits<{ submit: [repos: Repository[]] }>();
 
-const { storage } = useRepositoriesStore();
+const { repositories } = useRepositoriesStore();
 const { settings } = useSettingsStore();
 
 const userRepos = ref<UserRepositoriesResponse>([]);
@@ -73,7 +73,7 @@ onBeforeMount(async () => {
   if (settings.value.authToken) {
     isLoading.value = true;
     const data = await fetchCurrentUserRepos().finally(() => { isLoading.value = false; });
-    if (data) userRepos.value = data.filter(({ id }) => !storage.value.repositories.some((repo) => repo.id === id));
+    if (data) userRepos.value = data.filter(({ id }) => !repositories.value.some((repo) => repo.id === id));
   }
 });
 
