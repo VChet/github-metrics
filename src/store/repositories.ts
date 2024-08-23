@@ -1,4 +1,4 @@
-import { useStorage } from "@vueuse/core";
+import { useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { fetchRepo, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
@@ -16,12 +16,7 @@ const DEFAULT_STORE: RepositoriesStore = {
 };
 
 export function useRepositoriesStore() {
-  const storage = useStorage<RepositoriesStore>(
-    "repositories",
-    DEFAULT_STORE,
-    localStorage,
-    { mergeDefaults: true }
-  );
+  const storage = useLocalStorage<RepositoriesStore>("repositories", DEFAULT_STORE, { mergeDefaults: true });
 
   function _isRepoExists(id: Repository["id"]): boolean {
     return storage.value.repositories.some(({ id: repoId }) => repoId === id);

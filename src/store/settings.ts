@@ -1,4 +1,4 @@
-import { useStorage } from "@vueuse/core";
+import { useLocalStorage } from "@vueuse/core";
 
 type Theme = "github" | "blue" | "beige" | "green" | "red";
 interface SettingsStore {
@@ -18,11 +18,6 @@ const DEFAULT_STORE: SettingsStore = {
 };
 
 export function useSettingsStore() {
-  const settings = useStorage<SettingsStore>(
-    "settings",
-    DEFAULT_STORE,
-    localStorage,
-    { mergeDefaults: true }
-  );
+  const settings = useLocalStorage<SettingsStore>("settings", DEFAULT_STORE, { mergeDefaults: true });
   return { settings };
 }

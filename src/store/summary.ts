@@ -1,5 +1,5 @@
 import { computed, watch } from "vue";
-import { useArrayReduce, useStorage } from "@vueuse/core";
+import { useArrayReduce, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useRepositoriesStore } from "./repositories";
 import { deepCopy, deepEqual } from "@/helpers/object";
@@ -23,12 +23,7 @@ const DEFAULT_STORE: SummaryStore = {
 };
 
 export function useSummaryStorage() {
-  const summary = useStorage<SummaryStore>(
-    "summary",
-    DEFAULT_STORE,
-    localStorage,
-    { mergeDefaults: true }
-  );
+  const summary = useLocalStorage<SummaryStore>("summary", DEFAULT_STORE, { mergeDefaults: true });
 
   const diff = computed(() => ({
     stars: summary.value.current.stars - summary.value.previous.stars,

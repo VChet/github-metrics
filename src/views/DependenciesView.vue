@@ -43,7 +43,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computedAsync, useMemoize, useStorage } from "@vueuse/core";
+import { computedAsync, useLocalStorage, useMemoize } from "@vueuse/core";
 import { IconX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
 import type { ReleaseType } from "semver";
@@ -54,7 +54,7 @@ import { composeHashColorFromString } from "@/composable/useLibColor";
 const { settings } = useSettingsStore();
 const { hasDependencies, repos, dependencies } = useDependencyTable();
 
-const excludedDependencies = useStorage("excludedDependencies", new Set<string>(), localStorage, { mergeDefaults: true });
+const excludedDependencies = useLocalStorage("excludedDependencies", new Set<string>(), { mergeDefaults: true });
 function hideDependency(dep: string): void {
   excludedDependencies.value.add(dep);
 }
