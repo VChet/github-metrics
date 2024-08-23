@@ -1,4 +1,5 @@
 import { type Ref, computed } from "vue";
+import type { PackageJson } from "type-fest";
 import type { RepositoryResponse } from "@/types/repo";
 
 interface Integrations {
@@ -10,7 +11,7 @@ interface Integrations {
 }
 
 export interface Repository extends RepositoryResponse {
-  dependencies: Record<string, string> | null
+  dependencies: NonNullable<PackageJson.Dependency> | null
   integrations: Integrations
 }
 

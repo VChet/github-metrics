@@ -47,6 +47,7 @@ import { computedAsync, useLocalStorage, useMemoize } from "@vueuse/core";
 import { IconX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
 import type { ReleaseType } from "semver";
+import type { PackageJson } from "type-fest";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 import { useSettingsStore } from "@/store/settings";
 import { composeHashColorFromString } from "@/composable/useLibColor";
@@ -64,14 +65,17 @@ function showDependency(dep: string): void {
 
 const fetchLatestVersion = useMemoize(async (dependency: string) => {
   const response = await fetch(`https://registry.npmjs.org/${dependency}/latest`);
-  const data = await response.json();
+  const data: PackageJson = await response.json();
   return data.version;
 });
 
 const latestVersions = computedAsync(async () => {
   const map: Record<string, string> = {};
   const fetchPromises = dependencies.value.map(async (dependency) => {
-    if (!map[dependency]) { map[dependency] = await fetchLatestVersion(dependency); }
+    if (!map[dependency]) {
+      const latestVersion = await fetchLatestVersion(dependency);
+      if (latestVersion) map[dependency] = latestVersion;
+    }
   });
   await Promise.all(fetchPromises);
   return map;

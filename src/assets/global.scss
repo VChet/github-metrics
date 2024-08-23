@@ -36,8 +36,8 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  scrollbar-width: thin;
   scrollbar-color: var(--base-dimmed) var(--background);
+  scrollbar-width: thin;
 }
 *::selection {
   color: var(--background);
@@ -52,8 +52,8 @@ body {
   font-size: 16px;
   font-variant-numeric: tabular-nums;
   color: var(--base);
-  background-color: var(--background);
   scrollbar-gutter: stable;
+  background-color: var(--background);
   *.disable-scroll {
     overflow-y: hidden;
   }

@@ -1,5 +1,6 @@
 import { useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
+import type { PackageJson } from "type-fest";
 import { fetchRepo, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
 
@@ -21,7 +22,7 @@ export function useRepositoriesStore() {
   function _isRepoExists(id: Repository["id"]): boolean {
     return storage.value.repositories.some(({ id: repoId }) => repoId === id);
   }
-  async function _parseDependencies(fullName: Repository["full_name"]): Promise<Record<string, string> | null> {
+  async function _parseDependencies(fullName: Repository["full_name"]): Promise<PackageJson.Dependency | null> {
     const dependencies = await fetchRepositoryPackages(fullName);
     return dependencies ?? null;
   }

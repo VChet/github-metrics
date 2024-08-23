@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { Octokit } from "@octokit/core";
 import type { RequestError, RequestParameters, Route } from "@octokit/types";
 import { StatusCodes } from "http-status-codes";
+import type { PackageJson } from "type-fest";
 import { useSettingsStore } from "@/store/settings";
 import type {
   RepositoryResponse,
@@ -46,11 +47,11 @@ export async function fetchRepo(fullName: string): Promise<RepositoryResponse | 
   return data;
 }
 
-export async function fetchRepositoryPackages(fullName: string): Promise<Record<string, string> | null> {
+export async function fetchRepositoryPackages(fullName: string): Promise<PackageJson.Dependency | null> {
   try {
     const { data } = await fetch(`GET /repos/${fullName}/contents/package.json`);
     if (!("content" in data)) return null;
-    const content = JSON.parse(atob(data.content));
+    const content: PackageJson = JSON.parse(atob(data.content));
     return { ...content.dependencies, ...content.devDependencies };
   } catch (error: unknown) {
     if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
