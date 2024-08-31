@@ -3,6 +3,7 @@ import { Octokit } from "@octokit/core";
 import type { RequestError, RequestParameters, Route } from "@octokit/types";
 import { StatusCodes } from "http-status-codes";
 import type { PackageJson } from "type-fest";
+import { repositoryContents } from "./memoize";
 import { useSettingsStore } from "@/store/settings";
 import type {
   RepositoryResponse,
@@ -28,7 +29,7 @@ export async function setAuthToken(authToken: string | null): Promise<void> {
   await fetchRateLimit();
 }
 
-function fetch(url: Route, options: RequestParameters = {}): Promise<any> {
+export function fetch(url: Route, options: RequestParameters = {}): Promise<any> {
   const NO_CACHE_LIMIT = 4000;
   const bypassCache: boolean = Number(rateLimit.value) > NO_CACHE_LIMIT;
   return octokit.request(url, {
@@ -47,8 +48,14 @@ export async function fetchRepo(fullName: string): Promise<RepositoryResponse | 
   return data;
 }
 
+export function fetchRepositoryContents(fullName: string): Promise<unknown[]> {
+  return repositoryContents(fullName);
+}
+
 export async function fetchRepositoryPackages(fullName: string): Promise<PackageJson.Dependency | null> {
   try {
+    const hasPackage: boolean = await repositoryContents(fullName).then((files) => files.includes("package.json"));
+    if (!hasPackage) { return null; }
     const { data } = await fetch(`GET /repos/${fullName}/contents/package.json`);
     if (!("content" in data)) return null;
     const content: PackageJson = JSON.parse(atob(data.content));

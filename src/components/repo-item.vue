@@ -22,6 +22,12 @@
       </div>
     </header>
     <ul class="repo__body">
+      <li v-if="packageManager">
+        <icon-brand-npm v-if="packageManager === 'npm'" />
+        <icon-brand-pnpm v-else-if="packageManager === 'pnpm'" />
+        <icon-brand-yarn v-else-if="packageManager === 'yarn'" />
+        {{ packageManager }}
+      </li>
       <li v-if="bundler">
         <icon-box />
         {{ bundler }}
@@ -77,6 +83,9 @@ import { computed } from "vue";
 import {
   IconArchive,
   IconBox,
+  IconBrandNpm,
+  IconBrandPnpm,
+  IconBrandYarn,
   IconCircleDot,
   IconExternalLink,
   IconGitFork,
@@ -113,6 +122,7 @@ const {
   uptimerobotImage,
   hostingStatusImage,
   workflowBadge,
+  packageManager,
   license
 } = useRepository(repo);
 </script>
@@ -167,7 +177,7 @@ const {
     gap: 0.5rem;
     li {
       display: inline-flex;
-      gap: 0.375rem;
+      gap: 0.3rem;
       align-items: center;
       white-space: nowrap;
     }

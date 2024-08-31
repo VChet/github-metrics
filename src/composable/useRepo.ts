@@ -8,6 +8,7 @@ interface Integrations {
   analytics?: string
   // Auto-detected
   workflowBadge?: string
+  packageManager?: string
 }
 
 export interface Repository extends RepositoryResponse {
@@ -38,6 +39,7 @@ export function useRepository(data: Ref<Repository>) {
     return null;
   });
   const workflowBadge = computed<string | null>(() => data.value.integrations.workflowBadge ?? null);
+  const packageManager = computed<string | null>(() => data.value.integrations.packageManager ?? null);
   const license = computed<string | null>(() => {
     if (!data.value.license || data.value.license.spdx_id === "NOASSERTION") return null;
     return data.value.license.spdx_id;
@@ -59,6 +61,7 @@ export function useRepository(data: Ref<Repository>) {
     uptimerobotImage,
     hostingStatusImage,
     workflowBadge,
+    packageManager,
     license,
     hasIntegrations,
     bundler,

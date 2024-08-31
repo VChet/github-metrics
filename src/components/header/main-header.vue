@@ -28,6 +28,7 @@ import { fetchRateLimit, rateLimit } from "@/service/octokit";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
 import { useLatestVersionsStore } from "@/store/latest-versions";
+import { clearCachedRequests } from "@/service/memoize";
 import HeaderSummary from "./header-summary.vue";
 import ImportExport from "./import-export.vue";
 import AboutModal from "../modals/about-modal.vue";
@@ -45,6 +46,7 @@ async function update(): Promise<void> {
   refreshIcon.value.style.setProperty("will-change", "transform");
   play();
   try {
+    clearCachedRequests();
     await Promise.all([updateRepositories(), updateLatestVersions(), updateEvents()]);
   } finally {
     finish();

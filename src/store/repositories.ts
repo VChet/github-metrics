@@ -1,7 +1,7 @@
 import { useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { computed } from "vue";
-import { fetchRepo, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
+import { fetchRepo, fetchRepositoryContents, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
 
 interface RepositoriesStore {
@@ -20,6 +20,14 @@ async function parseWorkflows(fullName: Repository["full_name"]): Promise<Reposi
   const workflowsData = await fetchRepositoryWorkflows(fullName);
   const firstWorkflow = workflowsData?.workflows[0];
   return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
+}
+async function parsePackageManager(fullName: Repository["full_name"]): Promise<"npm" | "pnpm" | "yarn" | undefined> {
+  const files = await fetchRepositoryContents(fullName);
+  if (files.includes("package-lock.json")) return "npm";
+  else if (files.includes("pnpm-lock.yaml")) return "pnpm";
+  else if (files.includes("yarn.lock")) return "yarn";
+
+  return undefined;
 }
 
 export function useRepositoriesStore() {
@@ -44,8 +52,8 @@ export function useRepositoriesStore() {
     if (isRepoExists(repo.id)) return updateRepository(fullName, integrations);
 
     const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
-    const workflowBadge = repo.private ? await parseWorkflows(fullName) : undefined;
-    integrations.workflowBadge = workflowBadge;
+    integrations.workflowBadge = repo.private ? await parseWorkflows(fullName) : undefined;
+    integrations.packageManager = await parsePackageManager(fullName);
 
     repositories.value.push({ ...repo, dependencies, integrations });
   }
@@ -59,8 +67,8 @@ export function useRepositoriesStore() {
     if (!repo) throw new Error("Repo not found");
 
     const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
-    const workflowBadge = !repo.private ? await parseWorkflows(fullName) : undefined;
-    integrations.workflowBadge = workflowBadge;
+    integrations.workflowBadge = !repo.private ? await parseWorkflows(fullName) : undefined;
+    integrations.packageManager = await parsePackageManager(fullName);
 
     const entryIndex = repositories.value.findIndex(({ id }) => id === repo.id);
     repositories.value[entryIndex] = { ...repo, dependencies, integrations };
