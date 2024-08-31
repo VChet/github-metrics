@@ -48,7 +48,7 @@ const filteredItems = computed(() => {
   if (!searchQuery.value) return repositories.value;
   return repositories.value.filter((repo) => {
     const name = settings.value.showOwner ? repo.full_name : repo.name;
-    return RegExp(searchQuery.value, "i").test(name);
+    return new RegExp(searchQuery.value, "i").test(name);
   });
 });
 

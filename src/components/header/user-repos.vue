@@ -97,7 +97,7 @@ const filteredRepos = computed(() => {
   if (!filters.searchQuery) return result;
   return result.filter((repo) => {
     const name = settings.value.showOwner ? repo.full_name : repo.name;
-    return RegExp(filters.searchQuery, "i").test(name);
+    return new RegExp(filters.searchQuery, "i").test(name);
   });
 });
 const selectedRepos = ref<Repository[]>([]);

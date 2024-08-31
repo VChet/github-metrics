@@ -1,6 +1,5 @@
 import { useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import type { PackageJson } from "type-fest";
 import { computed } from "vue";
 import { fetchRepo, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
@@ -17,6 +16,12 @@ const DEFAULT_STORE: RepositoriesStore = {
   data: []
 };
 
+async function parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowBadge"]> {
+  const workflowsData = await fetchRepositoryWorkflows(fullName);
+  const firstWorkflow = workflowsData?.workflows[0];
+  return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
+}
+
 export function useRepositoriesStore() {
   const storage = useLocalStorage<RepositoriesStore>("repositories", DEFAULT_STORE, { mergeDefaults: true });
   const repositories = computed({
@@ -29,26 +34,17 @@ export function useRepositoriesStore() {
   });
   const isEmpty = computed(() => !repositories.value.length);
 
-  function _isRepoExists(id: Repository["id"]): boolean {
+  function isRepoExists(id: Repository["id"]): boolean {
     return repositories.value.some(({ id: repoId }) => repoId === id);
-  }
-  async function _parseDependencies(fullName: Repository["full_name"]): Promise<PackageJson.Dependency | null> {
-    const dependencies = await fetchRepositoryPackages(fullName);
-    return dependencies ?? null;
-  }
-  async function _parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowBadge"]> {
-    const workflowsData = await fetchRepositoryWorkflows(fullName);
-    const firstWorkflow = workflowsData?.workflows[0];
-    return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
   }
 
   async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"] = {}): Promise<void> {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
-    if (_isRepoExists(repo.id)) return updateRepository(fullName, integrations);
+    if (isRepoExists(repo.id)) return updateRepository(fullName, integrations);
 
-    const dependencies = repo.language ? await _parseDependencies(fullName) : null;
-    const workflowBadge = repo.private ? await _parseWorkflows(fullName) : undefined;
+    const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
+    const workflowBadge = repo.private ? await parseWorkflows(fullName) : undefined;
     integrations.workflowBadge = workflowBadge;
 
     repositories.value.push({ ...repo, dependencies, integrations });
@@ -62,8 +58,8 @@ export function useRepositoriesStore() {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
 
-    const dependencies = repo.language ? await _parseDependencies(fullName) : null;
-    const workflowBadge = !repo.private ? await _parseWorkflows(fullName) : undefined;
+    const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
+    const workflowBadge = !repo.private ? await parseWorkflows(fullName) : undefined;
     integrations.workflowBadge = workflowBadge;
 
     const entryIndex = repositories.value.findIndex(({ id }) => id === repo.id);
@@ -79,7 +75,7 @@ export function useRepositoriesStore() {
 
   function importRepositories(payload: Repository[]): void {
     for (const { id, full_name, integrations } of payload) {
-      _isRepoExists(id) ? updateRepository(full_name, integrations) : addRepository(full_name, integrations);
+      isRepoExists(id) ? updateRepository(full_name, integrations) : addRepository(full_name, integrations);
     }
   }
   function exportRepositories(): string {
