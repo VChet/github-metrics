@@ -4,36 +4,40 @@
     Export
   </button>
   <button title="import repositories" type="button" @click="importFile()">
-    <icon-upload />
+    <icon-upload v-if="!isImporting" />
+    <icon-loader v-else :model-value="true" />
     Import
   </button>
 </template>
 <script setup lang="ts">
-import { onUnmounted } from "vue";
+import { ref } from "vue";
 import { useFileDialog, whenever } from "@vueuse/core";
 import { IconDownload, IconUpload } from "@tabler/icons-vue";
 import dayjs from "dayjs";
 import { downloadFile, readFile } from "@/helpers/file";
 import { useRepositoriesStore } from "@/store/repositories";
+import { isValidJSON } from "@/helpers/validate";
+import IconLoader from "../icon-loader.vue";
 
 defineProps<{ noData: boolean }>();
-const { files, open: importFile, reset } = useFileDialog({ multiple: false, accept: "application/json" });
-onUnmounted(reset);
+const { files, open: importFile } = useFileDialog({ multiple: false, reset: true, accept: "application/json" });
 
-const { exportRepositories, importRepositories } = useRepositoriesStore();
+const { importRepositories, exportRepositories } = useRepositoriesStore();
 
-whenever(files, async (payload) => {
-  const content = await readFile(payload[0]);
-  if (content) {
-    const data = JSON.parse(String(content));
-    if (!data) throw new Error("Invalid JSON");
-    importRepositories(data);
-    reset();
+const isImporting = ref<boolean>(false);
+whenever(files, async ({ 0: payload }) => {
+  const content = await readFile(payload).then(String);
+  if (!isValidJSON(content)) throw new Error("Invalid JSON");
+  try {
+    isImporting.value = true;
+    await importRepositories(JSON.parse(content));
+  } finally {
+    isImporting.value = false;
   }
 });
 
 function exportFile(): void {
-  const name = `github-metrics-${dayjs().format("YYYY-MM-DD")}.json`;
-  downloadFile(exportRepositories(), name, "application/json");
+  const suggestedName = `github-metrics-${dayjs().format("YYYY-MM-DD")}.json`;
+  downloadFile(exportRepositories(), suggestedName, "application/json");
 }
 </script>

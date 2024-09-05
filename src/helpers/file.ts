@@ -11,7 +11,7 @@ export function readFile(file: File): Promise<string | ArrayBuffer> {
 export function downloadFile(
   data: BlobPart,
   fileName: HTMLAnchorElement["download"],
-  type: BlobPropertyBag["type"] = "text/xml"
+  type: BlobPropertyBag["type"] = "text/json"
 ): void {
   const blob = new Blob([data], { type });
   const element = window.document.createElement("a");

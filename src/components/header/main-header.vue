@@ -10,7 +10,7 @@
         {{ rateLimit }}
       </button>
       <button class="main-header__block-button" title="update" type="button" :disabled="isEmpty" @click="update">
-        <icon-refresh ref="refreshIcon" />
+        <icon-loader v-model="isUpdating" />
         Update
       </button>
     </div>
@@ -21,9 +21,8 @@
   </header>
 </template>
 <script setup lang="ts">
-import { useTemplateRef } from "vue";
-import { useAnimate } from "@vueuse/core";
-import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
+import { ref } from "vue";
+import { IconActivityHeartbeat } from "@tabler/icons-vue";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
@@ -34,23 +33,20 @@ import ImportExport from "./import-export.vue";
 import AboutModal from "../modals/about-modal.vue";
 import AddRepo from "../modals/add-repo.vue";
 import SettingsModal from "../modals/settings-modal.vue";
+import IconLoader from "../icon-loader.vue";
 
 const { isEmpty, updateRepositories } = useRepositoriesStore();
 const { updateLatestVersions } = useLatestVersionsStore();
 const { updateEvents } = useEventsStore();
 
-const refreshIcon = useTemplateRef<SVGElement>("refreshIcon");
-const { play, finish } = useAnimate(refreshIcon, { transform: "rotate(360deg)" }, 1000);
+const isUpdating = ref<boolean>(false);
 async function update(): Promise<void> {
-  if (!refreshIcon.value) return;
-  refreshIcon.value.style.setProperty("will-change", "transform");
-  play();
   try {
+    isUpdating.value = true;
     clearCachedRequests();
     await Promise.all([updateRepositories(), updateLatestVersions(), updateEvents()]);
   } finally {
-    finish();
-    refreshIcon.value.style.removeProperty("will-change");
+    isUpdating.value = false;
   }
 }
 </script>

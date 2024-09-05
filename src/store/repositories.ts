@@ -81,10 +81,12 @@ export function useRepositoriesStore() {
     lastUpdate.value = dayjs().toISOString();
   }
 
-  function importRepositories(payload: Repository[]): void {
-    for (const { id, full_name, integrations } of payload) {
-      isRepoExists(id) ? updateRepository(full_name, integrations) : addRepository(full_name, integrations);
-    }
+  async function importRepositories(payload: Repository[]): Promise<void> {
+    const fetchPromises = payload.map(({ id, full_name, integrations }) => isRepoExists(id) ?
+      updateRepository(full_name, integrations) :
+      addRepository(full_name, integrations)
+    );
+    await Promise.all(fetchPromises);
   }
   function exportRepositories(): string {
     const repos: ExportedRepository[] = repositories.value.map(
