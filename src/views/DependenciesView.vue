@@ -102,19 +102,26 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
     cursor: default;
     border-spacing: 0;
     border-collapse: collapse;
+    th {
+      height: 2.5rem;
+      padding-inline: 0.5rem;
+    }
     td {
+      padding-block: 0.25rem;
       &.patch {
-        color: #3cb371;
+        color: #79d297;
+        background-color: #79d29726;
       }
       &.minor {
-        color: #009595;
+        color: #14b8b8;
+        background-color: #14b8b826;
       }
       &.major {
-        color: #ff1b46;
+        color: #f35;
+        background-color: #ff335526;
       }
     }
     th, td {
-      padding: 0.25rem;
       white-space: nowrap;
       &:first-of-type {
         max-width: 12vw;
