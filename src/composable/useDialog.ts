@@ -1,8 +1,8 @@
-import { type Ref, ref } from "vue";
+import { type ShallowRef, useTemplateRef } from "vue";
 import { useEventListener } from "@vueuse/core";
 
-export function useDialog(elementRef?: Ref<HTMLDialogElement>) {
-  const element = elementRef ?? ref<HTMLDialogElement>();
+export function useDialog(elementRef?: Readonly<ShallowRef<HTMLDialogElement | null>>) {
+  const element = elementRef ?? useTemplateRef("dialogRef");
   function open(): void {
     if (!element.value) return;
     element.value.showModal();

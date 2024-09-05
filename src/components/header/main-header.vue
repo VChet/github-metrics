@@ -21,7 +21,7 @@
   </header>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { useTemplateRef } from "vue";
 import { useAnimate } from "@vueuse/core";
 import { IconActivityHeartbeat, IconRefresh } from "@tabler/icons-vue";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
@@ -39,7 +39,7 @@ const { isEmpty, updateRepositories } = useRepositoriesStore();
 const { updateLatestVersions } = useLatestVersionsStore();
 const { updateEvents } = useEventsStore();
 
-const refreshIcon = ref<SVGElement>();
+const refreshIcon = useTemplateRef<SVGElement>("refreshIcon");
 const { play, finish } = useAnimate(refreshIcon, { transform: "rotate(360deg)" }, 1000);
 async function update(): Promise<void> {
   if (!refreshIcon.value) return;

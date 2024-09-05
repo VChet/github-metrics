@@ -30,7 +30,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import { refDebounced } from "@vueuse/core";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
@@ -52,7 +52,7 @@ const filteredItems = computed(() => {
   });
 });
 
-const reposRef = ref<HTMLUListElement>();
+const reposRef = useTemplateRef("reposRef");
 useSortable(reposRef, repositories, { handle: ".repo__header-actions-handler" });
 
 function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {
