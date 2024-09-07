@@ -80,6 +80,12 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
     padding: 0.25rem;
+    button {
+      &:hover,
+      &:focus-visible {
+        box-shadow: 0 0.25rem 0 -0.125rem currentcolor;
+      }
+    }
   }
   .chip {
     display: flex;
