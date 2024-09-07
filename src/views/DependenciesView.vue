@@ -16,12 +16,14 @@
     </fieldset>
     <table class="dependencies-table">
       <thead>
-        <th />
-        <th v-for="repo in repos" :key="repo.id">
-          <a :href="repo.html_url" target="_blank">
-            {{ settings.showOwner ? repo.full_name : repo.name }}
-          </a>
-        </th>
+        <tr>
+          <th />
+          <th v-for="repo in repos" :key="repo.id">
+            <a :href="repo.html_url" target="_blank">
+              {{ settings.showOwner ? repo.full_name : repo.name }}
+            </a>
+          </th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="dep in dependencies.filter((dep) => !excludedDependencies.has(dep))" :key="dep">
@@ -108,26 +110,36 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
     cursor: default;
     border-spacing: 0;
     border-collapse: collapse;
-    th {
+    thead th {
       height: 2.5rem;
       padding-inline: 0.5rem;
     }
-    td {
-      padding-block: 0.25rem;
-      &.patch {
-        color: #79d297;
-        background-color: #79d29726;
+    tbody {
+      tr {
+        border-bottom: 1px solid var(--base-dimmed);
+        transition: background-color 0.1s;
+        &:hover,
+        &:focus-within {
+          background-color: var(--base-dimmed);
+        }
       }
-      &.minor {
-        color: #14b8b8;
-        background-color: #14b8b826;
-      }
-      &.major {
-        color: #f35;
-        background-color: #ff335526;
+      td {
+        padding-block: 0.25rem;
+        &.patch {
+          color: #79d297;
+          background-color: #79d29726;
+        }
+        &.minor {
+          color: #14b8b8;
+          background-color: #14b8b826;
+        }
+        &.major {
+          color: #f35;
+          background-color: #ff335526;
+        }
       }
     }
-    th, td {
+    thead th, tbody td {
       white-space: nowrap;
       &:first-of-type {
         max-width: 12vw;
@@ -140,14 +152,6 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
       }
       &:not(:first-of-type) {
         text-align: center;
-      }
-    }
-    tr {
-      border-bottom: 1px solid var(--base-dimmed);
-      transition: background-color 0.1s;
-      &:hover,
-      &:focus-within {
-        background-color: var(--base-dimmed);
       }
     }
   }
