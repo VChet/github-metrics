@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'Exo 2';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('Exo 2'), local('Exo-2'),
+    url('/fonts/Exo-2-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Exo 2';
+  font-style: normal;
+  font-weight: 700;
+  src:
+    local('Exo 2'), local('Exo-2'),
+    url('/fonts/Exo-2-Bold.woff2') format('woff2');
+  font-display: swap;
+}
