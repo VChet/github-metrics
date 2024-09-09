@@ -56,10 +56,10 @@
 import { computed, onBeforeMount, reactive, ref } from "vue";
 import { IconArchive, IconGitFork, IconLock, IconTemplate } from "@tabler/icons-vue";
 import { fetchCurrentUserRepos } from "@/service/octokit";
-import { useSettingsStore } from "@/store/settings";
 import { useRepositoriesStore } from "@/store/repositories";
-import type { UserRepositoriesResponse } from "@/types/repo";
+import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
+import type { UserRepositoriesResponse } from "@/types/repo";
 
 defineProps<{ progress: { current: number, total: number } }>();
 defineEmits<{ submit: [repos: Repository[]] }>();

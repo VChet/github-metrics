@@ -62,10 +62,10 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
 import { IconSettings, IconX } from "@tabler/icons-vue";
-import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
-import { fetchCurrentUser, setAuthToken } from "@/service/octokit";
 import { deepCopy } from "@/helpers/object";
+import { fetchCurrentUser, setAuthToken } from "@/service/octokit";
+import { useSettingsStore } from "@/store/settings";
 import InputSelect from "@/components/input-select.vue";
 
 const themes = [

@@ -1,9 +1,9 @@
-import { useLocalStorage } from "@vueuse/core";
 import { computed } from "vue";
+import { useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import type { UserReceivedEventsResponse } from "@/types/repo";
 import { fetchCurrentUserReceivedEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
+import type { UserReceivedEventsResponse } from "@/types/repo";
 
 type RawEvent = UserReceivedEventsResponse[0];
 

@@ -15,8 +15,8 @@ import { useFileDialog, whenever } from "@vueuse/core";
 import { IconDownload, IconUpload } from "@tabler/icons-vue";
 import dayjs from "dayjs";
 import { downloadFile, readFile } from "@/helpers/file";
-import { useRepositoriesStore } from "@/store/repositories";
 import { isValidJSON } from "@/helpers/validate";
+import { useRepositoriesStore } from "@/store/repositories";
 import IconLoader from "../icon-loader.vue";
 
 defineProps<{ noData: boolean }>();

@@ -1,8 +1,8 @@
 import { computed, watch } from "vue";
 import { useArrayReduce, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import { useRepositoriesStore } from "./repositories";
 import { deepCopy, deepEqual } from "@/helpers/object";
+import { useRepositoriesStore } from "./repositories";
 
 interface Summary {
   repos: number

@@ -1,6 +1,6 @@
 import { computed } from "vue";
-import type { Repository } from "./useRepo";
 import { useRepositoriesStore } from "@/store/repositories";
+import type { Repository } from "./useRepo";
 
 export function useDependencyTable() {
   const { repositories } = useRepositoriesStore();

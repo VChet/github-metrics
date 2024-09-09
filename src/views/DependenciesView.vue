@@ -49,10 +49,10 @@ import { IconX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
 import type { ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
-import { useSettingsStore } from "@/store/settings";
 import { composeHashColorFromString } from "@/composable/useLibColor";
-import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
+import { useLatestVersionsStore } from "@/store/latest-versions";
+import { useSettingsStore } from "@/store/settings";
 
 const { settings } = useSettingsStore();
 const { hasDependencies, repos, dependencies } = useDependencyTable();

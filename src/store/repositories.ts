@@ -1,6 +1,6 @@
+import { computed } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import { computed } from "vue";
 import { fetchRepo, fetchRepositoryContents, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
 

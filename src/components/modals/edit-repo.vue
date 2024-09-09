@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { IconPencil, IconX } from "@tabler/icons-vue";
-import { useRepositoriesStore } from "@/store/repositories";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
+import { useRepositoriesStore } from "@/store/repositories";
 import type { Repository } from "@/composable/useRepo";
 import RepoForm from "../header/repo-form.vue";
 

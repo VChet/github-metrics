@@ -2,9 +2,9 @@
   <icon-refresh ref="refreshIcon" />
 </template>
 <script setup lang="ts">
-import { IconRefresh } from "@tabler/icons-vue";
-import { useAnimate, useVModel } from "@vueuse/core";
 import { useTemplateRef, watch } from "vue";
+import { useAnimate, useVModel } from "@vueuse/core";
+import { IconRefresh } from "@tabler/icons-vue";
 
 const props = defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{ "update:modelValue": [value: boolean] }>();

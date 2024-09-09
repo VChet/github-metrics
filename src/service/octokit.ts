@@ -1,10 +1,10 @@
 import { ref } from "vue";
 import { Octokit } from "@octokit/core";
-import type { RequestError, RequestParameters, Route } from "@octokit/types";
 import { StatusCodes } from "http-status-codes";
+import type { RequestError, RequestParameters, Route } from "@octokit/types";
 import type { PackageJson } from "type-fest";
-import { repositoryContents } from "./memoize";
 import { useSettingsStore } from "@/store/settings";
+import { repositoryContents } from "./memoize";
 import type {
   RepositoryResponse,
   User,

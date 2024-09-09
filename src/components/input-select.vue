@@ -10,8 +10,8 @@
   </label>
 </template>
 <script setup lang="ts">
-import { useVModel } from "@vueuse/core";
 import type { SelectHTMLAttributes } from "vue";
+import { useVModel } from "@vueuse/core";
 
 interface Props {
   modelValue: SelectHTMLAttributes["value"]

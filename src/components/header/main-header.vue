@@ -23,17 +23,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { IconActivityHeartbeat } from "@tabler/icons-vue";
+import { clearCachedRequests } from "@/service/memoize";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
-import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
 import { useLatestVersionsStore } from "@/store/latest-versions";
-import { clearCachedRequests } from "@/service/memoize";
-import HeaderSummary from "./header-summary.vue";
-import ImportExport from "./import-export.vue";
+import { useRepositoriesStore } from "@/store/repositories";
+import IconLoader from "../icon-loader.vue";
 import AboutModal from "../modals/about-modal.vue";
 import AddRepo from "../modals/add-repo.vue";
 import SettingsModal from "../modals/settings-modal.vue";
-import IconLoader from "../icon-loader.vue";
+import HeaderSummary from "./header-summary.vue";
+import ImportExport from "./import-export.vue";
 
 const { isEmpty, updateRepositories } = useRepositoriesStore();
 const { updateLatestVersions } = useLatestVersionsStore();

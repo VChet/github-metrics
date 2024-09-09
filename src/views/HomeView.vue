@@ -15,8 +15,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { RouterView, useRouter } from "vue-router";
-import { useRepositoriesStore } from "@/store/repositories";
 import { useEventsStore } from "@/store/events";
+import { useRepositoriesStore } from "@/store/repositories";
 import MainHeader from "@/components/header/main-header.vue";
 import MainPlaceholder from "@/components/main-placeholder.vue";
 import TabSelector from "@/components/tab-selector.vue";

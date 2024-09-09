@@ -1,7 +1,7 @@
-import { URL, fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
-import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
 import Vue from "@vitejs/plugin-vue";
+import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import PWA_OPTIONS from "./src/constants/pwa-options.ts";
 

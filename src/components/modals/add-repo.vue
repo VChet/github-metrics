@@ -27,13 +27,13 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from "vue";
 import { IconPlus, IconX } from "@tabler/icons-vue";
-import { useRepositoriesStore } from "@/store/repositories";
-import { useSettingsStore } from "@/store/settings";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
+import { useRepositoriesStore } from "@/store/repositories";
+import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
-import UserRepos from "../header/user-repos.vue";
 import RepoForm from "../header/repo-form.vue";
+import UserRepos from "../header/user-repos.vue";
 
 defineOptions({ inheritAttrs: false });
 

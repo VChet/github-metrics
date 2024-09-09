@@ -98,8 +98,8 @@ import {
   IconTimeline,
   IconTrash
 } from "@tabler/icons-vue";
-import { useSettingsStore } from "@/store/settings";
 import { type Repository, useRepository } from "@/composable/useRepo";
+import { useSettingsStore } from "@/store/settings";
 import EditRepo from "./modals/edit-repo.vue";
 
 const props = defineProps<{ repo: Repository, query: string }>();

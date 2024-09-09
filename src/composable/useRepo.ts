@@ -1,4 +1,4 @@
-import { type Ref, computed } from "vue";
+import { computed, type Ref } from "vue";
 import type { PackageJson } from "type-fest";
 import type { RepositoryResponse } from "@/types/repo";
 
