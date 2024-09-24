@@ -42,7 +42,7 @@ async function editRepo({ full_name, integrations }: Pick<Repository, "full_name
     hasError.value = false;
     await updateRepository(full_name, integrations);
     close();
-  } catch (error) {
+  } catch {
     hasError.value = true;
   }
 }

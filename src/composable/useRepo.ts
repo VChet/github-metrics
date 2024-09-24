@@ -23,7 +23,7 @@ export function useRepository(data: Ref<Repository>) {
       const { hostname } = new URL(data.value.homepage);
       const match = /\w+\.\w+$/.exec(hostname); // Match top-level domain
       return match ? match[0] : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   });

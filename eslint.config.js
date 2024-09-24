@@ -81,7 +81,6 @@ export default antfu({
       allowTernary: true
     }],
     "unicorn/prefer-includes": "off",
-    "unused-imports/no-unused-vars": "off",
     "vue/attribute-hyphenation": ["error", "always"],
     "vue/block-order": ["error", { order: ["template", "script", "style"] }],
     "vue/comma-dangle": ["error", "never"],

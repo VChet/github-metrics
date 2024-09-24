@@ -70,7 +70,7 @@ async function addRepo({ full_name, integrations }: Pick<Repository, "full_name"
     await addRepository(full_name, integrations);
     resetForm();
     close();
-  } catch (error) {
+  } catch {
     hasError.value = true;
   }
 }
@@ -87,7 +87,7 @@ async function addRepos(payload: Repository[]): Promise<void> {
     await Promise.all(fetchPromises);
     resetForm();
     close();
-  } catch (error) {
+  } catch {
     hasError.value = true;
   }
 }
