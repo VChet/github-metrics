@@ -124,6 +124,7 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
         }
       }
       td {
+        min-width: 5rem;
         padding-block: 0.25rem;
         &.patch {
           color: #79d297;
