@@ -89,7 +89,7 @@ function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {
   }
   &__list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
     gap: 1rem;
     @media (width <= 600px) {
       grid-template-columns: 1fr;

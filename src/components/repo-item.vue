@@ -183,8 +183,7 @@ const {
     }
   }
   &__footer {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: .5rem;
     justify-content: space-between;
     margin-top: auto;
