@@ -61,6 +61,12 @@ body {
 #app {
   margin: 1rem 0;
 }
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+p, li {
+  text-wrap: pretty;
+}
 input,
 button,
 textarea,
