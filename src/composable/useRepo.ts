@@ -27,11 +27,11 @@ export function useRepository(data: Ref<Repository>) {
       return null;
     }
   });
-  const uptimerobotImage = computed<string | null>(() => {
+  const uptimerobotBadge = computed<string | null>(() => {
     if (!data.value.integrations?.uptimerobotKey) return null;
     return `https://img.shields.io/uptimerobot/ratio/${data.value.integrations.uptimerobotKey}`;
   });
-  const hostingStatusImage = computed<string | null>(() => {
+  const hostingStatusBadge = computed<string | null>(() => {
     if (!data.value.integrations?.hostingProjectId) return null;
     if (hostingName.value?.includes("netlify")) {
       return `https://api.netlify.com/api/v1/badges/${data.value.integrations.hostingProjectId}/deploy-status`;
@@ -45,7 +45,9 @@ export function useRepository(data: Ref<Repository>) {
     return data.value.license.spdx_id;
   });
 
-  const hasIntegrations = computed<boolean>(() => !!Object.values(data.value.integrations).filter(Boolean).length);
+  const hasBadges = computed<boolean>(() => {
+    return !!hostingStatusBadge.value || !!uptimerobotBadge.value || !!workflowBadge.value;
+  });
 
   const bundler = computed<string | null>(() => {
     if (!data.value.dependencies) { return null; }
@@ -58,12 +60,12 @@ export function useRepository(data: Ref<Repository>) {
 
   return {
     hostingName,
-    uptimerobotImage,
-    hostingStatusImage,
+    uptimerobotBadge,
+    hostingStatusBadge,
     workflowBadge,
     packageManager,
     license,
-    hasIntegrations,
+    hasBadges,
     bundler,
     testFramework
   };

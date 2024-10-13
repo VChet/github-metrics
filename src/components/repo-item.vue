@@ -70,9 +70,9 @@
           {{ license ?? "N/A" }}
         </span>
       </div>
-      <div v-if="settings.showBadges && hasIntegrations">
-        <img v-if="hostingStatusImage" :src="hostingStatusImage" alt="hosting status">
-        <img v-if="uptimerobotImage" :src="uptimerobotImage" alt="uptimerobot ratio">
+      <div v-if="settings.showBadges && hasBadges">
+        <img v-if="hostingStatusBadge" :src="hostingStatusBadge" alt="hosting status">
+        <img v-if="uptimerobotBadge" :src="uptimerobotBadge" alt="uptimerobot ratio">
         <img v-if="workflowBadge" :src="workflowBadge" alt="workflow badge">
       </div>
     </footer>
@@ -117,10 +117,10 @@ const repoName = computed<string>(() => {
 const {
   bundler,
   testFramework,
-  hasIntegrations,
+  hasBadges,
   hostingName,
-  uptimerobotImage,
-  hostingStatusImage,
+  uptimerobotBadge,
+  hostingStatusBadge,
   workflowBadge,
   packageManager,
   license
