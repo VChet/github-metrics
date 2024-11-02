@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useSettingsStore } from "./store/settings";
 
 const HomeView = () => import("@/views/HomeView.vue");
 const RepositoriesView = () => import("@/views/RepositoriesView.vue");
@@ -26,6 +27,10 @@ const router = createRouter({
   ]
 });
 
+router.beforeEach(() => {
+  const { needRefresh, updateServiceWorker } = useSettingsStore();
+  if (needRefresh) updateServiceWorker();
+});
 router.afterEach((to) => {
   const name = to.name?.toString();
   document.title = `${name} | GitHub Metrics`;

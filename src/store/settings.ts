@@ -1,4 +1,5 @@
 import { useLocalStorage } from "@vueuse/core";
+import { useRegisterSW } from "virtual:pwa-register/vue";
 
 type Theme = "github" | "blue" | "beige" | "green" | "red";
 interface SettingsStore {
@@ -19,5 +20,12 @@ const DEFAULT_STORE: SettingsStore = {
 
 export function useSettingsStore() {
   const settings = useLocalStorage<SettingsStore>("settings", DEFAULT_STORE, { mergeDefaults: true });
-  return { settings };
+
+  const { needRefresh, updateServiceWorker } = useRegisterSW({ immediate: true });
+
+  return {
+    settings,
+    needRefresh,
+    updateServiceWorker
+  };
 }

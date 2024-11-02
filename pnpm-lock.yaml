@@ -40,7 +40,7 @@ importers:
         version: 5.4.10(@types/node@22.8.4)(sass@1.80.4)(terser@5.31.5)
       vite-plugin-pwa:
         specifier: ^0.20.5
-        version: 0.20.5(vite@5.4.10(@types/node@22.8.4)(sass@1.80.4)(terser@5.31.5))(workbox-build@7.1.1)(workbox-window@7.1.0)
+        version: 0.20.5(vite@5.4.10(@types/node@22.8.4)(sass@1.80.4)(terser@5.31.5))(workbox-build@7.1.1)(workbox-window@7.3.0)
       vue:
         specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
@@ -115,6 +115,9 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0
       workbox-strategies:
+        specifier: ^7.3.0
+        version: 7.3.0
+      workbox-window:
         specifier: ^7.3.0
         version: 7.3.0
 
@@ -1156,7 +1159,7 @@ packages:
     resolution: {integrity: sha512-j/lym8nf5E21LwBT4Df1VD6hRO2L2iwUeUmP7litikRsVp1H6NWx20NEp0Y7su+7XGc476GnXXc4kFeZNGmaSQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      rollup: '>=4.22.4'
+      rollup: ^2.78.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
       rollup:
         optional: true
@@ -1170,7 +1173,7 @@ packages:
     resolution: {integrity: sha512-XHeJC5Bgvs8LfukDwWZp7yeqin6ns8RTl2B9avbejt6tZqsqvVoWI7ZTQrcNsfKEDWBTnTxM8nMDkO2IFFbd0A==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      rollup: '>=4.22.4'
+      rollup: ^2.0.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
       rollup:
         optional: true
@@ -1185,7 +1188,7 @@ packages:
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      rollup: '>=4.22.4'
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
       rollup:
         optional: true
@@ -3694,6 +3697,9 @@ packages:
 
   workbox-window@7.1.0:
     resolution: {integrity: sha512-ZHeROyqR+AS5UPzholQRDttLFqGMwP0Np8MKWAdyxsDETxq3qOAyXvqessc3GniohG6e0mAqSQyKOHmT8zPF7g==}
+
+  workbox-window@7.3.0:
+    resolution: {integrity: sha512-qW8PDy16OV1UBaUNGlTVcepzrlzyzNW/ZJvFQQs2j2TzGsg6IKjcpZC1RSquqQnTOafl5pCj5bGfAHlCjOOjdA==}
 
   wrap-ansi@7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
@@ -7576,14 +7582,14 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  vite-plugin-pwa@0.20.5(vite@5.4.10(@types/node@22.8.4)(sass@1.80.4)(terser@5.31.5))(workbox-build@7.1.1)(workbox-window@7.1.0):
+  vite-plugin-pwa@0.20.5(vite@5.4.10(@types/node@22.8.4)(sass@1.80.4)(terser@5.31.5))(workbox-build@7.1.1)(workbox-window@7.3.0):
     dependencies:
       debug: 4.3.6
       pretty-bytes: 6.1.1
       tinyglobby: 0.2.2
       vite: 5.4.10(@types/node@22.8.4)(sass@1.80.4)(terser@5.31.5)
       workbox-build: 7.1.1
-      workbox-window: 7.1.0
+      workbox-window: 7.3.0
     transitivePeerDependencies:
       - supports-color
 
@@ -7806,6 +7812,11 @@ snapshots:
     dependencies:
       '@types/trusted-types': 2.0.7
       workbox-core: 7.1.0
+
+  workbox-window@7.3.0:
+    dependencies:
+      '@types/trusted-types': 2.0.7
+      workbox-core: 7.3.0
 
   wrap-ansi@7.0.0:
     dependencies:
