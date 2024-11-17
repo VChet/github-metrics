@@ -61,7 +61,7 @@
           <icon-git-fork />
           {{ repo.forks_count }}
         </a>
-        <a :href="`https://github.com/${repo.full_name}/issues`" title="open issues">
+        <a :href="`https://github.com/${repo.full_name}/issues?q=is%3Aopen`" title="open issues/prs">
           <icon-circle-dot />
           {{ repo.open_issues_count }}
         </a>
