@@ -96,7 +96,7 @@ const filteredRepos = computed(() => {
   if (!filters.templates) result = result.filter((repo) => !repo.is_template);
   if (!filters.searchQuery) return result;
   return result.filter((repo) => {
-    const name = settings.value.showOwner ? repo.full_name : repo.name;
+    const name = settings.value.displayOwner ? repo.full_name : repo.name;
     return new RegExp(filters.searchQuery, "i").test(name);
   });
 });

@@ -70,7 +70,7 @@
           {{ license ?? "N/A" }}
         </span>
       </div>
-      <div v-if="settings.showBadges && hasBadges">
+      <div v-if="settings.displayBadges && hasBadges">
         <img v-if="hostingStatusBadge" :src="hostingStatusBadge" alt="hosting status">
         <img v-if="uptimerobotBadge" :src="uptimerobotBadge" alt="uptimerobot ratio">
         <img v-if="workflowBadge" :src="workflowBadge" alt="workflow badge">
@@ -110,7 +110,7 @@ const { settings } = useSettingsStore();
 // Watch deep changes
 const repo = computed(() => props.repo);
 const repoName = computed<string>(() => {
-  const name = settings.value.showOwner ? repo.value.full_name : repo.value.name;
+  const name = settings.value.displayOwner ? repo.value.full_name : repo.value.name;
   if (!props.query) return name;
   return name.replace(new RegExp(props.query, "gi"), (match) => `<mark>${match}</mark>`);
 });

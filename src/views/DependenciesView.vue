@@ -20,7 +20,7 @@
           <th />
           <th v-for="repo in repos" :key="repo.id">
             <a :href="repo.html_url" target="_blank">
-              {{ settings.showOwner ? repo.full_name : repo.name }}
+              {{ settings.displayOwner ? repo.full_name : repo.name }}
             </a>
           </th>
         </tr>

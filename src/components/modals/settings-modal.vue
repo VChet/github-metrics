@@ -18,14 +18,14 @@
           </button>
         </fieldset>
         <fieldset>
-          <legend>Appearance</legend>
+          <legend>Interface</legend>
           <label>
-            <input v-model="form.showOwner" name="showOwner" type="checkbox">
-            Show repository owner
+            <input v-model="form.displayOwner" name="displayOwner" type="checkbox">
+            Display repository owner
           </label>
           <label>
-            <input v-model="form.showBadges" name="showBadges" type="checkbox">
-            Show badges
+            <input v-model="form.displayBadges" name="displayBadges" type="checkbox">
+            Display badges
           </label>
           <input-select v-model="form.theme" name="theme" :items="themes" label="theme:" />
         </fieldset>

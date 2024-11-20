@@ -47,7 +47,7 @@ const searchQuery = refDebounced(searchQueryInput, 300);
 const filteredItems = computed(() => {
   if (!searchQuery.value) return repositories.value;
   return repositories.value.filter((repo) => {
-    const name = settings.value.showOwner ? repo.full_name : repo.name;
+    const name = settings.value.displayOwner ? repo.full_name : repo.name;
     return new RegExp(searchQuery.value, "i").test(name);
   });
 });
