@@ -28,14 +28,14 @@ const pages = computed(() => router.currentRoute.value.matched[0].children.map((
 const isTabRoute = (name: string): name is Tab => pages.value.includes(name);
 
 const { repositories } = useRepositoriesStore();
-const { isEmpty, isFeedAvailable } = useEventsStore();
+const { isFeedAvailable, amount } = useEventsStore();
 
 const tabs = computed(() => {
-  const entries: { value: Tab, text: string, badge?: boolean }[] = [
+  const entries: { value: Tab, text: string }[] = [
     { value: "Repositories", text: "Repositories" },
     { value: "Dependencies", text: "Dependencies" }
   ];
-  if (isFeedAvailable.value) entries.push({ value: "User Feed", text: "User Feed", badge: !isEmpty.value });
+  if (isFeedAvailable.value) entries.push({ value: "User Feed", text: `User Feed (${amount.value})` });
   return entries;
 });
 

@@ -13,7 +13,6 @@ import { useVModel } from "@vueuse/core";
 interface Tab {
   value: string
   text: string
-  badge?: boolean
 }
 
 const props = defineProps<{ modelValue: Tab["value"], items: Tab[] }>();
@@ -24,8 +23,7 @@ function getTabClassList(tab: Tab): Record<string, boolean> {
   const key = "tab-selector__button";
   return {
     [key]: true,
-    [`${key}--active`]: tab.value === selectedTab.value,
-    [`${key}--badge`]: !!tab.badge
+    [`${key}--active`]: tab.value === selectedTab.value
   };
 }
 </script>
@@ -38,20 +36,6 @@ function getTabClassList(tab: Tab): Record<string, boolean> {
     &--active {
       color: var(--accent);
       border-color: var(--accent);
-    }
-    &--badge {
-      position: relative;
-      &::after {
-        position: absolute;
-        top: calc(0% - 0.375rem);
-        left: calc(100% - 0.375rem);
-        width: 0.75rem;
-        height: 0.75rem;
-        content: '';
-        background: var(--accent);
-        border-radius: 50%;
-        box-shadow: 0 0 1.25rem 0 var(--accent);
-      }
     }
   }
 }

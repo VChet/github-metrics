@@ -1,7 +1,7 @@
 <template>
   <fieldset class="user-feed">
     <legend>Recent events</legend>
-    <span v-if="isEmpty">
+    <span v-if="!amount">
       No recent events
     </span>
     <ul v-else>
@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { useEventsStore } from "@/store/events";
 
-const { events, isEmpty, updateCheck } = useEventsStore();
+const { events, amount, updateCheck } = useEventsStore();
 updateCheck();
 </script>
 <style lang="scss">

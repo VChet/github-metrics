@@ -41,11 +41,11 @@ export function useEventsStore() {
     get: () => storage.value.data,
     set: (value) => { storage.value.data = value; }
   });
+  const amount = computed<number>(() => events.value.length);
   const lastUpdate = computed({
     get: () => storage.value.lastUpdate,
     set: (value) => { storage.value.lastUpdate = value; }
   });
-  const isEmpty = computed(() => !Object.keys(events.value).length);
   const { settings } = useSettingsStore();
   const isFeedAvailable = computed(() => !!settings.value.authToken && !!settings.value.username);
 
@@ -80,7 +80,7 @@ export function useEventsStore() {
 
   return {
     events,
-    isEmpty,
+    amount,
     isFeedAvailable,
     updateEvents,
     updateCheck
