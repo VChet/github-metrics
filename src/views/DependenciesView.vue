@@ -28,13 +28,13 @@
       <tbody>
         <tr v-for="dep in dependencies.filter((dep) => !excludedDependencies.has(dep))" :key="dep">
           <td :title="dep" :style="{ color: composeHashColorFromString(dep) }" class="chip">
+            <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
+              <icon-x />
+            </button>
             <a :href="`https://npmjs.org/${dep}`" target="_blank" class="text-truncate">
               {{ dep }}
               <div>{{ latestVersions[dep] ?? '???' }}</div>
             </a>
-            <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
-              <icon-x />
-            </button>
           </td>
           <td v-for="repo in repos" :key="repo.id" :class="versionDiffClass(dep, repo.dependencies![dep])">
             {{ repo.dependencies![dep] }}
@@ -89,22 +89,6 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
       }
     }
   }
-  .chip {
-    display: flex;
-    gap: 0.25rem;
-    .icon {
-      margin-left: auto;
-      color: var(--negative);
-      @media (hover: hover) and (pointer: fine) {
-        // hide icon only on non-touch devices
-        display: none;
-      }
-    }
-    &:hover .icon,
-    &:focus-visible .icon {
-      display: inline-block;
-    }
-  }
   &-table {
     width: 100%;
     cursor: default;
@@ -126,6 +110,21 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
       td {
         min-width: 5rem;
         padding-block: 0.25rem;
+        &.chip {
+          display: grid;
+          grid-template-columns: 1.5rem 10rem;
+          gap: 0.25rem;
+          .icon {
+            color: var(--negative);
+            @media (hover: hover) and (pointer: fine) { // hide icon only on non-touch devices
+              visibility: hidden;
+            }
+          }
+          &:hover .icon,
+          &:focus-visible .icon {
+            visibility: visible;
+          }
+        }
         &.patch {
           color: #79d297;
           background-color: #79d29726;
@@ -143,12 +142,8 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
     thead th, tbody td {
       white-space: nowrap;
       &:first-of-type {
-        max-width: 12vw;
         div {
           font-size: 0.75rem;
-        }
-        @media (width <= 600px) {
-          max-width: 10rem;
         }
       }
       &:not(:first-of-type) {
