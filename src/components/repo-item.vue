@@ -98,7 +98,7 @@ import {
   IconTimeline,
   IconTrash
 } from "@tabler/icons-vue";
-import { type Repository, useRepository } from "@/composable/useRepo";
+import { useRepository, type Repository } from "@/composable/useRepo";
 import { useSettingsStore } from "@/store/settings";
 import EditRepo from "./modals/edit-repo.vue";
 

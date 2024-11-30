@@ -1,4 +1,4 @@
-import { type ShallowRef, useTemplateRef } from "vue";
+import { useTemplateRef, type ShallowRef } from "vue";
 import { useEventListener } from "@vueuse/core";
 
 export function useDialog(elementRef?: Readonly<ShallowRef<HTMLDialogElement | null>>) {
