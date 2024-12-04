@@ -18,7 +18,7 @@
         </button>
       </div>
     </div>
-    <ul ref="reposRef" class="repo-grid__list">
+    <ul ref="reposElement" class="repo-grid__list">
       <repo-item
         v-for="repo in filteredItems"
         :key="repo.id"
@@ -52,7 +52,7 @@ const filteredItems = computed(() => {
   });
 });
 
-const reposRef = useTemplateRef("reposRef");
+const reposRef = useTemplateRef("reposElement");
 useSortable(reposRef, repositories, { handle: ".repo__header-actions-handler" });
 
 function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {

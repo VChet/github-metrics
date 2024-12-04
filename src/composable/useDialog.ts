@@ -1,22 +1,21 @@
-import { useTemplateRef, type ShallowRef } from "vue";
+import type { ShallowRef } from "vue";
 import { useEventListener } from "@vueuse/core";
 
-export function useDialog(elementRef?: Readonly<ShallowRef<HTMLDialogElement | null>>) {
-  const element = elementRef ?? useTemplateRef("dialogRef");
+export function useDialog(elementRef: Readonly<ShallowRef<HTMLDialogElement | null>>) {
   function open(): void {
-    if (!element.value) return;
-    element.value.showModal();
+    if (!elementRef.value) return;
+    elementRef.value.showModal();
     document.body.classList.add("disable-scroll");
   }
   function close(): void {
-    if (!element.value) return;
-    element.value.close();
+    if (!elementRef.value) return;
+    elementRef.value.close();
     document.body.classList.remove("disable-scroll");
   }
   // Close on click outside
-  useEventListener(element, "mousedown", (event) => {
-    if (event.target === element.value) close();
+  useEventListener(elementRef, "mousedown", (event) => {
+    if (event.target === elementRef.value) close();
   });
 
-  return { element, open, close };
+  return { open, close };
 }

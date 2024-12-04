@@ -1,5 +1,5 @@
 <template>
-  <icon-refresh ref="refreshIcon" />
+  <icon-refresh ref="refreshIconElement" />
 </template>
 <script setup lang="ts">
 import { useTemplateRef, watch } from "vue";
@@ -10,7 +10,7 @@ const props = defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{ "update:modelValue": [value: boolean] }>();
 const active = useVModel(props, "modelValue", emit);
 
-const refreshIcon = useTemplateRef<SVGElement>("refreshIcon");
-const { play, finish } = useAnimate(refreshIcon, { transform: "rotate(360deg)" }, 1000);
+const refreshIconRef = useTemplateRef<SVGElement>("refreshIconElement");
+const { play, finish } = useAnimate(refreshIconRef, { transform: "rotate(360deg)" }, 1000);
 watch(active, (isActive) => { isActive ? play() : finish(); });
 </script>

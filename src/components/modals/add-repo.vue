@@ -4,7 +4,7 @@
     Add GitHub repo
   </button>
   <teleport to="body">
-    <dialog ref="dialogRef" class="add-repo" :class="{ invalid: hasError }">
+    <dialog ref="dialogElement" class="add-repo" :class="{ invalid: hasError }">
       <header>
         Add GitHub repo
         <button type="button" name="close" class="icon" @click="close">
@@ -25,7 +25,7 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, useTemplateRef, watch } from "vue";
 import { IconPlus, IconX } from "@tabler/icons-vue";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
@@ -38,7 +38,8 @@ import UserRepos from "../header/user-repos.vue";
 defineOptions({ inheritAttrs: false });
 
 const { settings } = useSettingsStore();
-const { element: dialogRef, open, close } = useDialog();
+const dialogRef = useTemplateRef("dialogElement");
+const { open, close } = useDialog(dialogRef);
 
 // Form
 const tab = ref<"url" | "token">("url");

@@ -4,7 +4,7 @@
     About
   </button>
   <teleport to="body">
-    <dialog ref="dialogRef" class="about">
+    <dialog ref="dialogElement" class="about">
       <header>
         About
         <button type="button" name="close" class="icon" @click="close">
@@ -26,11 +26,13 @@
   </teleport>
 </template>
 <script setup lang="ts">
+import { useTemplateRef } from "vue";
 import { IconBrandGithub, IconTilde, IconX } from "@tabler/icons-vue";
 import dayjs from "dayjs";
 import { useDialog } from "@/composable/useDialog";
 
-const { element: dialogRef, open, close } = useDialog();
+const dialogRef = useTemplateRef("dialogElement");
+const { open, close } = useDialog(dialogRef);
 const commitDate = dayjs(import.meta.env.VITE_GIT_COMMIT_DATE).format("DD.MM.YY");
 </script>
 <style lang="scss">

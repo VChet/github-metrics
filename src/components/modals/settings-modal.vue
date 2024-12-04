@@ -4,7 +4,7 @@
     Settings
   </button>
   <teleport to="body">
-    <dialog ref="dialogRef" class="settings">
+    <dialog ref="dialogElement" class="settings">
       <header>
         Settings
         <button type="button" name="close" class="icon" @click="close">
@@ -65,7 +65,7 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { reactive, useTemplateRef, watch } from "vue";
 import { IconSettings, IconX } from "@tabler/icons-vue";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
@@ -82,7 +82,8 @@ const themes = [
 ] as const;
 
 const { settings, needRefresh, updateServiceWorker } = useSettingsStore();
-const { element: dialogRef, open, close } = useDialog();
+const dialogRef = useTemplateRef("dialogElement");
+const { open, close } = useDialog(dialogRef);
 const form = reactive(deepCopy(settings.value));
 
 async function getUsername(): Promise<void> {

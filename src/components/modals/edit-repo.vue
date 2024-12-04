@@ -3,7 +3,7 @@
     <icon-pencil title="edit repo" />
   </button>
   <teleport to="body">
-    <dialog v-if="form" ref="dialogRef" :class="{ invalid: hasError }">
+    <dialog v-if="form" ref="dialogElement" :class="{ invalid: hasError }">
       <header>
         Edit &laquo;{{ form.name }}&raquo;
         <button type="button" name="close" class="icon" @click="close">
@@ -15,7 +15,7 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, useTemplateRef, watch } from "vue";
 import { IconPencil, IconX } from "@tabler/icons-vue";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
@@ -25,7 +25,8 @@ import RepoForm from "../header/repo-form.vue";
 
 const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations"> }>();
 
-const { element: dialogRef, open, close } = useDialog();
+const dialogRef = useTemplateRef("dialogElement");
+const { open, close } = useDialog(dialogRef);
 
 // Form
 const form = ref(deepCopy(props.repo));
