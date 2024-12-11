@@ -13,6 +13,10 @@
         <icon-loader v-model="isUpdating" />
         Update
       </button>
+      <button v-if="needRefresh" type="button" @click.prevent="updateServiceWorker(true)">
+        <icon-progress-alert />
+        Update app
+      </button>
     </div>
     <div>
       <import-export :no-data="isEmpty" />
@@ -22,12 +26,13 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { IconActivityHeartbeat } from "@tabler/icons-vue";
+import { IconActivityHeartbeat, IconProgressAlert } from "@tabler/icons-vue";
 import { clearCachedRequests } from "@/service/memoize";
 import { fetchRateLimit, rateLimit } from "@/service/octokit";
 import { useEventsStore } from "@/store/events";
 import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useRepositoriesStore } from "@/store/repositories";
+import { useSettingsStore } from "@/store/settings";
 import IconLoader from "../icon-loader.vue";
 import AboutModal from "../modals/about-modal.vue";
 import AddRepo from "../modals/add-repo.vue";
@@ -38,6 +43,7 @@ import ImportExport from "./import-export.vue";
 const { isEmpty, updateRepositories } = useRepositoriesStore();
 const { updateLatestVersions } = useLatestVersionsStore();
 const { updateEvents } = useEventsStore();
+const { needRefresh, updateServiceWorker } = useSettingsStore();
 
 const isUpdating = ref<boolean>(false);
 async function update(): Promise<void> {

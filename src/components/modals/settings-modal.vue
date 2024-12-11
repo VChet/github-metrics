@@ -12,11 +12,6 @@
         </button>
       </header>
       <form class="settings__form" @submit.prevent="update">
-        <fieldset v-if="needRefresh">
-          <button type="button" @click.prevent="updateServiceWorker(true)">
-            Update app
-          </button>
-        </fieldset>
         <fieldset>
           <legend>Interface</legend>
           <label>
@@ -81,7 +76,7 @@ const themes = [
   { name: "red", value: "red" }
 ] as const;
 
-const { settings, needRefresh, updateServiceWorker } = useSettingsStore();
+const { settings } = useSettingsStore();
 const dialogRef = useTemplateRef("dialogElement");
 const { open, close } = useDialog(dialogRef);
 const form = reactive(deepCopy(settings.value));
