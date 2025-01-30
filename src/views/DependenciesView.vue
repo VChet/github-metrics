@@ -45,6 +45,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { IconX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
 import type { ReleaseType } from "semver";
@@ -60,7 +61,7 @@ const { hasDependencies, repos, dependencies } = useDependencyTable();
 const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
 
 const { latestVersions, updateCheck } = useLatestVersionsStore();
-updateCheck();
+onMounted(updateCheck);
 
 function versionDiffClass(packageName: string, version?: string): ReleaseType | null {
   if (!version) return null;

@@ -15,10 +15,11 @@
   </fieldset>
 </template>
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useEventsStore } from "@/store/events";
 
 const { events, amount, updateCheck } = useEventsStore();
-updateCheck();
+onMounted(updateCheck);
 </script>
 <style lang="scss">
 .user-feed {
