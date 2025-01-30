@@ -13,9 +13,8 @@ export default antfu({
     "antfu/consistent-list-newline": "off",
     "antfu/if-newline": "off",
     "curly": ["error", "multi-line"],
-    "import/no-useless-path-segments": ["error", {
-      noUselessIndex: true
-    }],
+    "import/consistent-type-specifier-style": "off",
+    "import/no-useless-path-segments": ["error", { noUselessIndex: true }],
     "max-lines": ["warn", { max: 1000 }],
     "max-params": ["error", { max: 6 }],
     "no-await-in-loop": "error",
@@ -100,6 +99,7 @@ export default antfu({
     "ts/array-type": "error",
     "ts/consistent-indexed-object-style": "error",
     "ts/consistent-type-definitions": "off",
+    "ts/member-ordering": ["error", { default: { optionalityOrder: "required-first" } }],
     "ts/no-shadow": "error",
     "unicorn/prefer-includes": "off",
     "vue/attribute-hyphenation": ["error", "always"],

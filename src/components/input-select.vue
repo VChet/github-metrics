@@ -36,10 +36,10 @@ const model = useVModel(props, "modelValue", emit, { defaultValue: "" });
     color: var(--base);
     appearance: none;
     cursor: pointer;
+    outline: none;
     background-color: transparent;
     border: none;
     border-bottom: 1px solid var(--base-dimmed);
-    outline: none;
     &:hover,
     &:focus-visible {
       outline: 1px solid var(--highlight);

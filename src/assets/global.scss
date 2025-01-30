@@ -45,15 +45,15 @@
   background: var(--accent);
 }
 html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  scrollbar-gutter: stable;
   font-family: "Exo 2", "Open Sans", sans-serif;
   font-size: 16px;
   font-weight: normal;
   font-variant-numeric: tabular-nums;
   color: var(--base);
-  scrollbar-gutter: stable;
   background-color: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   *.disable-scroll {
     overflow-y: hidden;
   }
@@ -147,10 +147,10 @@ button {
   color: inherit;
   white-space: nowrap;
   cursor: pointer;
+  outline: none;
   background: none;
   border: 1px solid var(--base);
   border-radius: var(--radius);
-  outline: none;
   transition: transform .3s;
   &:hover,
   &:focus-visible {
@@ -178,10 +178,10 @@ input {
   padding: .5rem;
   color: inherit;
   caret-color: var(--base);
+  outline: none;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--base-dimmed);
-  outline: none;
   &::placeholder {
     color: inherit;
     opacity: .6;
@@ -200,10 +200,10 @@ textarea {
   color: inherit;
   caret-color: var(--base);
   resize: vertical;
+  outline: none;
   background: transparent;
   border: 1px solid var(--base-dimmed);
   border-radius: var(--radius);
-  outline: none;
   &::placeholder {
     color: inherit;
     opacity: .6;
