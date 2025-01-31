@@ -1,6 +1,5 @@
 <template>
-  <fieldset class="user-feed">
-    <legend>Recent events</legend>
+  <section class="user-feed">
     <span v-if="!amount">
       No recent events
     </span>
@@ -12,7 +11,7 @@
         <a :href="`https://github.com/${repo}`">{{ repo }}</a>
       </li>
     </ul>
-  </fieldset>
+  </section>
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
@@ -23,11 +22,14 @@ onMounted(updateCheck);
 </script>
 <style lang="scss">
 .user-feed {
-  padding: 1rem;
-  border: 1px solid var(--base-dimmed);
-  border-radius: var(--radius);
-  li a {
-    font-weight: bold;
+  ul {
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+    li a {
+      font-weight: bold;
+    }
   }
 }
 </style>
