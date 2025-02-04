@@ -14,34 +14,36 @@
         </button>
       </div>
     </fieldset>
-    <table class="dependencies-table">
-      <thead>
-        <tr>
-          <th />
-          <th v-for="repo in repos" :key="repo.id">
-            <a :href="repo.html_url" target="_blank">
-              {{ settings.displayOwner ? repo.full_name : repo.name }}
-            </a>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="dep in dependencies.filter((dep) => !excludedDependencies.has(dep))" :key="dep">
-          <td :title="dep" :style="{ color: composeHashColorFromString(dep) }" class="chip">
-            <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
-              <icon-x />
-            </button>
-            <a :href="`https://npmjs.org/${dep}`" target="_blank" class="text-truncate">
-              {{ dep }}
-              <div>{{ latestVersions[dep] ?? '???' }}</div>
-            </a>
-          </td>
-          <td v-for="repo in repos" :key="repo.id" :class="versionDiffClass(dep, repo.dependencies![dep])">
-            {{ repo.dependencies![dep] }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="dependencies-table-wrapper">
+      <table class="dependencies-table">
+        <thead>
+          <tr>
+            <th />
+            <th v-for="repo in repos" :key="repo.id">
+              <a :href="repo.html_url" target="_blank">
+                {{ settings.displayOwner ? repo.full_name : repo.name }}
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="dep in dependencies.filter((dep) => !excludedDependencies.has(dep))" :key="dep">
+            <td :title="dep" :style="{ color: composeHashColorFromString(dep) }" class="chip">
+              <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
+                <icon-x />
+              </button>
+              <a :href="`https://npmjs.org/${dep}`" target="_blank" class="text-truncate">
+                {{ dep }}
+                <div>{{ latestVersions[dep] ?? '???' }}</div>
+              </a>
+            </td>
+            <td v-for="repo in repos" :key="repo.id" :class="versionDiffClass(dep, repo.dependencies![dep])">
+              {{ repo.dependencies![dep] }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -74,7 +76,7 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
 </script>
 <style lang="scss">
 .dependencies {
-  overflow: auto;
+  overflow: hidden;
   fieldset {
     margin-bottom: 1rem;
   }
@@ -89,6 +91,9 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
         box-shadow: 0 0.25rem 0 -0.125rem currentcolor;
       }
     }
+  }
+  &-table-wrapper {
+    overflow: auto;
   }
   &-table {
     width: 100%;
