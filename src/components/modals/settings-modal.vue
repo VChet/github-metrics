@@ -41,7 +41,7 @@
           </ol>
         </fieldset>
         <fieldset>
-          <legend>User Feed</legend>
+          <legend>Feed</legend>
           <label for="username">GitHub Username</label>
           <input
             id="username"

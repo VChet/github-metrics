@@ -21,7 +21,7 @@ import MainHeader from "@/components/header/main-header.vue";
 import MainPlaceholder from "@/components/main-placeholder.vue";
 import TabSelector from "@/components/tab-selector.vue";
 
-type Tab = "Repositories" | "Dependencies" | "User Feed";
+type Tab = "Repositories" | "Dependencies" | "Feed";
 
 const router = useRouter();
 const pages = computed(() => router.currentRoute.value.matched[0].children.map(({ name }) => name));
@@ -35,7 +35,7 @@ const tabs = computed(() => {
     { value: "Repositories", text: "Repositories" },
     { value: "Dependencies", text: "Dependencies" }
   ];
-  if (isFeedAvailable.value) entries.push({ value: "User Feed", text: `User Feed (${amount.value})` });
+  if (isFeedAvailable.value) entries.push({ value: "Feed", text: `Feed (${amount.value})` });
   return entries;
 });
 
