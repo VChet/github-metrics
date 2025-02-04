@@ -88,7 +88,7 @@ export async function fetchCurrentUserRepos(): Promise<UserRepositoriesResponse 
   return data;
 }
 
-export async function fetchCurrentUserReceivedEvents(page: number = 0): Promise<{ data: UserReceivedEventsResponse, hasNextPage: boolean } | void> {
+export async function fetchCurrentUserReceivedEvents(page = 1): Promise<{ data: UserReceivedEventsResponse, hasNextPage: boolean } | void> {
   if (!settings.value.authToken) throw new Error("empty authToken");
   if (!settings.value.username) throw new Error("empty username");
   const { data, headers } = await fetch(`GET /users/${settings.value.username}/received_events`, { per_page: 100, page });

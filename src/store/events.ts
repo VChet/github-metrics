@@ -7,7 +7,7 @@ import type { UserReceivedEventsResponse } from "@/types/repo";
 
 type RawEvent = UserReceivedEventsResponse[0];
 
-const TARGET_EVENTS = ["WatchEvent", "ForkEvent"];
+const TARGET_EVENTS = ["WatchEvent", "ForkEvent"] as const;
 
 function getActionString(action: RawEvent["type"]): string {
   switch (action) {
@@ -64,10 +64,16 @@ export function useEventsStore() {
     return acc;
   }
 
+  async function fetchAllEvents(page: number, accumulatedEvents: RawEvent[] = []): Promise<RawEvent[]> {
+    const response = await fetchCurrentUserReceivedEvents(page);
+    const currentPageEvents = response?.data ?? [];
+    if (!currentPageEvents.length) return accumulatedEvents;
+    return fetchAllEvents(page + 1, [...accumulatedEvents, ...currentPageEvents]);
+  }
+
   async function updateEvents(): Promise<void> {
     try {
-      const response = await fetchCurrentUserReceivedEvents();
-      events.value = response?.data.reduce(formatEvents, []) ?? [];
+      events.value = (await fetchAllEvents(1)).reduce(formatEvents, []);
     } catch (error) {
       console.error(error);
     }
