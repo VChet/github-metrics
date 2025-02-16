@@ -15,13 +15,6 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url))
     }
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: "modern"
-      }
-    }
-  },
   define: {
     "import.meta.env.VITE_GIT_COMMIT_DATE": JSON.stringify(commitDate)
   }
