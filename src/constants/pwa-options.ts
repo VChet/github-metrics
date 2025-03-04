@@ -7,8 +7,8 @@ const manifest: Partial<ManifestOptions> = {
   description: "Discover comprehensive insights into your GitHub repositories' metrics. Track stars, forks, and more, all conveniently stored locally",
   dir: "ltr",
   orientation: "portrait",
-  theme_color: "#0d1117",
-  background_color: "#0d1117",
+  theme_color: "#19191a",
+  background_color: "#19191a",
   icons: [
     { src: "icon-192x192.png", sizes: "192x192", type: "image/png" },
     { src: "icon-512x512.png", sizes: "512x512", type: "image/png" },
