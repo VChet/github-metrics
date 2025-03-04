@@ -9,7 +9,9 @@ Track stars, forks, and more, all conveniently stored locally.
 
 ## Preview
 
-![Preview](./meta/preview.png)
+![Repositories](./meta/repositories.png)
+![Dependencies](./meta/dependencies.png)
+![Feed](./meta/feed.png)
 
 ## Development
 
