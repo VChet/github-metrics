@@ -1,2 +1,1 @@
 reject:
-  - typescript # awaits @typescript-eslint support
