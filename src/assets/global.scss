@@ -119,7 +119,7 @@ a {
   text-decoration: none;
   outline: none;
   &:has(svg) {
-    display: flex;
+    display: inline-flex;
     gap: 0.125rem;
     align-items: center;
     min-width: 0;
@@ -267,7 +267,8 @@ dialog {
     display: flex;
     align-items: baseline;
     padding: 1rem 1.5rem;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: bold;
     border-bottom: 1px solid var(--base-dimmed);
     button[name="close"] {
       margin-left: auto;
