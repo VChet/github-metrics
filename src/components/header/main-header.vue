@@ -27,8 +27,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { IconActivityHeartbeat, IconProgressAlert } from "@tabler/icons-vue";
-import { clearCachedRequests } from "@/service/memoize";
-import { fetchRateLimit, rateLimit } from "@/service/octokit";
+import { fetchRateLimit, fetchRepositoryFiles, rateLimit } from "@/service/octokit";
 import { useEventsStore } from "@/store/events";
 import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useRepositoriesStore } from "@/store/repositories";
@@ -49,7 +48,7 @@ const isUpdating = ref<boolean>(false);
 async function update(): Promise<void> {
   try {
     isUpdating.value = true;
-    clearCachedRequests();
+    fetchRepositoryFiles.clear();
     await Promise.all([updateRepositories(), updateLatestVersions(), updateEvents()]);
   } finally {
     isUpdating.value = false;

@@ -9,6 +9,7 @@ const SORT_IMPORT_CUSTOM_GROUP = {
 
 export default antfu({
   toml: false,
+  isInEditor: false,
   rules: {
     "antfu/consistent-list-newline": "off",
     "antfu/if-newline": "off",

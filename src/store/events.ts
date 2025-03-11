@@ -5,7 +5,7 @@ import { fetchCurrentUserReceivedEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
 import type { UserReceivedEventsResponse } from "@/types/repo";
 
-type RawEvent = UserReceivedEventsResponse[0];
+type RawEvent = UserReceivedEventsResponse["data"][number];
 
 const TARGET_EVENTS = ["WatchEvent", "ForkEvent"] as const;
 

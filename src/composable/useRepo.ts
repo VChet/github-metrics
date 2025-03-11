@@ -1,6 +1,6 @@
 import { computed, type Ref } from "vue";
-import type { PackageJson } from "type-fest";
-import type { RepositoryResponse } from "@/types/repo";
+import type { PackageJson, Simplify } from "type-fest";
+import type { RepoResponse } from "@/types/repo";
 
 interface Integrations {
   uptimerobotKey?: string
@@ -11,10 +11,10 @@ interface Integrations {
   packageManager?: string
 }
 
-export interface Repository extends RepositoryResponse {
+export type Repository = Simplify<RepoResponse["data"] & {
   dependencies: NonNullable<PackageJson.Dependency> | null
   integrations: Integrations
-}
+}>;
 
 export function useRepository(data: Ref<Repository>) {
   const hostingName = computed<string | null>(() => {

@@ -1,3 +1,5 @@
+import mimeType from "mime-types";
+
 export function readFile(file: File): Promise<string | ArrayBuffer> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -8,16 +10,12 @@ export function readFile(file: File): Promise<string | ArrayBuffer> {
   });
 }
 
-export function downloadFile(
-  data: BlobPart,
-  fileName: HTMLAnchorElement["download"],
-  type: BlobPropertyBag["type"] = "text/json"
-): void {
-  const blob = new Blob([data], { type });
-  const element = window.document.createElement("a");
-  element.href = window.URL.createObjectURL(blob);
-  element.download = fileName;
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
+export function downloadFile(data: BlobPart, fileName: File["name"], type: File["type"]): void {
+  const blob = data instanceof Blob ? data : new Blob([data], { type });
+  const link = window.document.createElement("a");
+  const fileExtension = mimeType.extension(type);
+  link.href = window.URL.createObjectURL(blob);
+  link.download = `${fileName}.${fileExtension}`;
+  link.click();
+  link.remove();
 }

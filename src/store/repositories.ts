@@ -1,7 +1,7 @@
 import { computed } from "vue";
-import { useLocalStorage } from "@vueuse/core";
+import { isObject, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
-import { fetchRepo, fetchRepositoryContents, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
+import { fetchRepo, fetchRepositoryFiles, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
 
 interface RepositoriesStore {
@@ -9,7 +9,10 @@ interface RepositoriesStore {
   data: Repository[]
 };
 
-type ExportedRepository = Pick<Repository, "id" | "full_name" | "integrations">;
+export type ExportedRepository = Pick<Repository, "id" | "full_name" | "integrations">;
+export function isExportedRepository(data: unknown): data is ExportedRepository {
+  return isObject(data) && "id" in data && "full_name" in data && "integrations" in data;
+}
 
 const DEFAULT_STORE: RepositoriesStore = {
   lastUpdate: dayjs().toISOString(),
@@ -22,7 +25,7 @@ async function parseWorkflows(fullName: Repository["full_name"]): Promise<Reposi
   return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
 }
 async function parsePackageManager(fullName: Repository["full_name"]): Promise<"npm" | "pnpm" | "yarn" | undefined> {
-  const files = await fetchRepositoryContents(fullName);
+  const files = await fetchRepositoryFiles(fullName);
   if (files.includes("package-lock.json")) return "npm";
   else if (files.includes("pnpm-lock.yaml")) return "pnpm";
   else if (files.includes("yarn.lock")) return "yarn";
@@ -81,7 +84,7 @@ export function useRepositoriesStore() {
     lastUpdate.value = dayjs().toISOString();
   }
 
-  async function importRepositories(payload: Repository[]): Promise<void> {
+  async function importRepositories(payload: ExportedRepository[]): Promise<void> {
     const fetchPromises = payload.map(({ id, full_name, integrations }) => isRepoExists(id) ?
       updateRepository(full_name, integrations) :
       addRepository(full_name, integrations)

@@ -16,7 +16,7 @@ import { IconDownload, IconUpload } from "@tabler/icons-vue";
 import dayjs from "dayjs";
 import { downloadFile, readFile } from "@/helpers/file";
 import { isValidJSON } from "@/helpers/validate";
-import { useRepositoriesStore } from "@/store/repositories";
+import { isExportedRepository, useRepositoriesStore, type ExportedRepository } from "@/store/repositories";
 import IconLoader from "../icon-loader.vue";
 
 defineProps<{ noData: boolean }>();
@@ -28,9 +28,18 @@ const isImporting = ref<boolean>(false);
 whenever(files, async ({ 0: payload }) => {
   const content = await readFile(payload).then(String);
   if (!isValidJSON(content)) throw new Error("Invalid JSON");
+
+  const parsedData = JSON.parse(content);
+  if (!Array.isArray(parsedData)) throw new Error("Invalid import data");
+  const importData = parsedData.reduce((acc: ExportedRepository[], repo) => {
+    if (isExportedRepository(repo)) acc.push(repo);
+    return acc;
+  }, []);
+  if (!importData.length) throw new Error("Invalid import data");
+
   try {
     isImporting.value = true;
-    await importRepositories(JSON.parse(content));
+    await importRepositories(importData);
   } finally {
     isImporting.value = false;
   }

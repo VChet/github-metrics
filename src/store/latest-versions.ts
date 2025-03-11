@@ -15,7 +15,7 @@ const DEFAULT_STORE: LatestVersionsStore = {
 
 async function fetchLatestVersion(dependency: string) {
   const response = await fetch(`https://registry.npmjs.org/${dependency}/latest`);
-  const data: PackageJson = await response.json();
+  const data = await response.json() as PackageJson;
   return data.version;
 };
 

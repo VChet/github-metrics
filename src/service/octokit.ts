@@ -1,15 +1,17 @@
 import { ref } from "vue";
+import { useMemoize } from "@vueuse/core";
 import { Octokit } from "@octokit/core";
 import { StatusCodes } from "http-status-codes";
 import type { RequestError, RequestParameters, Route } from "@octokit/types";
 import type { PackageJson } from "type-fest";
 import { useSettingsStore } from "@/store/settings";
-import { repositoryContents } from "./memoize";
 import type {
-  RepositoryResponse,
-  User,
+  RateLimitResponse,
+  RepoContentsResponse,
+  RepoResponse,
   UserReceivedEventsResponse,
-  UserRepositoriesResponse,
+  UserReposResponse,
+  UserResponse,
   WorkflowsResponse
 } from "@/types/repo";
 
@@ -38,27 +40,43 @@ export function fetch(url: Route, options: RequestParameters = {}): Promise<any>
   });
 }
 
-export async function fetchRateLimit(): Promise<void> {
-  const response = await fetch("GET /rate_limit");
-  rateLimit.value = response.data.rate.remaining.toString() ?? "-";
+export async function fetchRateLimit() {
+  const { data } = await fetch("GET /rate_limit") as RateLimitResponse;
+  rateLimit.value = data.rate.remaining.toString() ?? "-";
 }
 
-export async function fetchRepo(fullName: string): Promise<RepositoryResponse | void> {
-  const { data } = await fetch(`GET /repos/${fullName}`);
+export async function fetchRepo(fullName: string) {
+  const { data } = await fetch(`GET /repos/${fullName}`) as RepoResponse;
   return data;
 }
 
-export function fetchRepositoryContents(fullName: string): Promise<unknown[]> {
-  return repositoryContents(fullName);
+async function fetchRepositoryContents(fullName: string) {
+  const { data } = await fetch(`GET /repos/${fullName}/contents`) as RepoContentsResponse;
+  return data;
+}
+
+export const fetchRepositoryFiles = useMemoize(async (fullName: string) => {
+  try {
+    const files = await fetchRepositoryContents(fullName);
+    return Array.isArray(files) ? files.map(({ name }) => name) : [];
+  } catch (error: unknown) {
+    if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
+    return [];
+  }
+});
+
+async function fetchRepositoryFile(fullName: string, fileName: string) {
+  const { data } = await fetch(`GET /repos/${fullName}/contents/${fileName}`) as RepoContentsResponse;
+  if ("content" in data) return atob(data.content);
+  throw new Error("Invalid file");
 }
 
 export async function fetchRepositoryPackages(fullName: string): Promise<PackageJson.Dependency | null> {
   try {
-    const hasPackage: boolean = await repositoryContents(fullName).then((files) => files.includes("package.json"));
-    if (!hasPackage) { return null; }
-    const { data } = await fetch(`GET /repos/${fullName}/contents/package.json`);
-    if (!("content" in data)) return null;
-    const content: PackageJson = JSON.parse(atob(data.content));
+    const hasPackage: boolean = await fetchRepositoryFiles(fullName).then((files) => files.includes("package.json"));
+    if (!hasPackage) return null;
+    const packageContents = await fetchRepositoryFile(fullName, "package.json");
+    const content = JSON.parse(packageContents) as PackageJson;
     return { ...content.dependencies, ...content.devDependencies };
   } catch (error: unknown) {
     if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
@@ -66,9 +84,9 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Package
   }
 }
 
-export async function fetchRepositoryWorkflows(fullName: string): Promise<WorkflowsResponse | null> {
+export async function fetchRepositoryWorkflows(fullName: string) {
   try {
-    const { data } = await fetch(`GET /repos/${fullName}/actions/workflows`);
+    const { data } = await fetch(`GET /repos/${fullName}/actions/workflows`) as WorkflowsResponse;
     return data;
   } catch (error: unknown) {
     if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
@@ -76,22 +94,22 @@ export async function fetchRepositoryWorkflows(fullName: string): Promise<Workfl
   }
 }
 
-export async function fetchCurrentUser(): Promise<User | void> {
+export async function fetchCurrentUser() {
   if (!settings.value.authToken) return console.warn("empty authToken");
-  const { data } = await fetch("GET /user");
+  const { data } = await fetch("GET /user") as UserResponse;
   return data;
 }
 
-export async function fetchCurrentUserRepos(): Promise<UserRepositoriesResponse | void> {
+export async function fetchCurrentUserRepos() {
   if (!settings.value.authToken) return console.warn("empty authToken");
-  const { data } = await fetch("GET /user/repos", { affiliation: "owner" });
+  const { data } = await fetch("GET /user/repos", { affiliation: "owner" }) as UserReposResponse;
   return data;
 }
 
-export async function fetchCurrentUserReceivedEvents(page = 1): Promise<{ data: UserReceivedEventsResponse, hasNextPage: boolean } | void> {
+export async function fetchCurrentUserReceivedEvents(page = 1) {
   if (!settings.value.authToken) throw new Error("empty authToken");
   if (!settings.value.username) throw new Error("empty username");
-  const { data, headers } = await fetch(`GET /users/${settings.value.username}/received_events`, { per_page: 100, page });
+  const { data, headers } = await fetch(`GET /users/${settings.value.username}/received_events`, { per_page: 100, page }) as UserReceivedEventsResponse;
   if (!Array.isArray(data)) throw new Error("Error fetching user received events", data);
 
   return {

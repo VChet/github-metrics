@@ -59,7 +59,9 @@ import { fetchCurrentUserRepos } from "@/service/octokit";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
-import type { UserRepositoriesResponse } from "@/types/repo";
+import type { UserReposResponse } from "@/types/repo";
+
+type RawRepo = UserReposResponse["data"][number];
 
 defineProps<{ progress: { current: number, total: number } }>();
 defineEmits<{ submit: [repos: Repository[]] }>();
@@ -67,7 +69,7 @@ defineEmits<{ submit: [repos: Repository[]] }>();
 const { repositories } = useRepositoriesStore();
 const { settings } = useSettingsStore();
 
-const userRepos = ref<UserRepositoriesResponse>([]);
+const userRepos = ref<RawRepo[]>([]);
 const isLoading = ref(false);
 onBeforeMount(async () => {
   if (settings.value.authToken) {

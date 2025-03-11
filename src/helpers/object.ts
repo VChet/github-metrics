@@ -21,5 +21,5 @@ export function deepEqual<T extends Record<string, any>>(a: T | null, b: T | nul
 }
 
 export function deepCopy<T>(object: T): WritableDeep<T> {
-  return JSON.parse(JSON.stringify(object));
+  return JSON.parse(JSON.stringify(object)) as WritableDeep<T>;
 }
