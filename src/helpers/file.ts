@@ -1,4 +1,4 @@
-import mimeType from "mime-types";
+import { mimeType } from "mime-type/with-db";
 
 export function readFile(file: File): Promise<string | ArrayBuffer> {
   return new Promise((resolve, reject) => {
