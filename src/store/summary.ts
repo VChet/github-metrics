@@ -1,5 +1,5 @@
 import { computed, watch } from "vue";
-import { useArrayReduce, useLocalStorage } from "@vueuse/core";
+import { createSharedComposable, useArrayReduce, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { deepCopy, deepEqual } from "@/helpers/object";
 import { useRepositoriesStore } from "./repositories";
@@ -22,7 +22,7 @@ const DEFAULT_STORE: SummaryStore = {
   lastUpdate: dayjs().toISOString()
 };
 
-export function useSummaryStorage() {
+export const useSummaryStorage = createSharedComposable(() => {
   const summary = useLocalStorage<SummaryStore>("summary", DEFAULT_STORE, { mergeDefaults: true });
 
   const diff = computed(() => ({
@@ -57,4 +57,4 @@ export function useSummaryStorage() {
     repoAmount: computed(() => summary.value.current.repos),
     summary: computed(() => summary.value.current)
   };
-}
+});

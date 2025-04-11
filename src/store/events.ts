@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { useLocalStorage } from "@vueuse/core";
+import { createSharedComposable, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { fetchCurrentUserReceivedEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
@@ -35,7 +35,7 @@ const DEFAULT_STORE: EventsStore = {
   data: []
 };
 
-export function useEventsStore() {
+export const useEventsStore = createSharedComposable(() => {
   const storage = useLocalStorage<EventsStore>("events", DEFAULT_STORE, { mergeDefaults: true });
   const events = computed({
     get: () => storage.value.data,
@@ -91,4 +91,4 @@ export function useEventsStore() {
     updateEvents,
     updateCheck
   };
-}
+});
