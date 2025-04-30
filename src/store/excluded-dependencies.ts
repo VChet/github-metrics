@@ -13,8 +13,13 @@ export const useExcludedDependenciesStore = createSharedComposable(() => {
     excludedDependencies.value.delete(dep);
   }
 
+  function importExcludedDependencies(deps: string[]): void {
+    excludedDependencies.value = new Set(deps);
+  }
+
   return {
     excludedDependencies,
+    importExcludedDependencies,
     hideDependency,
     showDependency
   };

@@ -18,10 +18,7 @@
         Update app
       </button>
     </div>
-    <div>
-      <import-export :no-data="isEmpty" />
-      <add-repo class="main-header__block-button" />
-    </div>
+    <add-repo class="main-header__block-button" />
   </header>
 </template>
 <script setup lang="ts">
@@ -37,7 +34,6 @@ import AboutModal from "../modals/about-modal.vue";
 import AddRepo from "../modals/add-repo.vue";
 import SettingsModal from "../modals/settings-modal.vue";
 import HeaderSummary from "./header-summary.vue";
-import ImportExport from "./import-export.vue";
 
 const { isEmpty, updateRepositories } = useRepositoriesStore();
 const { updateLatestVersions } = useLatestVersionsStore();

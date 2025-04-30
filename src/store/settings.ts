@@ -2,7 +2,7 @@ import { createSharedComposable, useLocalStorage } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
 type Theme = "github" | "blue" | "beige" | "green" | "red";
-interface SettingsStore {
+export interface SettingsStore {
   authToken: string
   username: string
   displayOwner: boolean
@@ -23,9 +23,14 @@ export const useSettingsStore = createSharedComposable(() => {
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({ immediate: true });
 
+  function importSettings(newSettings: Partial<SettingsStore>): void {
+    Object.assign(settings.value, newSettings);
+  }
+
   return {
     settings,
     needRefresh,
-    updateServiceWorker
+    updateServiceWorker,
+    importSettings
   };
 });

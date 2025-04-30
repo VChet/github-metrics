@@ -260,8 +260,8 @@ dialog {
   &.invalid {
     border-color: var(--negative);
   }
-  > * {
-    padding: 1.5rem;
+  > *:not(header) {
+    margin: 1.5rem;
   }
   > header {
     display: flex;

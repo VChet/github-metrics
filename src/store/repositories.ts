@@ -1,6 +1,7 @@
 import { computed } from "vue";
-import { createSharedComposable, isObject, useLocalStorage } from "@vueuse/core";
+import { createSharedComposable, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
+import { isExportedRepository, type ExportedRepository } from "@/helpers/export";
 import { fetchRepo, fetchRepositoryFiles, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
 
@@ -8,11 +9,6 @@ interface RepositoriesStore {
   lastUpdate: string
   data: Repository[]
 };
-
-export type ExportedRepository = Pick<Repository, "id" | "full_name" | "integrations">;
-export function isExportedRepository(data: unknown): data is ExportedRepository {
-  return isObject(data) && "id" in data && "full_name" in data && "integrations" in data;
-}
 
 const DEFAULT_STORE: RepositoriesStore = {
   lastUpdate: dayjs().toISOString(),
@@ -49,7 +45,10 @@ export const useRepositoriesStore = createSharedComposable(() => {
     return repositories.value.some(({ id: repoId }) => repoId === id);
   }
 
-  async function addRepository(fullName: Repository["full_name"], integrations: Repository["integrations"] = {}): Promise<void> {
+  async function addRepository(
+    fullName: Repository["full_name"],
+    integrations: Repository["integrations"] = {}
+  ): Promise<void> {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
     if (isRepoExists(repo.id)) return updateRepository(fullName, integrations);
@@ -65,7 +64,10 @@ export const useRepositoriesStore = createSharedComposable(() => {
     repositories.value = repositories.value.filter((repo) => repo.id !== id);
   }
 
-  async function updateRepository(fullName: Repository["full_name"], integrations: Repository["integrations"]): Promise<void> {
+  async function updateRepository(
+    fullName: Repository["full_name"],
+    integrations: Repository["integrations"]
+  ): Promise<void> {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
 
@@ -85,17 +87,20 @@ export const useRepositoriesStore = createSharedComposable(() => {
   }
 
   async function importRepositories(payload: ExportedRepository[]): Promise<void> {
-    const fetchPromises = payload.map(({ id, full_name, integrations }) => isRepoExists(id) ?
-      updateRepository(full_name, integrations) :
-      addRepository(full_name, integrations)
-    );
+    const fetchPromises = payload.reduce((acc: Promise<void>[], repo) => {
+      if (isExportedRepository(repo)) {
+        const { id, full_name, integrations } = repo;
+        const request = isRepoExists(id) ?
+          updateRepository(full_name, integrations) :
+          addRepository(full_name, integrations);
+        acc.push(request);
+      }
+      return acc;
+    }, []);
     await Promise.all(fetchPromises);
   }
-  function exportRepositories(): string {
-    const repos: ExportedRepository[] = repositories.value.map(
-      ({ id, full_name, integrations }) => ({ id, full_name, integrations })
-    );
-    return JSON.stringify(repos, null, 2);
+  function exportRepositories(): ExportedRepository[] {
+    return repositories.value.map(({ id, full_name, integrations }) => ({ id, full_name, integrations }));
   }
 
   function updateCheck() {

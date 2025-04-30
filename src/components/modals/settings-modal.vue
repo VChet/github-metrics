@@ -11,6 +11,7 @@
           <icon-x />
         </button>
       </header>
+      <import-export />
       <form class="settings__form" @submit.prevent="update">
         <fieldset>
           <legend>Interface</legend>
@@ -66,6 +67,7 @@ import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
 import { fetchCurrentUser, setAuthToken } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
+import ImportExport from "@/components/import-export.vue";
 import InputSelect from "@/components/input-select.vue";
 
 const themes = [
@@ -80,6 +82,7 @@ const { settings } = useSettingsStore();
 const dialogRef = useTemplateRef("dialogElement");
 const { open, close } = useDialog(dialogRef);
 const form = reactive(deepCopy(settings.value));
+watch(settings, (value) => { Object.assign(form, value); }, { deep: true });
 
 async function getUsername(): Promise<void> {
   const user = await fetchCurrentUser();
