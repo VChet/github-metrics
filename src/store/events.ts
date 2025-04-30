@@ -65,6 +65,7 @@ export const useEventsStore = createSharedComposable(() => {
   }
 
   async function fetchAllEvents(page: number, accumulatedEvents: RawEvent[] = []): Promise<RawEvent[]> {
+    if (page >= 4) return accumulatedEvents; // Pagination is limited by API
     const response = await fetchCurrentUserReceivedEvents(page);
     const currentPageEvents = response?.data ?? [];
     if (!currentPageEvents.length) return accumulatedEvents;
