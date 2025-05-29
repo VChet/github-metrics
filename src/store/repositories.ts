@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createSharedComposable, useLocalStorage } from "@vueuse/core";
+import { createSharedComposable, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import { isExportedRepository, type ExportedRepository } from "@/helpers/export";
 import { fetchRepo, fetchRepositoryFiles, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
@@ -107,6 +107,7 @@ export const useRepositoriesStore = createSharedComposable(() => {
     const isUpdateNeeded = !lastUpdate.value || dayjs().diff(dayjs(lastUpdate.value), "hours") >= 1;
     if (isUpdateNeeded) return updateRepositories();
   }
+  whenever(() => storage.value.lastUpdate, () => updateCheck, { immediate: true });
 
   return {
     repositories,
@@ -116,7 +117,6 @@ export const useRepositoriesStore = createSharedComposable(() => {
     updateRepository,
     updateRepositories,
     importRepositories,
-    exportRepositories,
-    updateCheck
+    exportRepositories
   };
 });

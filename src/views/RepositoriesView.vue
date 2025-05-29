@@ -30,7 +30,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import { refDebounced } from "@vueuse/core";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
@@ -39,8 +39,7 @@ import { useSettingsStore } from "@/store/settings";
 import RepoItem from "@/components/repo-item.vue";
 
 const { settings } = useSettingsStore();
-const { repositories, deleteRepository, updateCheck } = useRepositoriesStore();
-onMounted(updateCheck);
+const { repositories, deleteRepository } = useRepositoriesStore();
 
 const searchQueryInput = ref("");
 const searchQuery = refDebounced(searchQueryInput, 300);

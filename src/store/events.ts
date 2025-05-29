@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createSharedComposable, useLocalStorage } from "@vueuse/core";
+import { createSharedComposable, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import { fetchCurrentUserReceivedEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
@@ -84,12 +84,12 @@ export const useEventsStore = createSharedComposable(() => {
     const isUpdateNeeded = !lastUpdate.value || dayjs().diff(dayjs(lastUpdate.value), "hours") >= 1;
     if (isUpdateNeeded) return updateEvents();
   }
+  whenever(() => storage.value.lastUpdate, () => updateCheck, { immediate: true });
 
   return {
     events,
     amount,
     isFeedAvailable,
-    updateEvents,
-    updateCheck
+    updateEvents
   };
 });

@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createSharedComposable, useLocalStorage } from "@vueuse/core";
+import { createSharedComposable, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import type { PackageJson } from "type-fest";
 import { useDependencyTable } from "@/composable/useDependencyTable";
@@ -45,10 +45,10 @@ export const useLatestVersionsStore = createSharedComposable(() => {
     const isUpdateNeeded = isEmpty.value || !lastUpdate.value || dayjs().diff(dayjs(lastUpdate.value), "hours") >= 1;
     if (isUpdateNeeded) return updateLatestVersions();
   }
+  whenever(() => storage.value.lastUpdate, () => updateCheck, { immediate: true });
 
   return {
     latestVersions,
-    updateLatestVersions,
-    updateCheck
+    updateLatestVersions
   };
 });

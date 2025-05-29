@@ -14,11 +14,9 @@
   </section>
 </template>
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useEventsStore } from "@/store/events";
 
-const { events, amount, updateCheck } = useEventsStore();
-onMounted(updateCheck);
+const { events, amount } = useEventsStore();
 </script>
 <style lang="scss">
 .user-feed {
