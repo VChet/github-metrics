@@ -45,7 +45,7 @@ export const useLatestVersionsStore = createSharedComposable(() => {
     const isUpdateNeeded = isEmpty.value || !lastUpdate.value || dayjs().diff(dayjs(lastUpdate.value), "hours") >= 1;
     if (isUpdateNeeded) return updateLatestVersions();
   }
-  whenever(() => storage.value.lastUpdate, () => updateCheck, { immediate: true });
+  whenever(() => storage.value.lastUpdate, updateCheck, { immediate: true });
 
   return {
     latestVersions,
