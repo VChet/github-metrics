@@ -41,7 +41,8 @@ export function useRepository(data: Ref<Repository>) {
   const workflowBadge = computed<string | null>(() => data.value.integrations.workflowBadge ?? null);
   const packageManager = computed<string | null>(() => data.value.integrations.packageManager ?? null);
   const license = computed<string | null>(() => {
-    if (!data.value.license || data.value.license.spdx_id === "NOASSERTION") return null;
+    if (!data.value.license) return null;
+    if (data.value.license.spdx_id === "NOASSERTION") { return data.value.license.name; }
     return data.value.license.spdx_id;
   });
 
