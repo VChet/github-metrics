@@ -52,11 +52,34 @@ export function useRepository(data: Ref<Repository>) {
 
   const bundler = computed<string | null>(() => {
     if (!data.value.dependencies) { return null; }
-    return Object.keys(data.value.dependencies).find((dep) => ["vite", "rollup", "webpack"].includes(dep)) ?? null;
+    return Object.keys(data.value.dependencies).find((dep) => [
+      "bun",
+      "esbuild",
+      "parcel",
+      "rolldown",
+      "rollup",
+      "rspack",
+      "tsdown",
+      "tsup",
+      "unbuild",
+      "vite",
+      "webpack"
+    ].includes(dep)) ?? null;
   });
   const testFramework = computed<string | null>(() => {
     if (!data.value.dependencies) { return null; }
-    return Object.keys(data.value.dependencies).find((dep) => ["jest", "mocha", "vitest"].includes(dep)) ?? null;
+    return Object.keys(data.value.dependencies).find((dep) => [
+      "ava",
+      "bench",
+      "cypress",
+      "jest",
+      "mocha",
+      "playwright",
+      "tap",
+      "uvu",
+      "vitest",
+      "zora"
+    ].includes(dep)) ?? null;
   });
 
   return {

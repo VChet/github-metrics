@@ -56,11 +56,16 @@ const props = defineProps<Props>();
 defineEmits<{ submit: [repo: Pick<Repository, "full_name" | "integrations">] }>();
 // Form
 const analyticsOptions = [
+  { name: "Ackee", value: "ackee" },
+  { name: "GoatCounter", value: "goat_counter" },
+  { name: "Matomo", value: "matomo" },
+  { name: "Plausible", value: "plausible" },
+  { name: "PostHog", value: "posthog" },
   { name: "counter.dev", value: "counter.dev" },
   { name: "Google Analytics", value: "google_analytics" },
-  { name: "Yandex.Metrika", value: "yandex_metrika" },
   { name: "Hotjar", value: "hotjar" },
-  { name: "Umami", value: "umami" }
+  { name: "Umami", value: "umami" },
+  { name: "Yandex.Metrika", value: "yandex_metrika" }
 ] as const;
 
 const form = ref(deepCopy(props.repo));
