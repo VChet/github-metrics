@@ -27,19 +27,23 @@
         </fieldset>
         <fieldset>
           <legend>GitHub API</legend>
-          <label for="authToken">Token</label>
-          <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
-          <ol>
+          <ol v-if="!form.authToken">
             <li>
               Go to
-              <a href="https://github.com/settings/tokens?type=beta" title="github tokens page">
-                github.com/settings/tokens
+              <a
+                href="https://github.com/settings/personal-access-tokens/new"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="github tokens page"
+              >
+                <b>fine-grained tokens page</b>
               </a>
             </li>
-            <li>Click <b>Generate new token</b></li>
-            <li>Add Read-only permissions: Actions, Contents, Metadata</li>
-            <li>Click <b>Generate Token</b> and paste it here</li>
+            <li>Add Read-only access to Actions, Contents, Metadata</li>
+            <li>Click <b>Generate token</b> and paste it here</li>
           </ol>
+          <label for="authToken">Token</label>
+          <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
         </fieldset>
         <fieldset>
           <legend>Feed</legend>
