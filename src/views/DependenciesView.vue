@@ -51,7 +51,7 @@ import { IconX } from "@tabler/icons-vue";
 import semverDiff from "semver/functions/diff";
 import type { ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
-import { composeHashColorFromString } from "@/composable/useLibColor";
+import { composeHashColorFromString } from "@/helpers/color";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
 import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useSettingsStore } from "@/store/settings";
