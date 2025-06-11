@@ -13,7 +13,7 @@ function getActionString(action: RawEvent["type"]): string {
   switch (action) {
     case "WatchEvent": return "starred";
     case "ForkEvent": return "forked";
-    default: return action ?? "";
+    default: return action ?? "[unknown action]";
   }
 }
 

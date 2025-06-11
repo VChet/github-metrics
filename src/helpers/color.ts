@@ -15,9 +15,10 @@ const predefinedColorMap: Readonly<Record<string, string>> = {
 };
 
 export function composeHashColorFromString(name: string): string {
-  let hash = 0;
   const mapKey = Object.keys(predefinedColorMap).find((key) => name.includes(key));
   if (mapKey) return predefinedColorMap[mapKey];
+
+  let hash = 0;
   for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
   return getHsla(hash % 360);
 }

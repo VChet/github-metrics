@@ -14,9 +14,16 @@ interface Tab {
   value: string
   text: string
 }
+interface Props {
+  modelValue: Tab["value"]
+  items: Tab[]
+}
+type Emits = {
+  "update:modelValue": [value: Props["modelValue"]]
+};
 
-const props = defineProps<{ modelValue: Tab["value"], items: Tab[] }>();
-const emit = defineEmits<{ "update:modelValue": [value: Tab["value"]] }>();
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 const selectedTab = useVModel(props, "modelValue", emit);
 
 function getTabClassList(tab: Tab): Record<string, boolean> {

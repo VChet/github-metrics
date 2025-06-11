@@ -102,7 +102,11 @@ import { useRepository, type Repository } from "@/composable/useRepo";
 import { useSettingsStore } from "@/store/settings";
 import EditRepo from "./modals/edit-repo.vue";
 
-const props = defineProps<{ repo: Repository, query: string }>();
+interface Props {
+  repo: Repository
+  query: string
+}
+const props = defineProps<Props>();
 defineEmits<{ delete: [repositoryId: Repository["id"]] }>();
 
 const { settings } = useSettingsStore();

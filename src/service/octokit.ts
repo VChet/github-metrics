@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import type { RequestError, RequestParameters, Route } from "@octokit/types";
 import type { PackageJson } from "type-fest";
 import { useSettingsStore } from "@/store/settings";
+import type { Repository } from "@/composable/useRepo";
 import type {
   RateLimitResponse,
   RepoContentsResponse,
@@ -26,7 +27,8 @@ export async function setAuthToken(authToken: string | null): Promise<void> {
   settings.value.authToken = authToken ?? "";
   octokit = new Octokit({ auth: authToken });
   octokit.hook.after("request", (response) => {
-    rateLimit.value = response.headers["x-ratelimit-remaining"] ?? "-";
+    const limitRemaining = response.headers["x-ratelimit-remaining"];
+    if (limitRemaining) { rateLimit.value = limitRemaining; }
   });
   await fetchRateLimit();
 }
@@ -45,17 +47,17 @@ export async function fetchRateLimit() {
   rateLimit.value = data.rate.remaining.toString() ?? "-";
 }
 
-export async function fetchRepo(fullName: string) {
+export async function fetchRepo(fullName: Repository["full_name"]) {
   const { data } = await fetch(`GET /repos/${fullName}`) as RepoResponse;
   return data;
 }
 
-async function fetchRepositoryContents(fullName: string) {
+async function fetchRepositoryContents(fullName: Repository["full_name"]) {
   const { data } = await fetch(`GET /repos/${fullName}/contents`) as RepoContentsResponse;
   return data;
 }
 
-export const fetchRepositoryFiles = useMemoize(async (fullName: string) => {
+export const fetchRepositoryFiles = useMemoize(async (fullName: Repository["full_name"]) => {
   try {
     const files = await fetchRepositoryContents(fullName);
     return Array.isArray(files) ? files.map(({ name }) => name) : [];
@@ -65,13 +67,13 @@ export const fetchRepositoryFiles = useMemoize(async (fullName: string) => {
   }
 });
 
-async function fetchRepositoryFile(fullName: string, fileName: string) {
+async function fetchRepositoryFile(fullName: Repository["full_name"], fileName: string) {
   const { data } = await fetch(`GET /repos/${fullName}/contents/${fileName}`) as RepoContentsResponse;
   if ("content" in data) return atob(data.content);
   throw new Error("Invalid file");
 }
 
-export async function fetchRepositoryPackages(fullName: string): Promise<PackageJson.Dependency | null> {
+export async function fetchRepositoryPackages(fullName: Repository["full_name"]): Promise<PackageJson.Dependency | null> {
   try {
     const hasPackage: boolean = await fetchRepositoryFiles(fullName).then((files) => files.includes("package.json"));
     if (!hasPackage) return null;
@@ -84,7 +86,7 @@ export async function fetchRepositoryPackages(fullName: string): Promise<Package
   }
 }
 
-export async function fetchRepositoryWorkflows(fullName: string) {
+export async function fetchRepositoryWorkflows(fullName: Repository["full_name"]) {
   try {
     const { data } = await fetch(`GET /repos/${fullName}/actions/workflows`) as WorkflowsResponse;
     return data;

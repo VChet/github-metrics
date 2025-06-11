@@ -6,8 +6,15 @@ import { useTemplateRef, watch } from "vue";
 import { useAnimate, useVModel } from "@vueuse/core";
 import { IconRefresh } from "@tabler/icons-vue";
 
-const props = defineProps<{ modelValue: boolean }>();
-const emit = defineEmits<{ "update:modelValue": [value: boolean] }>();
+interface Props {
+  modelValue: boolean
+}
+type Emits = {
+  "update:modelValue": [value: Props["modelValue"]]
+};
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 const active = useVModel(props, "modelValue", emit);
 
 const refreshIconRef = useTemplateRef<SVGElement>("refreshIconElement");

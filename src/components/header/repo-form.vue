@@ -52,8 +52,11 @@ interface Props {
   repo: Pick<Repository, "name" | "full_name" | "integrations">
   submitText: string
 }
+type Emits = {
+  submit: [repo: Props["repo"]]
+};
 const props = defineProps<Props>();
-defineEmits<{ submit: [repo: Pick<Repository, "full_name" | "integrations">] }>();
+defineEmits<Emits>();
 // Form
 const analyticsOptions = [
   { name: "Ackee", value: "ackee" },

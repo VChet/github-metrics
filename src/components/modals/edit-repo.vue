@@ -23,7 +23,10 @@ import { useRepositoriesStore } from "@/store/repositories";
 import type { Repository } from "@/composable/useRepo";
 import RepoForm from "../header/repo-form.vue";
 
-const props = defineProps<{ repo: Pick<Repository, "name" | "full_name" | "integrations"> }>();
+interface Props {
+  repo: Pick<Repository, "name" | "full_name" | "integrations">
+}
+const props = defineProps<Props>();
 
 const dialogRef = useTemplateRef("dialogElement");
 const { open, close } = useDialog(dialogRef);

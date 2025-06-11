@@ -63,7 +63,10 @@ import type { UserReposResponse } from "@/types/repo";
 
 type RawRepo = UserReposResponse["data"][number];
 
-defineProps<{ progress: { current: number, total: number } }>();
+interface Props {
+  progress: { current: number, total: number }
+}
+defineProps<Props>();
 defineEmits<{ submit: [repos: Repository[]] }>();
 
 const { repositories } = useRepositoriesStore();
