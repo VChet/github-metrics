@@ -16,6 +16,30 @@ export type Repository = Simplify<RepoResponse["data"] & {
   integrations: Integrations
 }>;
 
+const BUNDLERS = [
+  "esbuild",
+  "parcel",
+  "rollup",
+  "rspack",
+  "tsdown",
+  "tsup",
+  "unbuild",
+  "vite",
+  "webpack"
+];
+const TEST_FRAMEWORKS = [
+  "ava",
+  "bench",
+  "cypress",
+  "jest",
+  "mocha",
+  "playwright",
+  "tap",
+  "uvu",
+  "vitest",
+  "zora"
+];
+
 export function useRepository(data: Ref<Repository>) {
   const hostingName = computed<string | null>(() => {
     if (!data.value.homepage) return null;
@@ -50,36 +74,13 @@ export function useRepository(data: Ref<Repository>) {
     return !!hostingStatusBadge.value || !!uptimerobotBadge.value || !!workflowBadge.value;
   });
 
-  const bundler = computed<string | null>(() => {
-    if (!data.value.dependencies) { return null; }
-    return Object.keys(data.value.dependencies).find((dep) => [
-      "bun",
-      "esbuild",
-      "parcel",
-      "rolldown",
-      "rollup",
-      "rspack",
-      "tsdown",
-      "tsup",
-      "unbuild",
-      "vite",
-      "webpack"
-    ].includes(dep)) ?? null;
+  const bundler = computed<string[]>(() => {
+    if (!data.value.dependencies) { return []; }
+    return Object.keys(data.value.dependencies).filter((dep) => BUNDLERS.includes(dep));
   });
-  const testFramework = computed<string | null>(() => {
-    if (!data.value.dependencies) { return null; }
-    return Object.keys(data.value.dependencies).find((dep) => [
-      "ava",
-      "bench",
-      "cypress",
-      "jest",
-      "mocha",
-      "playwright",
-      "tap",
-      "uvu",
-      "vitest",
-      "zora"
-    ].includes(dep)) ?? null;
+  const testFramework = computed<string[]>(() => {
+    if (!data.value.dependencies) { return []; }
+    return Object.keys(data.value.dependencies).filter((dep) => TEST_FRAMEWORKS.includes(dep));
   });
 
   return {

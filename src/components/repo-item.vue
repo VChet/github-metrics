@@ -28,13 +28,13 @@
         <icon-brand-yarn v-else-if="packageManager === 'yarn'" />
         {{ packageManager }}
       </li>
-      <li v-if="bundler">
+      <li v-if="bundler.length">
         <icon-box />
-        {{ bundler }}
+        {{ bundler.join(', ') }}
       </li>
-      <li v-if="testFramework">
+      <li v-if="testFramework.length">
         <icon-list-check />
-        {{ testFramework }}
+        {{ testFramework.join(', ') }}
       </li>
       <li v-if="repo.integrations.analytics">
         <icon-timeline />
