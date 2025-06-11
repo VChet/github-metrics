@@ -14,8 +14,6 @@ export default antfu({
     "antfu/consistent-list-newline": "off",
     "antfu/if-newline": "off",
     "curly": ["error", "multi-line"],
-    "import/consistent-type-specifier-style": "off",
-    "import/no-useless-path-segments": ["error", { noUselessIndex: true }],
     "max-lines": ["warn", { max: 1000 }],
     "max-params": ["error", { max: 6 }],
     "no-await-in-loop": "error",
