@@ -4,6 +4,7 @@ function getHsla(hue: number, opacity: number | string = 1): string {
 
 const predefinedColorMap: Readonly<Record<string, string>> = {
   "@types/": "#0086e0",
+  "esbuild": "#ffcf00",
   "eslint": "#b7b7ff",
   "postcss": "#f44d27",
   "stylelint": "#d0d5dd",
