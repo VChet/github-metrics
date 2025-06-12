@@ -23,7 +23,6 @@
             <input v-model="form.displayBadges" name="displayBadges" type="checkbox">
             Display badges
           </label>
-          <input-select v-model="form.theme" name="theme" :items="themes" label="theme:" />
         </fieldset>
         <fieldset>
           <legend>GitHub API</legend>
@@ -72,15 +71,6 @@ import { deepCopy } from "@/helpers/object";
 import { fetchCurrentUser, setAuthToken } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
 import ImportExport from "@/components/import-export.vue";
-import InputSelect from "@/components/input-select.vue";
-
-const themes = [
-  { name: "github", value: "github" },
-  { name: "beige", value: "beige" },
-  { name: "blue", value: "blue" },
-  { name: "green", value: "green" },
-  { name: "red", value: "red" }
-] as const;
 
 const { settings } = useSettingsStore();
 const dialogRef = useTemplateRef("dialogElement");

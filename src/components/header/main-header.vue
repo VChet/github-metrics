@@ -3,6 +3,10 @@
     <div>
       <header-summary />
       <settings-modal />
+      <button class="main-header__block-button" title="change color theme" type="button" @click="nextTheme">
+        <icon-palette />
+        <span class="capitalize">{{ theme }}</span>
+      </button>
       <about-modal />
       <button title="get rate limit" type="button" @click="fetchRateLimit">
         Rate Limit
@@ -22,8 +26,8 @@
   </header>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-import { IconActivityHeartbeat, IconProgressAlert } from "@tabler/icons-vue";
+import { computed, ref } from "vue";
+import { IconActivityHeartbeat, IconPalette, IconProgressAlert } from "@tabler/icons-vue";
 import { fetchRateLimit, fetchRepositoryFiles, rateLimit } from "@/service/octokit";
 import { useEventsStore } from "@/store/events";
 import { useLatestVersionsStore } from "@/store/latest-versions";
@@ -38,8 +42,9 @@ import HeaderSummary from "./header-summary.vue";
 const { isEmpty, updateRepositories } = useRepositoriesStore();
 const { updateLatestVersions } = useLatestVersionsStore();
 const { updateEvents } = useEventsStore();
-const { needRefresh, updateServiceWorker } = useSettingsStore();
 
+const { settings, needRefresh, updateServiceWorker, nextTheme } = useSettingsStore();
+const theme = computed(() => settings.value.theme);
 const isUpdating = ref<boolean>(false);
 async function update(): Promise<void> {
   try {

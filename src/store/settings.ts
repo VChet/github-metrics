@@ -1,7 +1,7 @@
 import { createSharedComposable, useLocalStorage } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
-type Theme = "github" | "blue" | "beige" | "green" | "red";
+type Theme = "github" | "blue" | "beige" | "green" | "red" | "departure";
 export interface SettingsStore {
   authToken: string
   username: string
@@ -27,10 +27,18 @@ export const useSettingsStore = createSharedComposable(() => {
     Object.assign(settings.value, newSettings);
   }
 
+  function nextTheme(): void {
+    const themes: readonly Theme[] = ["github", "blue", "beige", "green", "red", "departure"];
+    const index = themes.indexOf(settings.value.theme);
+    const nextIndex = (index + 1) % themes.length;
+    settings.value.theme = themes[nextIndex];
+  }
+
   return {
     settings,
     needRefresh,
     updateServiceWorker,
-    importSettings
+    importSettings,
+    nextTheme
   };
 });

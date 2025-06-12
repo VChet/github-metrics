@@ -31,6 +31,12 @@
     --base-dimmed: #33393e;
     --accent: #ff7b5d;
   }
+  &[data-theme="departure"] {
+    --base: #c0c0c0;
+    --background: #222;
+    --base-dimmed: #6c6c58;
+    --accent: #ffa133;
+  }
 }
 *,
 *::before,
@@ -302,4 +308,7 @@ dialog {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.capitalize {
+  text-transform: capitalize;
 }
