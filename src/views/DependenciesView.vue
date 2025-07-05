@@ -112,6 +112,7 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
       td {
         min-width: 5rem;
         padding-block: 0.25rem;
+        transition: color 0.3s, background-color 0.3s;
         &.chip {
           display: grid;
           grid-template-columns: 1.5rem 10rem;
