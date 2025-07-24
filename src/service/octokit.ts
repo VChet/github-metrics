@@ -9,8 +9,8 @@ import type { Repository } from "@/composable/useRepo";
 import type {
   RateLimitResponse,
   RepoContentsResponse,
+  RepoEventsResponse,
   RepoResponse,
-  UserReceivedEventsResponse,
   UserReposResponse,
   UserResponse,
   WorkflowsResponse
@@ -96,6 +96,12 @@ export async function fetchRepositoryWorkflows(fullName: Repository["full_name"]
   }
 }
 
+export async function fetchRepositoryEvents(fullName: Repository["full_name"], page = 1) {
+  const { data } = await fetch(`GET /repos/${fullName}/events`, { per_page: 100, page }) as RepoEventsResponse;
+  if (!Array.isArray(data)) throw new Error(`Error fetching ${fullName} repo events`, data);
+  return { data };
+}
+
 export async function fetchCurrentUser() {
   if (!settings.value.authToken) return console.warn("empty authToken");
   const { data } = await fetch("GET /user") as UserResponse;
@@ -106,16 +112,4 @@ export async function fetchCurrentUserRepos() {
   if (!settings.value.authToken) return console.warn("empty authToken");
   const { data } = await fetch("GET /user/repos", { affiliation: "owner" }) as UserReposResponse;
   return data;
-}
-
-export async function fetchCurrentUserReceivedEvents(page = 1) {
-  if (!settings.value.authToken) throw new Error("empty authToken");
-  if (!settings.value.username) throw new Error("empty username");
-  const { data, headers } = await fetch(`GET /users/${settings.value.username}/received_events`, { per_page: 100, page }) as UserReceivedEventsResponse;
-  if (!Array.isArray(data)) throw new Error("Error fetching user received events", data);
-
-  return {
-    data,
-    hasNextPage: !!headers.link?.includes("rel=\"next\"")
-  };
 }

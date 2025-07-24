@@ -1,11 +1,12 @@
 import { computed } from "vue";
 import { createSharedComposable, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
-import { fetchCurrentUserReceivedEvents } from "@/service/octokit";
+import { fetchRepositoryEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
-import type { UserReceivedEventsResponse } from "@/types/repo";
+import { useRepositoriesStore } from "./repositories";
+import type { RepoEventsResponse } from "@/types/repo";
 
-type RawEvent = UserReceivedEventsResponse["data"][number];
+type RawEvent = RepoEventsResponse["data"][number];
 
 const TARGET_EVENTS = ["WatchEvent", "ForkEvent"] as const;
 
@@ -64,17 +65,16 @@ export const useEventsStore = createSharedComposable(() => {
     return acc;
   }
 
-  async function fetchAllEvents(page: number, accumulatedEvents: RawEvent[] = []): Promise<RawEvent[]> {
-    if (page >= 4) return accumulatedEvents; // Pagination is limited by API
-    const response = await fetchCurrentUserReceivedEvents(page);
-    const currentPageEvents = response?.data ?? [];
-    if (!currentPageEvents.length) return accumulatedEvents;
-    return fetchAllEvents(page + 1, [...accumulatedEvents, ...currentPageEvents]);
+  const { repositories } = useRepositoriesStore();
+  async function fetchAllEvents(): Promise<FeedEvent[]> {
+    const fetchPromises = repositories.value.map(({ full_name }) => fetchRepositoryEvents(full_name));
+    const response = await Promise.all(fetchPromises);
+    return response.flatMap(({ data }) => data).reduce(formatEvents, []);
   }
 
   async function updateEvents(): Promise<void> {
     try {
-      events.value = (await fetchAllEvents(1)).reduce(formatEvents, []);
+      events.value = await fetchAllEvents();
     } catch (error) {
       console.error(error);
     }
