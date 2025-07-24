@@ -2,8 +2,9 @@ import { ref } from "vue";
 import { useMemoize } from "@vueuse/core";
 import { Octokit } from "@octokit/core";
 import { StatusCodes } from "http-status-codes";
-import type { RequestError, RequestParameters, Route } from "@octokit/types";
+import type { RequestParameters, Route } from "@octokit/types";
 import type { PackageJson } from "type-fest";
+import { isRequestError } from "@/helpers/validate";
 import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
 import type {
@@ -62,7 +63,7 @@ export const fetchRepositoryFiles = useMemoize(async (fullName: Repository["full
     const files = await fetchRepositoryContents(fullName);
     return Array.isArray(files) ? files.map(({ name }) => name) : [];
   } catch (error: unknown) {
-    if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
+    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
     return [];
   }
 });
@@ -81,7 +82,7 @@ export async function fetchRepositoryPackages(fullName: Repository["full_name"])
     const content = JSON.parse(packageContents) as PackageJson;
     return { ...content.dependencies, ...content.devDependencies };
   } catch (error: unknown) {
-    if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
+    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
     return null;
   }
 }
@@ -91,7 +92,7 @@ export async function fetchRepositoryWorkflows(fullName: Repository["full_name"]
     const { data } = await fetch(`GET /repos/${fullName}/actions/workflows`) as WorkflowsResponse;
     return data;
   } catch (error: unknown) {
-    if ((error as RequestError).status !== StatusCodes.NOT_FOUND) console.error(error);
+    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
     return null;
   }
 }
