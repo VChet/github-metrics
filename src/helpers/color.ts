@@ -3,12 +3,20 @@ function getHsla(hue: number, opacity: number | string = 1): string {
 }
 
 const predefinedColorMap: Readonly<Record<string, string>> = {
+  "@octokit": "#ffffff",
   "@types/": "#0086e0",
   "esbuild": "#ffcf00",
   "eslint": "#b7b7ff",
+  "neostandard": "#b7b7ff",
   "postcss": "#f44d27",
+  "sass": "#cc6699",
+  "scss": "#cc6699",
   "stylelint": "#d0d5dd",
   "svelte": "#ff3e00",
+  "tsconfig": "#0086e0",
+  "tslib": "#0086e0",
+  "tsx": "#0086e0",
+  "type-fest": "#0086e0",
   "typescript": "#0086e0",
   "vite": "#9499ff",
   "vue": "#41b883",
