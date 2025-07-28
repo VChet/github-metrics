@@ -13,10 +13,10 @@ const DEFAULT_STORE: LatestVersionsStore = {
   data: {}
 };
 
-async function fetchLatestVersion(dependency: string) {
+async function fetchLatestVersion(dependency: string): Promise<string | null> {
   const response = await fetch(`https://registry.npmjs.org/${dependency}/latest`);
   const data = await response.json() as PackageJson;
-  return data.version;
+  return data.version ?? null;
 };
 
 export const useLatestVersionsStore = createSharedComposable(() => {
@@ -32,7 +32,7 @@ export const useLatestVersionsStore = createSharedComposable(() => {
   const isEmpty = computed(() => !Object.keys(latestVersions.value).length);
 
   const { dependencies } = useDependencyTable();
-  async function updateLatestVersions() {
+  async function updateLatestVersions(): Promise<void> {
     const fetchPromises = dependencies.value.map(async (dependency) => {
       const latestVersion = await fetchLatestVersion(dependency);
       if (latestVersion) latestVersions.value[dependency] = latestVersion;
