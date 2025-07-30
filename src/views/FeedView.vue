@@ -5,7 +5,7 @@
     </span>
     <ul v-else>
       <li v-for="{ date, username, action, repo, id } in events" :key="id">
-        {{ date }}:
+        <time>{{ date }}</time>:
         <a :href="`https://github.com/${username}`">{{ username }}</a>
         {{ action }}
         <a :href="`https://github.com/${repo}`">{{ repo }}</a>
@@ -24,9 +24,15 @@ const { events, amount } = useEventsStore();
     display: grid;
     gap: 0.5rem;
     padding-left: 1.25rem;
-    list-style: disc;
-    li a {
-      font-weight: bold;
+    list-style-type: circle;
+    li {
+      a {
+        font-weight: bold;
+      }
+      time {
+        font-size: 0.875rem;
+        color: var(--accent);
+      }
     }
   }
 }
