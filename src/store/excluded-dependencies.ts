@@ -1,9 +1,9 @@
-import { createSharedComposable, useLocalStorage } from "@vueuse/core";
+import { createGlobalState, useLocalStorage } from "@vueuse/core";
 
 type ExcludedDependenciesStore = Set<string>;
 const DEFAULT_STORE: ExcludedDependenciesStore = new Set();
 
-export const useExcludedDependenciesStore = createSharedComposable(() => {
+export const useExcludedDependenciesStore = createGlobalState(() => {
   const excludedDependencies = useLocalStorage("excludedDependencies", DEFAULT_STORE, { mergeDefaults: true });
 
   function hideDependency(dep: string): void {

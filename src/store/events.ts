@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createSharedComposable, useLocalStorage, whenever } from "@vueuse/core";
+import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import { fetchRepositoryEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
@@ -45,7 +45,7 @@ const DEFAULT_STORE: EventsStore = {
   data: []
 };
 
-export const useEventsStore = createSharedComposable(() => {
+export const useEventsStore = createGlobalState(() => {
   const storage = useLocalStorage<EventsStore>("events", DEFAULT_STORE, { mergeDefaults: true });
   const events = computed({
     get: () => storage.value.data,

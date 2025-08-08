@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createSharedComposable, useLocalStorage, whenever } from "@vueuse/core";
+import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import { isExportedRepository, type ExportedRepository } from "@/helpers/export";
 import { fetchRepo, fetchRepositoryFiles, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
@@ -29,7 +29,7 @@ async function parsePackageManager(fullName: Repository["full_name"]): Promise<"
   return undefined;
 }
 
-export const useRepositoriesStore = createSharedComposable(() => {
+export const useRepositoriesStore = createGlobalState(() => {
   const storage = useLocalStorage<RepositoriesStore>("repositories", DEFAULT_STORE, { mergeDefaults: true });
   const repositories = computed({
     get: () => storage.value.data,

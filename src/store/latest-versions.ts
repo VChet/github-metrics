@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createSharedComposable, useLocalStorage, whenever } from "@vueuse/core";
+import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import type { PackageJson } from "type-fest";
 import { useDependencyTable } from "@/composable/useDependencyTable";
@@ -19,7 +19,7 @@ async function fetchLatestVersion(dependency: string): Promise<string | null> {
   return data.version ?? null;
 };
 
-export const useLatestVersionsStore = createSharedComposable(() => {
+export const useLatestVersionsStore = createGlobalState(() => {
   const storage = useLocalStorage<LatestVersionsStore>("latestVersions", DEFAULT_STORE, { mergeDefaults: true });
   const latestVersions = computed({
     get: () => storage.value.data,

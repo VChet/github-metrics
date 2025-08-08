@@ -1,4 +1,4 @@
-import { createSharedComposable, useLocalStorage } from "@vueuse/core";
+import { createGlobalState, useLocalStorage } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
 type Theme = "github" | "blue" | "beige" | "green" | "red" | "departure";
@@ -18,7 +18,7 @@ const DEFAULT_STORE: SettingsStore = {
   theme: "github"
 };
 
-export const useSettingsStore = createSharedComposable(() => {
+export const useSettingsStore = createGlobalState(() => {
   const settings = useLocalStorage<SettingsStore>("settings", DEFAULT_STORE, { mergeDefaults: true });
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({ immediate: true });
