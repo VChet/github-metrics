@@ -16,6 +16,8 @@
 <script setup lang="ts">
 import { useEventsStore } from "@/store/events";
 
+definePage({ name: "Feed" });
+
 const { events, amount } = useEventsStore();
 </script>
 <style lang="scss">

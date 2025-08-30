@@ -38,6 +38,8 @@ import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import RepoItem from "@/components/repo-item.vue";
 
+definePage({ name: "Repositories" });
+
 const { settings } = useSettingsStore();
 const { repositories, deleteRepository } = useRepositoriesStore();
 

@@ -55,6 +55,8 @@ import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
 import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useSettingsStore } from "@/store/settings";
 
+definePage({ name: "Dependencies" });
+
 const { settings } = useSettingsStore();
 const { hasDependencies, repos, dependencies } = useDependencyTable();
 const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
