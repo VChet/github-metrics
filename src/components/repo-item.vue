@@ -53,17 +53,23 @@
           <span class="repo__footer-language" :class="`bg-color-${repo.language.toLowerCase()}`" />
           {{ repo.language }}
         </span>
+        <!-- Stars -->
         <a :href="`https://github.com/${repo.full_name}/stargazers`" title="stars">
           <icon-star />
           {{ repo.stargazers_count }}
+          <metric-delta :delta="repoDiff?.stars" />
         </a>
+        <!-- Forks -->
         <a :href="`https://github.com/${repo.full_name}/forks`" title="forks">
           <icon-git-fork />
           {{ repo.forks_count }}
+          <metric-delta :delta="repoDiff?.forks" />
         </a>
+        <!-- Issues -->
         <a :href="`https://github.com/${repo.full_name}/issues?q=is%3Aopen`" title="open issues/prs">
           <icon-circle-dot />
           {{ repo.open_issues_count }}
+          <metric-delta :delta="repoDiff?.issues" inverse />
         </a>
         <span :class="{ error: !license }">
           <icon-scale />
@@ -100,6 +106,8 @@ import {
 } from "@tabler/icons-vue";
 import { useRepository, type Repository } from "@/composable/useRepo";
 import { useSettingsStore } from "@/store/settings";
+import { useSummaryStorage } from "@/store/summary";
+import MetricDelta from "./metric-delta.vue";
 import EditRepo from "./modals/edit-repo.vue";
 
 interface Props {
@@ -118,6 +126,10 @@ const repoName = computed<string>(() => {
   if (!props.query) return name;
   return name.replace(new RegExp(props.query, "gi"), (match) => `<mark>${match}</mark>`);
 });
+
+const { repoDeltas } = useSummaryStorage();
+const repoDiff = computed(() => repoDeltas.value[repo.value.id] ?? null);
+
 const {
   bundler,
   testFramework,
@@ -191,12 +203,12 @@ const {
     gap: .5rem;
     justify-content: space-between;
     margin-top: auto;
-    div {
+    > div {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       align-items: center;
-      span {
+      > span {
         display: inherit;
         gap: 0.25rem;
         align-items: inherit;

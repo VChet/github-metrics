@@ -1,60 +1,76 @@
-import { computed, watch } from "vue";
-import { createGlobalState, useArrayReduce, useLocalStorage } from "@vueuse/core";
-import dayjs from "dayjs";
-import { deepCopy, deepEqual } from "@/helpers/object";
+import { computed } from "vue";
+import { createGlobalState, useEventListener, useLocalStorage } from "@vueuse/core";
 import { useRepositoriesStore } from "./repositories";
+import type { Repository } from "@/composable/useRepo";
 
-interface Summary {
-  repos: number
+interface RepoSummary {
+  id: Repository["id"]
+  stars: Repository["stargazers_count"]
+  forks: Repository["forks_count"]
+  issues: Repository["open_issues_count"]
+}
+
+interface SummaryStore {
+  repos: RepoSummary[]
+}
+const DEFAULT_STORE: SummaryStore = { repos: [] };
+
+interface Delta {
   stars: number
   forks: number
   issues: number
 }
-interface SummaryStore {
-  previous: Summary
-  current: Summary
-  lastUpdate: string
+
+function summarize(repos: RepoSummary[]): Delta & { repos: number } {
+  return repos.reduce((acc, repo) => {
+    acc.repos++;
+    acc.stars += repo.stars;
+    acc.forks += repo.forks;
+    acc.issues += repo.issues;
+    return acc;
+  }, { repos: 0, stars: 0, forks: 0, issues: 0 });
 }
-const DEFAULT_SUMMARY: Summary = { repos: 0, stars: 0, forks: 0, issues: 0 };
-const DEFAULT_STORE: SummaryStore = {
-  previous: deepCopy(DEFAULT_SUMMARY),
-  current: deepCopy(DEFAULT_SUMMARY),
-  lastUpdate: dayjs().toISOString()
-};
 
 export const useSummaryStorage = createGlobalState(() => {
-  const summary = useLocalStorage<SummaryStore>("summary", DEFAULT_STORE, { mergeDefaults: true });
+  const storage = useLocalStorage<SummaryStore>("summary", DEFAULT_STORE, { mergeDefaults: true });
+  const { repositories } = useRepositoriesStore();
 
-  const diff = computed(() => ({
-    stars: summary.value.current.stars - summary.value.previous.stars,
-    forks: summary.value.current.forks - summary.value.previous.forks,
-    issues: summary.value.current.issues - summary.value.previous.issues
+  const currentRepos = computed<RepoSummary[]>(() =>
+    repositories.value.map((repo) => ({
+      id: repo.id,
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+      issues: repo.open_issues_count
+    }))
+  );
+
+  const summary = computed(() => summarize(currentRepos.value));
+  const prevSummary = computed(() => summarize(storage.value.repos));
+
+  const summaryDelta = computed<Delta>(() => ({
+    stars: summary.value.stars - prevSummary.value.stars,
+    forks: summary.value.forks - prevSummary.value.forks,
+    issues: summary.value.issues - prevSummary.value.issues
   }));
 
-  function updateSummary(current: Summary, previous?: Summary): void {
-    if (!previous || current.repos !== previous.repos) {
-      summary.value.previous = deepCopy(current);
-      summary.value.current = deepCopy(current);
-      summary.value.lastUpdate = dayjs().toISOString();
-    } else if (!deepEqual(current, previous)) {
-      summary.value.previous = deepCopy(previous);
-      summary.value.current = deepCopy(current);
-      summary.value.lastUpdate = dayjs().toISOString();
+  const repoDeltas = computed<Record<number, Delta>>(() => {
+    const map: Record<number, Delta> = {};
+    for (const current of currentRepos.value) {
+      const prev = storage.value.repos.find((repo) => repo.id === current.id);
+      map[current.id] = {
+        stars: current.stars - (prev?.stars ?? 0),
+        forks: current.forks - (prev?.forks ?? 0),
+        issues: current.issues - (prev?.issues ?? 0)
+      };
     }
-  }
+    return map;
+  });
 
-  const { repositories } = useRepositoriesStore();
-  const latestSummary = useArrayReduce(repositories, (acc, repo) => ({
-    repos: repositories.value.length,
-    stars: acc.stars + repo.stargazers_count,
-    forks: acc.forks + repo.forks_count,
-    issues: acc.issues + repo.open_issues_count
-  }), { repos: 0, stars: 0, forks: 0, issues: 0 });
-  watch(latestSummary, updateSummary, { deep: true, immediate: true });
+  useEventListener("beforeunload", () => { storage.value.repos = currentRepos.value; });
 
   return {
-    diff,
-    repoAmount: computed(() => summary.value.current.repos),
-    summary: computed(() => summary.value.current)
+    summary,
+    summaryDelta,
+    repoDeltas
   };
 });
