@@ -18,7 +18,7 @@ const DEFAULT_STORE: RepositoriesStore = {
 async function parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowBadge"]> {
   const workflowsData = await fetchRepositoryWorkflows(fullName);
   const firstWorkflow = workflowsData?.workflows[0];
-  return firstWorkflow?.state === "active" ? firstWorkflow.badge_url : undefined;
+  return firstWorkflow?.state === "active" ? firstWorkflow.path : undefined;
 }
 async function parsePackageManager(fullName: Repository["full_name"]): Promise<"npm" | "pnpm" | "yarn" | undefined> {
   const files = await fetchRepositoryFiles(fullName);

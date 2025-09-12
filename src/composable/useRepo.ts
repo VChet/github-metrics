@@ -40,6 +40,12 @@ const TEST_FRAMEWORKS = [
   "zora"
 ];
 
+function composeBadgeUrl(base: string): string {
+  const url = new URL(base);
+  url.searchParams.set("style", "flat-square");
+  return url.href;
+}
+
 export function useRepository(data: Ref<Repository>) {
   const hostingName = computed<string | null>(() => {
     if (!data.value.homepage) return null;
@@ -51,18 +57,24 @@ export function useRepository(data: Ref<Repository>) {
       return null;
     }
   });
-  const uptimerobotBadge = computed<string | null>(() => {
-    if (!data.value.integrations?.uptimerobotKey) return null;
-    return `https://img.shields.io/uptimerobot/ratio/${data.value.integrations.uptimerobotKey}`;
+  const uptimeRobotBadge = computed<string | null>(() => {
+    const key = data.value.integrations?.uptimerobotKey;
+    if (!key) return null;
+    return composeBadgeUrl(`https://img.shields.io/uptimerobot/ratio/${key}`);
   });
   const hostingStatusBadge = computed<string | null>(() => {
-    if (!data.value.integrations?.hostingProjectId) return null;
-    if (hostingName.value?.includes("netlify")) {
-      return `https://api.netlify.com/api/v1/badges/${data.value.integrations.hostingProjectId}/deploy-status`;
-    }
+    const projectId = data.value.integrations?.hostingProjectId;
+    if (!projectId) return null;
+    if (hostingName.value?.includes("netlify")) return composeBadgeUrl(`https://img.shields.io/netlify/${projectId}`);
     return null;
   });
-  const workflowBadge = computed<string | null>(() => data.value.integrations.workflowBadge ?? null);
+  const workflowBadge = computed<string | null>(() => {
+    const { integrations, owner, name } = data.value;
+    if (!integrations.workflowBadge) return null;
+    return composeBadgeUrl(
+      `https://img.shields.io/github/actions/workflow/status/${owner.login}/${name}/${integrations.workflowBadge}`
+    );
+  });
   const packageManager = computed<string | null>(() => data.value.integrations.packageManager ?? null);
   const license = computed<string | null>(() => {
     if (!data.value.license) return null;
@@ -71,7 +83,7 @@ export function useRepository(data: Ref<Repository>) {
   });
 
   const hasBadges = computed<boolean>(() => {
-    return !!hostingStatusBadge.value || !!uptimerobotBadge.value || !!workflowBadge.value;
+    return !!hostingStatusBadge.value || !!uptimeRobotBadge.value || !!workflowBadge.value;
   });
 
   const bundler = computed<string[]>(() => {
@@ -85,7 +97,7 @@ export function useRepository(data: Ref<Repository>) {
 
   return {
     hostingName,
-    uptimerobotBadge,
+    uptimeRobotBadge,
     hostingStatusBadge,
     workflowBadge,
     packageManager,

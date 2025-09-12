@@ -77,9 +77,9 @@
         </span>
       </div>
       <div v-if="settings.displayBadges && hasBadges">
-        <img v-if="hostingStatusBadge" :src="hostingStatusBadge" alt="hosting status">
-        <img v-if="uptimerobotBadge" :src="uptimerobotBadge" alt="uptimerobot ratio">
         <img v-if="workflowBadge" :src="workflowBadge" alt="workflow badge">
+        <img v-if="hostingStatusBadge" :src="hostingStatusBadge" alt="hosting status">
+        <img v-if="uptimeRobotBadge" :src="uptimeRobotBadge" alt="uptimerobot ratio">
       </div>
     </footer>
   </li>
@@ -135,7 +135,7 @@ const {
   testFramework,
   hasBadges,
   hostingName,
-  uptimerobotBadge,
+  uptimeRobotBadge,
   hostingStatusBadge,
   workflowBadge,
   packageManager,
