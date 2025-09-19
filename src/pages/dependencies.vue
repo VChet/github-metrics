@@ -48,7 +48,7 @@
 </template>
 <script setup lang="ts">
 import { IconX } from "@tabler/icons-vue";
-import { coerce, diff, type ReleaseType } from "semver";
+import { coerce, compare, diff, type ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 import { composeHashColorFromString } from "@/helpers/color";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
@@ -60,11 +60,12 @@ const { hasDependencies, repos, dependencies } = useDependencyTable();
 const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
 
 const { latestVersions } = useLatestVersionsStore();
-function versionDiffClass(packageName: string, version?: string): ReleaseType | null {
+function versionDiffClass(packageName: string, version?: string): ReleaseType | "ahead" | null {
   if (!version) return null;
   const projectVersion = coerce(version)?.version;
-  const latestVersion = latestVersions.value[packageName];
+  const latestVersion = coerce(latestVersions.value[packageName])?.version;
   if (!projectVersion || !latestVersion) return null;
+  if (compare(projectVersion, latestVersion) === 1) return "ahead";
   return diff(projectVersion, latestVersion);
 }
 </script>
@@ -136,6 +137,10 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
         &.major {
           color: #f35;
           background-color: #ff335526;
+        }
+        &.ahead {
+          color: #c4b5fd;
+          background-color: #c4b5fd26;
         }
       }
     }
