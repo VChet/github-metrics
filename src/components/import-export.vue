@@ -50,7 +50,7 @@ whenever(files, async ({ 0: payload }) => {
 
 // Export
 function exportSettings(): void {
-  const fileName = `github-metrics-${dayjs().format("YYYY-MM-DD")}.json`;
+  const fileName = `github-metrics-${dayjs().format("YYYY-MM-DD")}`;
   const payload: ExportedData = {
     settings: settings.value,
     excludedDependencies: [...excludedDependencies.value.values()],
