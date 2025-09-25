@@ -47,7 +47,7 @@ const DEFAULT_STORE: EventsStore = {
 
 export const useEventsStore = createGlobalState(() => {
   const storage = useLocalStorage<EventsStore>("events", DEFAULT_STORE, { mergeDefaults: true });
-  const events = computed({
+  const events = computed<FeedEvent[]>({
     get: () => storage.value.data,
     set: (value) => { storage.value.data = value; }
   });
@@ -77,7 +77,10 @@ export const useEventsStore = createGlobalState(() => {
   async function fetchAllEvents(): Promise<FeedEvent[]> {
     const fetchPromises = repositories.value.map(({ full_name }) => fetchRepositoryEvents(full_name));
     const response = await Promise.all(fetchPromises);
-    return response.flatMap(({ data }) => data).reduce(formatEvents, []);
+    return response
+      .flatMap(({ data }) => data)
+      .sort((a, b) => dayjs(b.created_at).diff(dayjs(a.created_at)))
+      .reduce(formatEvents, []);
   }
 
   async function updateEvents(): Promise<void> {
