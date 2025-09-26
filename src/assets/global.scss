@@ -247,16 +247,15 @@ label:has([type="checkbox"]) {
   }
 }
 dialog {
-  left: 50%;
   width: 100%;
   max-width: 25rem;
-  max-height: 100dvh;
+  max-height: 90dvh;
   padding: 0;
+  margin: auto;
   color: var(--base);
   background-color: var(--background);
   border: 1px solid var(--base-dimmed);
   border-radius: 0.25rem;
-  transform: translateX(-50%);
   &::backdrop {
     background-color: rgb(0 0 0 / 35%)
   }

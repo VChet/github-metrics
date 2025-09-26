@@ -77,10 +77,9 @@ const commitDate = dayjs(import.meta.env.VITE_GIT_COMMIT_DATE).format("DD.MM.YY"
 <style lang="scss">
 .about {
   max-width: 75vw;
-  max-height: unset;
   &__content {
     display: grid;
-    gap: 0.5rem;
+    gap: 1rem;
     ul {
       padding-left: 1.25rem;
       list-style: disc;
