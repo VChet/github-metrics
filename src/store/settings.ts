@@ -1,7 +1,7 @@
 import { createGlobalState, useLocalStorage } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
-type Theme = "github" | "blue" | "beige" | "green" | "red" | "departure";
+type Theme = "github" | "aqua" | "cream" | "mint" | "rose" | "departure";
 export interface SettingsStore {
   authToken: string
   username: string
@@ -28,7 +28,7 @@ export const useSettingsStore = createGlobalState(() => {
   }
 
   function nextTheme(): void {
-    const themes: readonly Theme[] = ["github", "blue", "beige", "green", "red", "departure"];
+    const themes = ["github", "aqua", "cream", "mint", "rose", "departure"] as const satisfies readonly Theme[];
     const index = themes.indexOf(settings.value.theme);
     const nextIndex = (index + 1) % themes.length;
     settings.value.theme = themes[nextIndex];

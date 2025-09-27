@@ -11,24 +11,24 @@
     --base-dimmed: #30363d;
     --accent: #2f81f7;
   }
-  &[data-theme="beige"] {
-    --background: #191919;
-    --base-dimmed: #2c2c2c;
-    --accent: #b9b384;
-  }
-  &[data-theme="blue"] {
+  &[data-theme="aqua"] {
     --background: #1d1d24;
     --base-dimmed: #31313b;
     --accent: #77babc;
   }
-  &[data-theme="green"] {
-    --background: #19191a;
-    --base-dimmed: #2f2f31;
+  &[data-theme="cream"] {
+    --background: #1b1a17;
+    --base-dimmed: #2c2b26;
+    --accent: #b9b384;
+  }
+  &[data-theme="mint"] {
+    --background: #1b1b1c;
+    --base-dimmed: #313131;
     --accent: #63b97f;
   }
-  &[data-theme="red"] {
-    --background: #262a2e;
-    --base-dimmed: #33393e;
+  &[data-theme="rose"] {
+    --background: #1f1a18;
+    --base-dimmed: #322b28;
     --accent: #ff7b5d;
   }
   &[data-theme="departure"] {
