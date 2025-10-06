@@ -13,6 +13,9 @@
         <button class="icon" type="button" title="sort by forks" @click="sort('forks')">
           <icon-git-fork />
         </button>
+        <button class="icon" type="button" title="sort by issues" @click="sort('issues')">
+          <icon-circle-dot />
+        </button>
         <button class="icon" type="button" title="sort by language" @click="sort('language')">
           <icon-packages />
         </button>
@@ -33,7 +36,7 @@
 import { computed, ref, useTemplateRef } from "vue";
 import { refDebounced } from "@vueuse/core";
 import { useSortable } from "@vueuse/integrations/useSortable";
-import { IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
+import { IconCircleDot, IconGitFork, IconPackages, IconSortAZ, IconStar } from "@tabler/icons-vue";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import RepoItem from "@/components/repo-item.vue";
@@ -54,12 +57,14 @@ const filteredItems = computed(() => {
 const reposRef = useTemplateRef("reposElement");
 useSortable(reposRef, repositories, { handle: ".repo__header-actions-handler" });
 
-function sort(option: "alphabetic" | "stars" | "forks" | "language"): void {
+type SortOption = "alphabetic" | "stars" | "forks" | "issues" | "language";
+function sort(option: SortOption): void {
   repositories.value.sort((a, b) => {
     switch (option) {
       case "alphabetic": return a.name.localeCompare(b.name);
       case "stars": return b.stargazers_count - a.stargazers_count;
       case "forks": return b.forks_count - a.forks_count;
+      case "issues": return b.open_issues_count - a.open_issues_count;
       case "language":
         return (a.language && b.language) ?
           a.language.localeCompare(b.language) :
