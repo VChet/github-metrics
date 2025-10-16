@@ -1,4 +1,5 @@
 import { createGlobalState, useLocalStorage } from "@vueuse/core";
+import { useIDBKeyval } from "@vueuse/integrations/useIDBKeyval";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
 type Theme = "github" | "aqua" | "cream" | "mint" | "rose" | "departure";
@@ -19,7 +20,8 @@ const DEFAULT_STORE: SettingsStore = {
 };
 
 export const useSettingsStore = createGlobalState(() => {
-  const settings = useLocalStorage<SettingsStore>("settings", DEFAULT_STORE, { mergeDefaults: true });
+  const local = useLocalStorage("settings", DEFAULT_STORE);
+  const { data: settings } = useIDBKeyval<SettingsStore>("settings", local.value ?? DEFAULT_STORE, { deep: true, writeDefaults: true });
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({ immediate: true });
 

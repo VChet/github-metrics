@@ -1,5 +1,6 @@
 import { computed } from "vue";
 import { createGlobalState, useEventListener, useLocalStorage } from "@vueuse/core";
+import { useIDBKeyval } from "@vueuse/integrations/useIDBKeyval";
 import { useRepositoriesStore } from "./repositories";
 import type { Repository } from "@/composable/useRepo";
 
@@ -32,7 +33,8 @@ function summarize(repos: RepoSummary[]): Delta & { repos: number } {
 }
 
 export const useSummaryStorage = createGlobalState(() => {
-  const storage = useLocalStorage<SummaryStore>("summary", DEFAULT_STORE, { mergeDefaults: true });
+  const local = useLocalStorage("summary", DEFAULT_STORE);
+  const { data: storage } = useIDBKeyval<SummaryStore>("summary", local.value ?? DEFAULT_STORE, { deep: true, writeDefaults: true });
   const { repositories } = useRepositoriesStore();
 
   const currentRepos = computed<RepoSummary[]>(() =>

@@ -1,5 +1,6 @@
 import { computed } from "vue";
 import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
+import { useIDBKeyval } from "@vueuse/integrations/useIDBKeyval";
 import dayjs from "dayjs";
 import type { PackageJson } from "type-fest";
 import { useDependencyTable } from "@/composable/useDependencyTable";
@@ -20,7 +21,8 @@ async function fetchLatestVersion(dependency: string): Promise<string | null> {
 };
 
 export const useLatestVersionsStore = createGlobalState(() => {
-  const storage = useLocalStorage<LatestVersionsStore>("latestVersions", DEFAULT_STORE, { mergeDefaults: true });
+  const local = useLocalStorage("latestVersions", DEFAULT_STORE);
+  const { data: storage } = useIDBKeyval("latestVersions", local.value ?? DEFAULT_STORE, { deep: true, writeDefaults: true });
   const latestVersions = computed({
     get: () => storage.value.data,
     set: (value) => { storage.value.data = value; }

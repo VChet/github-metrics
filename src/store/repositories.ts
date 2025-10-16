@@ -1,5 +1,6 @@
 import { computed } from "vue";
 import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
+import { useIDBKeyval } from "@vueuse/integrations/useIDBKeyval";
 import dayjs from "dayjs";
 import { isExportedRepository, type ExportedRepository } from "@/helpers/export";
 import { fetchRepo, fetchRepositoryFiles, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
@@ -30,7 +31,8 @@ async function parsePackageManager(fullName: Repository["full_name"]): Promise<"
 }
 
 export const useRepositoriesStore = createGlobalState(() => {
-  const storage = useLocalStorage<RepositoriesStore>("repositories", DEFAULT_STORE, { mergeDefaults: true });
+  const local = useLocalStorage("repositories", DEFAULT_STORE);
+  const { data: storage } = useIDBKeyval<RepositoriesStore>("repositories", local.value ?? DEFAULT_STORE, { deep: true, writeDefaults: true });
   const repositories = computed({
     get: () => storage.value.data,
     set: (data) => { storage.value.data = data; }

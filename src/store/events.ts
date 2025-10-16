@@ -1,5 +1,6 @@
 import { computed } from "vue";
 import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
+import { useIDBKeyval } from "@vueuse/integrations/useIDBKeyval";
 import dayjs from "dayjs";
 import { fetchRepositoryEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
@@ -46,7 +47,8 @@ const DEFAULT_STORE: EventsStore = {
 };
 
 export const useEventsStore = createGlobalState(() => {
-  const storage = useLocalStorage<EventsStore>("events", DEFAULT_STORE, { mergeDefaults: true });
+  const local = useLocalStorage("events", DEFAULT_STORE);
+  const { data: storage } = useIDBKeyval("events", local.value ?? DEFAULT_STORE, { deep: true, writeDefaults: true });
   const events = computed<FeedEvent[]>({
     get: () => storage.value.data,
     set: (value) => { storage.value.data = value; }
