@@ -75,6 +75,10 @@
           <icon-scale />
           {{ license ?? "N/A" }}
         </span>
+        <span>
+          <icon-clock />
+          {{ dayjs(repo.updated_at).fromNow() }}
+        </span>
       </div>
       <div v-if="settings.displayBadges && hasBadges">
         <img v-if="workflowBadge" :src="workflowBadge" alt="workflow badge">
@@ -93,6 +97,7 @@ import {
   IconBrandPnpm,
   IconBrandYarn,
   IconCircleDot,
+  IconClock,
   IconExternalLink,
   IconGitFork,
   IconGripVertical,
@@ -104,6 +109,8 @@ import {
   IconTimeline,
   IconTrash
 } from "@tabler/icons-vue";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { useRepository, type Repository } from "@/composable/useRepo";
 import { useSettingsStore } from "@/store/settings";
 import { useSummaryStorage } from "@/store/summary";
@@ -116,6 +123,8 @@ interface Props {
 }
 const props = defineProps<Props>();
 defineEmits<{ delete: [repositoryId: Repository["id"]] }>();
+
+dayjs.extend(relativeTime);
 
 const { settings } = useSettingsStore();
 
