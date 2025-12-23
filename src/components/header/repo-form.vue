@@ -52,7 +52,7 @@ interface Props {
   repo: Pick<Repository, "name" | "full_name" | "integrations">
   submitText: string
 }
-type Emits = {
+interface Emits {
   submit: [repo: Props["repo"]]
 };
 const props = defineProps<Props>();

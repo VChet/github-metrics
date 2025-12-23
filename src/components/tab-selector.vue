@@ -18,7 +18,7 @@ interface Props {
   modelValue: Tab["value"]
   items: Tab[]
 }
-type Emits = {
+interface Emits {
   "update:modelValue": [value: Props["modelValue"]]
 };
 

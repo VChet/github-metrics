@@ -100,7 +100,7 @@ export default antfu({
     "style/semi": ["error", "always"],
     "ts/array-type": "error",
     "ts/consistent-indexed-object-style": "error",
-    "ts/consistent-type-definitions": "off",
+    "ts/consistent-type-definitions": ["error", "interface"],
     "ts/member-ordering": ["error", { default: { optionalityOrder: "required-first" } }],
     "ts/no-shadow": "error",
     "unicorn/prefer-includes": "off",

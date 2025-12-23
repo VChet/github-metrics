@@ -9,7 +9,7 @@ import { IconRefresh } from "@tabler/icons-vue";
 interface Props {
   modelValue: boolean
 }
-type Emits = {
+interface Emits {
   "update:modelValue": [value: Props["modelValue"]]
 };
 
