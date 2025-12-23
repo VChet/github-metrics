@@ -6,7 +6,7 @@
     </button>
     <button title="import repositories" type="button" @click="importFile()">
       <icon-upload v-if="!isImporting" />
-      <icon-loader v-else :model-value="true" />
+      <icon-loader v-else active persistent />
       Import settings
     </button>
   </section>

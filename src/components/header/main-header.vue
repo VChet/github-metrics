@@ -14,7 +14,7 @@
         {{ rateLimit }}
       </button>
       <button class="main-header__block-button" title="update" type="button" :disabled="isEmpty" @click="update">
-        <icon-loader v-model="isUpdating" />
+        <icon-loader :active="isUpdating" />
         Update
       </button>
       <button v-if="needRefresh" type="button" @click.prevent="updateServiceWorker(true)">
