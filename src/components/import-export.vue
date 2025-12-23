@@ -1,10 +1,10 @@
 <template>
   <section class="import-export">
-    <button title="export repositories" type="button" @click="exportSettings">
+    <button title="export repositories" type="button" :disabled="isImporting" @click="exportSettings">
       <icon-download />
       Export settings
     </button>
-    <button title="import repositories" type="button" @click="importFile()">
+    <button title="import repositories" type="button" :disabled="isImporting" @click="importFile()">
       <icon-upload v-if="!isImporting" />
       <icon-loader v-else active persistent />
       Import settings
@@ -30,6 +30,8 @@ const { excludedDependencies, importExcludedDependencies } = useExcludedDependen
 
 // Import
 const isImporting = ref<boolean>(false);
+defineExpose({ isImporting });
+
 const { files, open: importFile } = useFileDialog({ multiple: false, reset: true, accept: "application/json" });
 whenever(files, async ({ 0: payload }) => {
   try {

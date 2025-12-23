@@ -7,11 +7,11 @@
     <dialog ref="dialogElement" class="settings">
       <header>
         Settings
-        <button type="button" name="close" class="icon" @click="close">
+        <button type="button" name="close" class="icon" @click="closeModal">
           <icon-x />
         </button>
       </header>
-      <import-export />
+      <import-export ref="importExportElement" />
       <form class="settings__form" @submit.prevent="update">
         <fieldset>
           <legend>Interface</legend>
@@ -64,7 +64,7 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { reactive, useTemplateRef, watch } from "vue";
+import { computed, reactive, useTemplateRef, watch } from "vue";
 import { IconSettings, IconX } from "@tabler/icons-vue";
 import { useDialog } from "@/composable/useDialog";
 import { deepCopy } from "@/helpers/object";
@@ -72,27 +72,33 @@ import { fetchCurrentUser, setAuthToken } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
 import ImportExport from "@/components/import-export.vue";
 
-const { settings } = useSettingsStore();
 const dialogRef = useTemplateRef("dialogElement");
 const { open, close } = useDialog(dialogRef);
-const form = reactive(deepCopy(settings.value));
-watch(settings, (value) => { Object.assign(form, value); }, { deep: true });
 
-async function getUsername(): Promise<void> {
-  const user = await fetchCurrentUser();
-  if (user) form.username = user.login;
-}
-
-async function update(): Promise<void> {
-  if (form.authToken && !form.username) await getUsername();
-  settings.value = { ...form };
+const importExportRef = useTemplateRef("importExportElement");
+const isImporting = computed<boolean>(() => importExportRef.value?.isImporting ?? false);
+function closeModal(): void {
+  if (isImporting.value) return;
   close();
 }
 
+const { settings } = useSettingsStore();
+const form = reactive(deepCopy(settings.value));
+watch(settings, (value) => { Object.assign(form, value); }, { deep: true });
 watch(() => settings.value.authToken, setAuthToken);
 watch(() => settings.value.theme, (theme) => {
   document.documentElement.setAttribute("data-theme", theme);
 }, { immediate: true });
+
+async function setUsername(): Promise<void> {
+  const user = await fetchCurrentUser();
+  if (user) form.username = user.login;
+}
+async function update(): Promise<void> {
+  if (form.authToken && !form.username) await setUsername();
+  settings.value = { ...form };
+  closeModal();
+}
 </script>
 <style lang="scss">
 .settings {
