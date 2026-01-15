@@ -6,7 +6,6 @@ export default {
   plugins: [
     "@stylistic/stylelint-plugin",
     "stylelint-order",
-    "stylelint-declaration-block-no-ignored-properties",
     "stylelint-rem-over-px"
   ],
   customSyntax: "postcss-scss",
