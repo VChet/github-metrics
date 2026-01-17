@@ -71,7 +71,7 @@
           {{ repo.open_issues_count }}
           <metric-delta :delta="repoDiff?.issues" inverse />
         </a>
-        <span :class="{ error: !license }">
+        <span :class="{ error: !repo.private && !license }">
           <icon-scale />
           {{ license ?? "N/A" }}
         </span>
