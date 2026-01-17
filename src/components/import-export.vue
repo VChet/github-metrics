@@ -1,13 +1,13 @@
 <template>
   <section class="import-export">
-    <button title="export repositories" type="button" :disabled="isImporting" @click="exportSettings">
-      <icon-download />
-      Export settings
-    </button>
     <button title="import repositories" type="button" :disabled="isImporting" @click="importFile()">
-      <icon-upload v-if="!isImporting" />
+      <icon-download v-if="!isImporting" />
       <icon-loader v-else active persistent />
-      Import settings
+      Import data
+    </button>
+    <button title="export repositories" type="button" :disabled="isImporting" @click="exportSettings">
+      <icon-upload />
+      Export data
     </button>
   </section>
 </template>
