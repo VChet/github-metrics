@@ -20,7 +20,12 @@
           <tr>
             <th />
             <th v-for="repo in repos" :key="repo.id">
-              <a :href="repo.html_url" target="_blank">
+              <a
+                :href="repo.html_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                :title="`Go to ${repo.full_name} repository`"
+              >
                 {{ settings.displayOwner ? repo.full_name : repo.name }}
               </a>
             </th>
@@ -32,7 +37,13 @@
               <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
                 <icon-x />
               </button>
-              <a :href="`https://npmjs.org/${dep}`" target="_blank" class="text-truncate">
+              <a
+                :href="`https://npmjs.org/${dep}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                :title="`Go to ${dep} on npm`"
+                class="text-truncate"
+              >
                 {{ dep }}
                 <div>{{ latestVersions[dep] ?? '???' }}</div>
               </a>

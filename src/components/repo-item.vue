@@ -6,7 +6,13 @@
         <icon-template v-if="repo.is_template" />
         <icon-lock v-if="repo.private" />
         <icon-archive v-if="repo.archived" />
-        <a v-dompurify-html="repoName" :href="repo.html_url" class="text-truncate icon-button" />
+        <a
+          v-dompurify-html="repoName"
+          :href="repo.html_url"
+          rel="noopener noreferrer"
+          :title="`Go to ${repo.full_name} repository`"
+          class="text-truncate icon-button"
+        />
       </h2>
       <div class="repo__header-actions">
         <edit-repo :repo />
@@ -41,7 +47,12 @@
         {{ repo.integrations.analytics }}
       </li>
       <li v-if="repo.homepage">
-        <a :href="repo.homepage">
+        <a
+          :href="repo.homepage"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Go to website"
+        >
           <icon-external-link />
           {{ hostingName ?? "Website" }}
         </a>
@@ -54,19 +65,34 @@
           {{ repo.language }}
         </span>
         <!-- Stars -->
-        <a :href="`https://github.com/${repo.full_name}/stargazers`" title="stars">
+        <a
+          :href="`https://github.com/${repo.full_name}/stargazers`"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Go to stargazers"
+        >
           <icon-star />
           {{ repo.stargazers_count }}
           <metric-delta :delta="repoDiff?.stars" />
         </a>
         <!-- Forks -->
-        <a :href="`https://github.com/${repo.full_name}/forks`" title="forks">
+        <a
+          :href="`https://github.com/${repo.full_name}/forks`"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Go to forks"
+        >
           <icon-git-fork />
           {{ repo.forks_count }}
           <metric-delta :delta="repoDiff?.forks" />
         </a>
         <!-- Issues -->
-        <a :href="`https://github.com/${repo.full_name}/issues?q=is%3Aopen`" title="open issues/prs">
+        <a
+          :href="`https://github.com/${repo.full_name}/issues?q=is%3Aopen`"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Go to open issues/prs"
+        >
           <icon-circle-dot />
           {{ repo.open_issues_count }}
           <metric-delta :delta="repoDiff?.issues" inverse />

@@ -10,7 +10,12 @@
       <ol v-if="!form.integrations.uptimerobotKey">
         <li>
           Go to
-          <a href="https://uptimerobot.com/dashboard.php#mySettings" target="_blank">
+          <a
+            href="https://uptimerobot.com/dashboard.php#mySettings"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Go to UptimeRobot settings"
+          >
             Settings
           </a>
         </li>
@@ -18,7 +23,11 @@
         <li>Find your monitor</li>
         <li>Copy and paste it's API key here</li>
       </ol>
-      <input v-model.trim="form.integrations.uptimerobotKey" name="uptimerobotKey" placeholder="uptimerobot monitor key">
+      <input
+        v-model.trim="form.integrations.uptimerobotKey"
+        name="uptimerobotKey"
+        placeholder="uptimerobot monitor key"
+      >
     </fieldset>
     <fieldset v-if="form.name">
       <legend>Netlify Deploy Status</legend>
@@ -28,6 +37,8 @@
           <a
             :href="`https://app.netlify.com/sites/${form.name}/configuration/general#site-information`"
             target="_blank"
+            rel="noopener noreferrer"
+            title="Go to Netlify site details"
           >
             Site Details
           </a>
