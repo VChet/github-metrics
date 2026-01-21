@@ -4,11 +4,29 @@
       No recent events
     </span>
     <ul v-else>
-      <li v-for="{ date, username, action, repo, id } in events" :key="id">
+      <li v-for="{ date, username, action, repo, id, eventUrl } in events" :key="id">
         <time>{{ date }}</time>:
-        <a :href="`https://github.com/${username}`">{{ username }}</a>
+        <a
+          :href="`https://github.com/${username}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          :title="`Go to ${username} profile`"
+        >
+          {{ username }}
+        </a>
         {{ action }}
-        <a :href="`https://github.com/${repo}`">{{ repo }}</a>
+        <template v-if="eventUrl">
+          <span v-dompurify-html="eventUrl" />
+          in
+        </template>
+        <a
+          :href="`https://github.com/${repo}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          :title="`Go to ${repo} repository`"
+        >
+          {{ repo }}
+        </a>
       </li>
     </ul>
   </section>

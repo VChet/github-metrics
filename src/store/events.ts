@@ -15,16 +15,26 @@ const TARGET_EVENTS = [
   "PublicEvent",
   "WatchEvent"
 ] as const;
+const FILTERED_ACTIONS = [
+  "labeled",
+  "unlabeled"
+];
 
 function getActionString({ type, payload }: RawEvent): string {
   switch (type) {
     case "ForkEvent": return "forked";
-    case "IssuesEvent": return `${payload.action} issue #${payload.issue!.number} "${payload.issue!.title}" in`;
+    case "IssuesEvent": return `${payload.action} issue`;
     case "MemberEvent": return "joined";
     case "PublicEvent": return "made public";
     case "WatchEvent": return "starred";
     default: return type ?? "[unknown action]";
   }
+}
+
+function formatIssueString({ issue }: RawEvent["payload"]): string | null {
+  if (!issue) return null;
+  const { html_url, number, title } = issue;
+  return `<a href="${html_url}" rel="noopener noreferrer" title="Go to issue">#${number} ${title}</a>`;
 }
 
 interface FeedEvent {
@@ -33,6 +43,7 @@ interface FeedEvent {
   username: string
   action: string
   repo: string
+  eventUrl?: string | null
 }
 
 interface EventsStore {
@@ -62,13 +73,18 @@ export const useEventsStore = createGlobalState(() => {
   function formatEvents(acc: FeedEvent[], event: RawEvent): FeedEvent[] {
     const isTargetEvent = TARGET_EVENTS.some((targetType) => targetType === event.type);
     if (isTargetEvent) {
-      acc.push({
+      if (event.type === "IssuesEvent" && FILTERED_ACTIONS.some((action) => action === event.payload.action)) {
+        return acc;
+      }
+      const feedEvent: FeedEvent = {
         id: event.id,
         date: dayjs(event.created_at).format("DD MMMM HH:mm"),
         username: event.actor.display_login ?? event.actor.login,
         action: getActionString(event),
-        repo: event.repo.name
-      });
+        repo: event.repo.name,
+        eventUrl: event.type === "IssuesEvent" ? formatIssueString(event.payload) : undefined
+      };
+      acc.push(feedEvent);
     }
     return acc;
   }
