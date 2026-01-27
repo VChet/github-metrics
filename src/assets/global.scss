@@ -257,7 +257,7 @@ dialog {
   border: 1px solid var(--base-dimmed);
   border-radius: 0.25rem;
   &::backdrop {
-    background-color: rgb(0 0 0 / 35%)
+    background-color: rgb(0 0 0 / 35%);
   }
   &:not([open]) {
     pointer-events: none;
