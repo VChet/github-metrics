@@ -18,7 +18,7 @@ const TARGET_EVENTS = [
 const FILTERED_ACTIONS = [
   "labeled",
   "unlabeled"
-];
+] as const;
 
 function getActionString({ type, payload }: RawEvent): string {
   switch (type) {
@@ -31,10 +31,16 @@ function getActionString({ type, payload }: RawEvent): string {
   }
 }
 
-function formatIssueString({ issue }: RawEvent["payload"]): string | null {
-  if (!issue) return null;
-  const { html_url, number, title } = issue;
-  return `<a href="${html_url}" rel="noopener noreferrer" title="Go to issue">#${number} ${title}</a>`;
+function composeEventUrl(event: RawEvent): string | null {
+  if (event.type === "IssuesEvent" && event.payload.issue) {
+    const { html_url, number, title } = event.payload.issue;
+    return `<a href="${html_url}" rel="noopener noreferrer" title="Go to issue">#${number} ${title}</a> in `;
+  }
+  if (event.type === "ForkEvent" && "forkee" in event.payload) {
+    const { html_url, full_name } = event.payload.forkee as { html_url: string, full_name: string };
+    return `<a href="${html_url}" rel="noopener noreferrer" title="Go to forked repository">${full_name}</a> from `;
+  }
+  return null;
 }
 
 interface FeedEvent {
@@ -82,7 +88,7 @@ export const useEventsStore = createGlobalState(() => {
         username: event.actor.display_login ?? event.actor.login,
         action: getActionString(event),
         repo: event.repo.name,
-        eventUrl: event.type === "IssuesEvent" ? formatIssueString(event.payload) : undefined
+        eventUrl: composeEventUrl(event)
       };
       acc.push(feedEvent);
     }

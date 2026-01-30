@@ -15,10 +15,7 @@
           {{ username }}
         </a>
         {{ action }}
-        <template v-if="eventUrl">
-          <span v-dompurify-html="eventUrl" />
-          in
-        </template>
+        <span v-if="eventUrl" v-dompurify-html="eventUrl" />
         <a
           :href="`https://github.com/${repo}`"
           target="_blank"
