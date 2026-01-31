@@ -13,6 +13,7 @@ const TARGET_EVENTS = [
   "IssuesEvent",
   "MemberEvent",
   "PublicEvent",
+  "PullRequestEvent",
   "WatchEvent"
 ] as const;
 const FILTERED_ACTIONS = [
@@ -26,6 +27,7 @@ function getActionString({ type, payload }: RawEvent): string {
     case "IssuesEvent": return `${payload.action} issue`;
     case "MemberEvent": return "joined";
     case "PublicEvent": return "made public";
+    case "PullRequestEvent": return `${payload.action} pull request`;
     case "WatchEvent": return "starred";
     default: return type ?? "[unknown action]";
   }
@@ -39,6 +41,11 @@ function composeEventUrl(event: RawEvent): string | null {
   if (event.type === "ForkEvent" && "forkee" in event.payload) {
     const { html_url, full_name } = event.payload.forkee as { html_url: string, full_name: string };
     return `<a href="${html_url}" rel="noopener noreferrer" title="Go to forked repository">${full_name}</a> from `;
+  }
+  if (event.type === "PullRequestEvent" && "pull_request" in event.payload) {
+    const { number } = event.payload.pull_request as { number: number };
+    const html_url = `https://github.com/${event.repo.name}/pull/${number}`;
+    return `<a href="${html_url}" rel="noopener noreferrer" title="Go to pull request">#${number}</a> in `;
   }
   return null;
 }
@@ -79,9 +86,10 @@ export const useEventsStore = createGlobalState(() => {
   function formatEvents(acc: FeedEvent[], event: RawEvent): FeedEvent[] {
     const isTargetEvent = TARGET_EVENTS.some((targetType) => targetType === event.type);
     if (isTargetEvent) {
-      if (event.type === "IssuesEvent" && FILTERED_ACTIONS.some((action) => action === event.payload.action)) {
-        return acc;
-      }
+      if (
+        FILTERED_ACTIONS.some((action) => action === event.payload.action) ||
+        event.actor.login.includes("dependabot")
+      ) { return acc; }
       const feedEvent: FeedEvent = {
         id: event.id,
         date: dayjs(event.created_at).format("DD MMMM HH:mm"),
