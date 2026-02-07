@@ -59,7 +59,7 @@ const filteredItems = computed(() => {
 });
 
 const reposRef = useTemplateRef("reposElement");
-useSortable(reposRef, repositories, { handle: ".repo__header-actions-handler" });
+useSortable(reposRef, repositories, { handle: ".drag-handle" });
 
 type SortOption = "alphabetic" | "stars" | "forks" | "issues" | "update" | "language";
 function sort(option: SortOption): void {

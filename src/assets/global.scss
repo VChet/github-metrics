@@ -311,3 +311,9 @@ dialog {
 .capitalize {
   text-transform: capitalize;
 }
+.drag-handle {
+  cursor: grab;
+  &:hover {
+    color: var(--accent);
+  }
+}

@@ -24,7 +24,7 @@
         >
           <icon-trash />
         </button>
-        <icon-grip-vertical class="repo__header-actions-handler" />
+        <icon-grip-vertical class="drag-handle" />
       </div>
     </header>
     <ul class="repo__body">
@@ -213,12 +213,6 @@ const {
       .repo:hover &,
       .repo:focus-within & {
         display: flex;
-      }
-      &-handler {
-        cursor: grab;
-        &:hover {
-          color: var(--accent);
-        }
       }
     }
   }
