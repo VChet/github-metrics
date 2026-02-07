@@ -1,12 +1,14 @@
 import { createGlobalState, useLocalStorage } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
+export type PackageBrowser = "npmjs.org" | "npmx.dev";
 type Theme = "github" | "aqua" | "cream" | "mint" | "rose" | "departure";
 export interface SettingsStore {
   authToken: string
   username: string
   displayOwner: boolean
   displayBadges: boolean
+  packageBrowser: PackageBrowser
   theme: Theme
 }
 
@@ -15,6 +17,7 @@ const DEFAULT_STORE: SettingsStore = {
   username: "",
   displayOwner: true,
   displayBadges: true,
+  packageBrowser: "npmjs.org",
   theme: "github"
 };
 

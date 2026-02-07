@@ -25,6 +25,10 @@
           </label>
         </fieldset>
         <fieldset>
+          <legend>NPM</legend>
+          <input-select v-model="form.packageBrowser" :items="PACKAGE_BROWSERS" name="packageBrowser" mandatory />
+        </fieldset>
+        <fieldset>
           <legend>GitHub API</legend>
           <ol v-if="!form.authToken">
             <li>
@@ -71,6 +75,7 @@ import { deepCopy } from "@/helpers/object";
 import { fetchCurrentUser, setAuthToken } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
 import ImportExport from "@/components/import-export.vue";
+import InputSelect from "@/components/input-select.vue";
 
 const dialogRef = useTemplateRef("dialogElement");
 const { open, close } = useDialog(dialogRef);
@@ -89,6 +94,11 @@ watch(() => settings.value.authToken, setAuthToken);
 watch(() => settings.value.theme, (theme) => {
   document.documentElement.setAttribute("data-theme", theme);
 }, { immediate: true });
+
+const PACKAGE_BROWSERS = [
+  { value: "npmjs.org", name: "npmjs.org" },
+  { value: "npmx.dev", name: "npmx.dev" }
+] as const;
 
 async function setUsername(): Promise<void> {
   const user = await fetchCurrentUser();

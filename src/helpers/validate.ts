@@ -12,3 +12,7 @@ export function isValidJSON(payload: string): boolean {
 export function isRequestError(payload: unknown): payload is RequestError {
   return !!payload && typeof payload === "object" && "status" in payload;
 }
+
+export function isNullish(value: unknown): value is null | undefined {
+  return value === null || value === undefined;
+}

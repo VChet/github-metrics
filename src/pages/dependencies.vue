@@ -38,10 +38,10 @@
                 <icon-x />
               </button>
               <a
-                :href="`https://npmjs.org/${dep}`"
+                :href="`https://${settings.packageBrowser}/${dep}`"
                 target="_blank"
                 rel="noopener noreferrer"
-                :title="`Go to ${dep} on npm`"
+                :title="`Go to ${dep} on ${settings.packageBrowser}`"
                 class="text-truncate"
               >
                 {{ dep }}
