@@ -25,7 +25,7 @@
           </label>
         </fieldset>
         <fieldset>
-          <legend>NPM</legend>
+          <legend>Package Browser</legend>
           <input-select v-model="form.packageBrowser" :items="PACKAGE_BROWSERS" name="packageBrowser" mandatory />
         </fieldset>
         <fieldset>
