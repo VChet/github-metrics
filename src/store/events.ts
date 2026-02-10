@@ -26,10 +26,10 @@ function getActionString({ type, payload }: RawEvent): string {
   switch (type) {
     case "ForkEvent": return "forked";
     case "IssuesEvent": return `${payload.action} issue`;
-    case "ReleaseEvent": return `${payload.action} release`;
     case "MemberEvent": return "joined";
     case "PublicEvent": return "made public";
     case "PullRequestEvent": return `${payload.action} pull request`;
+    case "ReleaseEvent": return `${payload.action} release`;
     case "WatchEvent": return "starred";
     default: return type ?? "[unknown action]";
   }
@@ -56,12 +56,13 @@ function composeEventUrl(event: RawEvent): string | null {
   return null;
 }
 
-interface FeedEvent {
-  id: string
+export interface FeedEvent {
+  id: RawEvent["id"]
+  type: RawEvent["type"]
+  repo: RawEvent["repo"]["name"]
   date: string
   username: string
   action: string
-  repo: string
   eventUrl?: string | null
 }
 
@@ -98,10 +99,11 @@ export const useEventsStore = createGlobalState(() => {
       ) { return acc; }
       const feedEvent: FeedEvent = {
         id: event.id,
+        type: event.type,
+        repo: event.repo.name,
         date: dayjs(event.created_at).format("DD MMMM HH:mm"),
         username: event.actor.display_login ?? event.actor.login,
         action: getActionString(event),
-        repo: event.repo.name,
         eventUrl: composeEventUrl(event)
       };
       acc.push(feedEvent);
