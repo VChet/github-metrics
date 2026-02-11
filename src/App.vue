@@ -37,8 +37,9 @@ const tabs = computed(() => {
   return entries;
 });
 
+const isFeedTab = (payload: unknown): payload is Tab => tabs.value.some(({ value }) => value === payload);
 const selectedTab = computed<Tab>({
-  get: () => route.name?.toString() as Tab ?? tabs.value[0].value,
+  get: () => isFeedTab(route.name) ? route.name : tabs.value[0].value,
   set: (name) => { router.push({ name }); }
 });
 </script>
