@@ -22,10 +22,7 @@ const { settings } = useSettingsStore();
 let octokit: Octokit;
 export const rateLimit = ref("-");
 
-setAuthToken(settings.value.authToken);
-
 export async function setAuthToken(authToken: string | null): Promise<void> {
-  settings.value.authToken = authToken ?? "";
   octokit = new Octokit({ auth: authToken });
   octokit.hook.after("request", (response) => {
     const limitRemaining = response.headers["x-ratelimit-remaining"];
@@ -33,6 +30,7 @@ export async function setAuthToken(authToken: string | null): Promise<void> {
   });
   await fetchRateLimit();
 }
+setAuthToken(settings.value.authToken);
 
 export function fetch(url: Route, options: RequestParameters = {}): Promise<any> {
   const NO_CACHE_LIMIT = 4000;

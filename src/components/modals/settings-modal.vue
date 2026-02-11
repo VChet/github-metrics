@@ -87,7 +87,7 @@ function closeModal(): void {
   close();
 }
 
-const { settings } = useSettingsStore();
+const { settings, setSettings } = useSettingsStore();
 const form = reactive(deepCopy(settings.value));
 watch(settings, (value) => { Object.assign(form, value); }, { deep: true });
 watch(() => settings.value.authToken, setAuthToken);
@@ -105,8 +105,8 @@ async function setUsername(): Promise<void> {
   if (user) form.username = user.login;
 }
 async function update(): Promise<void> {
-  if (form.authToken && !form.username) await setUsername();
-  settings.value = { ...form };
+  if (!form.username && form.authToken) await setUsername();
+  setSettings(form);
   closeModal();
 }
 </script>

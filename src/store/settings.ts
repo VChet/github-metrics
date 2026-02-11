@@ -1,3 +1,4 @@
+import { readonly } from "vue";
 import { createGlobalState, useLocalStorage } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
@@ -30,6 +31,9 @@ export const useSettingsStore = createGlobalState(() => {
     Object.assign(settings.value, newSettings);
   }
 
+  function setSettings(payload: Partial<SettingsStore>): void {
+    Object.assign(settings.value, payload);
+  }
   function nextTheme(): void {
     const themes = ["github", "aqua", "cream", "mint", "rose", "departure"] as const satisfies readonly Theme[];
     const index = themes.indexOf(settings.value.theme);
@@ -38,8 +42,9 @@ export const useSettingsStore = createGlobalState(() => {
   }
 
   return {
-    settings,
+    settings: readonly(settings),
     needRefresh,
+    setSettings,
     updateServiceWorker,
     importSettings,
     nextTheme
