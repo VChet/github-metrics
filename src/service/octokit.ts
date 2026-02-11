@@ -32,27 +32,27 @@ export async function setAuthToken(authToken: string | null): Promise<void> {
 }
 setAuthToken(settings.value.authToken);
 
-export function fetch(url: Route, options: RequestParameters = {}): Promise<any> {
+export function fetch<T>(url: Route, options: RequestParameters = {}): Promise<T> {
   const NO_CACHE_LIMIT = 4000;
   const bypassCache: boolean = Number(rateLimit.value) > NO_CACHE_LIMIT;
   return octokit.request(url, {
     ...options,
     headers: bypassCache ? { "If-None-Match": "" } : undefined
-  });
+  }) as Promise<T>;
 }
 
 export async function fetchRateLimit() {
-  const { data } = await fetch("GET /rate_limit") as RateLimitResponse;
+  const { data } = await fetch<RateLimitResponse>("GET /rate_limit");
   rateLimit.value = data.rate.remaining.toString() ?? "-";
 }
 
 export async function fetchRepo(fullName: Repository["full_name"]) {
-  const { data } = await fetch(`GET /repos/${fullName}`) as RepoResponse;
+  const { data } = await fetch<RepoResponse>(`GET /repos/${fullName}`);
   return data;
 }
 
 async function fetchRepositoryContents(fullName: Repository["full_name"]) {
-  const { data } = await fetch(`GET /repos/${fullName}/contents`) as RepoContentsResponse;
+  const { data } = await fetch<RepoContentsResponse>(`GET /repos/${fullName}/contents`);
   return data;
 }
 
@@ -67,7 +67,7 @@ export const fetchRepositoryFiles = useMemoize(async (fullName: Repository["full
 });
 
 async function fetchRepositoryFile(fullName: Repository["full_name"], fileName: string) {
-  const { data } = await fetch(`GET /repos/${fullName}/contents/${fileName}`) as RepoContentsResponse;
+  const { data } = await fetch<RepoContentsResponse>(`GET /repos/${fullName}/contents/${fileName}`);
   if ("content" in data) return atob(data.content);
   throw new Error("Invalid file");
 }
@@ -87,7 +87,7 @@ export async function fetchRepositoryPackages(fullName: Repository["full_name"])
 
 export async function fetchRepositoryWorkflows(fullName: Repository["full_name"]) {
   try {
-    const { data } = await fetch(`GET /repos/${fullName}/actions/workflows`) as WorkflowsResponse;
+    const { data } = await fetch<WorkflowsResponse>(`GET /repos/${fullName}/actions/workflows`);
     return data;
   } catch (error: unknown) {
     if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
@@ -96,19 +96,19 @@ export async function fetchRepositoryWorkflows(fullName: Repository["full_name"]
 }
 
 export async function fetchRepositoryEvents(fullName: Repository["full_name"], page = 1) {
-  const { data } = await fetch(`GET /repos/${fullName}/events`, { per_page: 100, page }) as RepoEventsResponse;
+  const { data } = await fetch<RepoEventsResponse>(`GET /repos/${fullName}/events`, { per_page: 100, page });
   if (!Array.isArray(data)) throw new Error(`Error fetching ${fullName} repo events`, data);
   return { data };
 }
 
 export async function fetchCurrentUser() {
   if (!settings.value.authToken) return console.warn("empty authToken");
-  const { data } = await fetch("GET /user") as UserResponse;
+  const { data } = await fetch<UserResponse>("GET /user");
   return data;
 }
 
 export async function fetchCurrentUserRepos() {
   if (!settings.value.authToken) return console.warn("empty authToken");
-  const { data } = await fetch("GET /user/repos", { affiliation: "owner" }) as UserReposResponse;
+  const { data } = await fetch<UserReposResponse>("GET /user/repos", { affiliation: "owner" });
   return data;
 }
