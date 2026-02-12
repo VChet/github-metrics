@@ -19,7 +19,9 @@ const TARGET_EVENTS = [
 ] as const;
 const FILTERED_ACTIONS = [
   "labeled",
-  "unlabeled"
+  "unlabeled",
+  "assigned",
+  "unassigned"
 ] as const;
 
 function getActionString({ type, payload }: RawEvent): string {
