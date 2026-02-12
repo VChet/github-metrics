@@ -5,6 +5,9 @@ import type { Repository } from "./useRepo";
 function isLocalDependency(version: string): boolean {
   return version.startsWith("link:") || version.startsWith("file:");
 }
+function isAliasDependency(version: string): boolean {
+  return version.startsWith("npm:");
+}
 
 export function useDependencyTable() {
   const { repositories } = useRepositoriesStore();
@@ -18,7 +21,7 @@ export function useDependencyTable() {
     for (const repo of repositoriesWithDependencies.value) {
       for (const key in repo.dependencies) {
         const version = repo.dependencies[key];
-        if (version && !isLocalDependency(version)) { set.add(key); }
+        if (version && !isLocalDependency(version) && !isAliasDependency(version)) { set.add(key); }
       }
     }
     return [...set].sort((a, b) => a.localeCompare(b));
