@@ -6,7 +6,7 @@
         <button
           v-for="dep in [...excludedDependencies].sort()"
           :key="dep"
-          :style="{ color: composeHashColorFromString(dep) }"
+          :style="{ color: composeHashColor(dep), textDecoration: dependencies.includes(dep) ? '' : 'line-through' }"
           class="icon chip"
           @click="showDependency(dep)"
         >
@@ -33,7 +33,7 @@
         </thead>
         <tbody>
           <tr v-for="dep in dependencies.filter((dep) => !excludedDependencies.has(dep))" :key="dep">
-            <td :title="dep" :style="{ color: composeHashColorFromString(dep) }" class="chip">
+            <td :title="dep" :style="{ color: composeHashColor(dep) }" class="chip">
               <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
                 <icon-x />
               </button>
@@ -61,7 +61,7 @@
 import { IconX } from "@tabler/icons-vue";
 import { coerce, compare, diff, type ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
-import { composeHashColorFromString } from "@/helpers/color";
+import { composeHashColor } from "@/helpers/color";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
 import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useSettingsStore } from "@/store/settings";

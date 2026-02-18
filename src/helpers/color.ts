@@ -26,7 +26,7 @@ const predefinedColorMap: Readonly<Record<string, string>> = {
   "workbox": "#ee810f"
 };
 
-export function composeHashColorFromString(name: string): string {
+export function composeHashColor(name: string): string {
   const mapKey = Object.keys(predefinedColorMap).find((key) => name.includes(key));
   if (mapKey) return predefinedColorMap[mapKey];
 
