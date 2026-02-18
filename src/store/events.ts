@@ -103,7 +103,7 @@ export const useEventsStore = createGlobalState(() => {
         id: event.id,
         type: event.type,
         repo: event.repo.name,
-        date: dayjs(event.created_at).format("DD MMMM HH:mm"),
+        date: dayjs(event.created_at).format("DD MMM, HH:mm"),
         username: event.actor.display_login ?? event.actor.login,
         action: getActionString(event),
         eventUrl: composeEventUrl(event)

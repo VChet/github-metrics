@@ -1,6 +1,6 @@
 <template>
   <li class="feed-item">
-    <time class="feed-item__timestamp">{{ data.date }}:</time>
+    <time class="feed-item__timestamp">{{ data.date }}</time>
     <component :is="icon.component" :style="{ stroke: icon.color }" class="feed-item__icon" />
     <span v-if="data.username.includes('github-actions')" class="feed-item__accent">
       {{ data.username }}
