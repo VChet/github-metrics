@@ -1,7 +1,7 @@
 <template>
   <li class="feed-item">
     <time class="feed-item__timestamp">{{ data.date }}:</time>
-    <component :is="iconComponent" :style="{ stroke: iconColor }" class="feed-item__icon" />
+    <component :is="icon.component" :style="{ stroke: icon.color }" class="feed-item__icon" />
     <span v-if="data.username.includes('github-actions')" class="feed-item__accent">
       {{ data.username }}
     </span>
@@ -32,7 +32,9 @@ import {
   IconCircleDot,
   IconEye,
   IconGitFork,
+  IconGitMerge,
   IconGitPullRequest,
+  IconGitPullRequestClosed,
   IconStar,
   IconTag,
   IconUser,
@@ -45,38 +47,38 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const iconComponent: Icon = (() => {
-  switch (props.data.type) {
-    case "ForkEvent": return IconGitFork;
-    case "IssuesEvent": return IconCircleDot;
-    case "MemberEvent": return IconUser;
-    case "PublicEvent": return IconEye;
-    case "PullRequestEvent": return IconGitPullRequest;
-    case "ReleaseEvent": return IconTag;
-    case "WatchEvent": return IconStar;
-    default: return IconCalendarEvent;
+const EVENT_VIEW_MAP: Record<NonNullable<FeedEvent["type"]>, Record<FeedEvent["action"], { component: Icon, color: string }>> = {
+  ForkEvent: {
+    forked: { component: IconGitFork, color: "var(--base)" }
+  },
+  IssuesEvent: {
+    "opened issue": { component: IconCircleDot, color: "var(--success)" },
+    "closed issue": { component: IconCircleDot, color: "var(--danger)" }
+  },
+  MemberEvent: {
+    joined: { component: IconUser, color: "var(--base)" }
+  },
+  PublicEvent: {
+    "made public": { component: IconEye, color: "var(--accent)" }
+  },
+  PullRequestEvent: {
+    "opened pull request": { component: IconGitPullRequest, color: "var(--success)" },
+    "closed pull request": { component: IconGitPullRequestClosed, color: "var(--danger)" },
+    "merged pull request": { component: IconGitMerge, color: "var(--done)" }
+  },
+  ReleaseEvent: {
+    "published release": { component: IconTag, color: "var(--success)" }
+  },
+  WatchEvent: {
+    starred: { component: IconStar, color: "var(--accent)" }
   }
-})();
-const iconColor: string | undefined = (() => {
-  switch (props.data.action) {
-    case "opened issue":
-    case "opened pull request":
-    case "published release":
-      return "#3fb950"; // green
-    case "merged pull request":
-      return "#ab7df8"; // purple
-    case "closed issue":
-    case "closed pull request":
-      return "#f85149"; // red
-    case "made public":
-    case "starred":
-      return "#e3b341"; // yellow
-    case "forked":
-    case "joined":
-      return "#9198a1"; // gray
-    default:
-      return undefined;
-  }
+};
+const DEFAULT_ICON = { component: IconCalendarEvent, color: "var(--base)" } as const;
+
+const icon = (() => {
+  const { type, action } = props.data;
+  if (!type) return DEFAULT_ICON;
+  return EVENT_VIEW_MAP[type][action] ?? DEFAULT_ICON;
 })();
 </script>
 <style lang="scss">
