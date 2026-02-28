@@ -32,7 +32,7 @@ const { settings } = useSettingsStore();
     font-weight: bold;
   }
   p {
-    margin-block: .5rem;
+    margin-block: 0.5rem;
   }
   &__token-note {
     margin-block: 2rem;

@@ -119,7 +119,7 @@ async function update(): Promise<void> {
     fieldset {
       display: grid;
       gap: 1rem;
-      padding: .75rem;
+      padding: 0.75rem;
     }
   }
 }

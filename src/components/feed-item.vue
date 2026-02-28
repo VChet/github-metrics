@@ -90,7 +90,7 @@ const icon = (() => {
   &__icon {
     width: 1rem;
     height: 1rem;
-    margin-inline: .25rem;
+    margin-inline: 0.25rem;
     vertical-align: bottom;
   }
   a, &__accent {

@@ -37,7 +37,7 @@ function getTabClassList(tab: Tab): Record<string, boolean> {
 <style lang="scss">
 .tab-selector {
   display: flex;
-  gap: .5rem;
+  gap: 0.5rem;
   align-items: center;
   &__button {
     &--active {

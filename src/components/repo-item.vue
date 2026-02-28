@@ -229,7 +229,7 @@ const {
   }
   &__footer {
     display: grid;
-    gap: .5rem;
+    gap: 0.5rem;
     justify-content: space-between;
     margin-top: auto;
     > div {
