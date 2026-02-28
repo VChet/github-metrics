@@ -2,7 +2,7 @@
   <li class="feed-item">
     <time class="feed-item__timestamp">{{ data.date }}</time>
     <component :is="icon.component" :style="{ stroke: icon.color }" class="feed-item__icon" />
-    <span v-if="data.username.includes('github-actions')" class="feed-item__accent">
+    <span v-if="data.username.includes('github-actions')">
       {{ data.username }}
     </span>
     <a
@@ -92,7 +92,7 @@ const icon = props.data.type ? EVENT_VIEW_MAP[props.data.type][props.data.action
     margin-inline: 0.25rem;
     vertical-align: bottom;
   }
-  a, &__accent {
+  a {
     font-weight: bold;
   }
 }
