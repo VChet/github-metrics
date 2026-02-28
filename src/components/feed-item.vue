@@ -47,7 +47,11 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-const EVENT_VIEW_MAP: Record<NonNullable<FeedEvent["type"]>, Record<FeedEvent["action"], { component: Icon, color: string }>> = {
+interface IconInfo {
+  component: Icon
+  color: string
+}
+const EVENT_VIEW_MAP: Record<NonNullable<FeedEvent["type"]>, Record<FeedEvent["action"], IconInfo>> = {
   ForkEvent: {
     forked: { component: IconGitFork, color: "var(--base)" }
   },
@@ -73,13 +77,8 @@ const EVENT_VIEW_MAP: Record<NonNullable<FeedEvent["type"]>, Record<FeedEvent["a
     starred: { component: IconStar, color: "var(--accent)" }
   }
 };
-const DEFAULT_ICON = { component: IconCalendarEvent, color: "var(--base)" } as const;
-
-const icon = (() => {
-  const { type, action } = props.data;
-  if (!type) return DEFAULT_ICON;
-  return EVENT_VIEW_MAP[type][action] ?? DEFAULT_ICON;
-})();
+const DEFAULT_ICON = { component: IconCalendarEvent, color: "var(--base)" } as const satisfies IconInfo;
+const icon = props.data.type ? EVENT_VIEW_MAP[props.data.type][props.data.action] ?? DEFAULT_ICON : DEFAULT_ICON;
 </script>
 <style lang="scss">
 .feed-item {
