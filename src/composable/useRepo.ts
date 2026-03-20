@@ -46,12 +46,13 @@ function composeBadgeUrl(base: string): string {
   return url.href;
 }
 
+const TOP_LEVEL_DOMAIN_REGEX = /\w+\.\w+$/;
 export function useRepository(data: Ref<Repository>) {
   const hostingName = computed<string | null>(() => {
     if (!data.value.homepage) return null;
     try {
       const { hostname } = new URL(data.value.homepage);
-      const match = /\w+\.\w+$/.exec(hostname); // Match top-level domain
+      const match = TOP_LEVEL_DOMAIN_REGEX.exec(hostname);
       return match ? match[0] : null;
     } catch {
       return null;

@@ -69,7 +69,7 @@ async function update(): Promise<void> {
     gap: inherit;
     align-items: center;
     @media (width <= 600px) {
-    flex-basis: 100%;
+      flex-basis: 100%;
       > * {
         flex-grow: 1;
       }

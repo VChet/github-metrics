@@ -38,10 +38,10 @@ const classList = computed<Record<string, boolean>>(() => {
     color: currentcolor;
   }
   &--positive {
-     color: var(--positive);
-    }
+    color: var(--positive);
+  }
   &--negative {
     color: var(--negative);
-   }
+  }
 }
 </style>

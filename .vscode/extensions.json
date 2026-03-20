@@ -2,7 +2,6 @@
   "recommendations": [
     "christian-kohler.npm-intellisense",
     "dbaeumer.vscode-eslint",
-    "editorconfig.editorconfig",
     "stylelint.vscode-stylelint",
     "vue.volar"
   ]
