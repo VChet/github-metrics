@@ -1,6 +1,8 @@
 import { execSync } from "node:child_process";
+import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 import Vue from "@vitejs/plugin-vue";
+import namedPort from "named-port";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import VueRouter from "vue-router/vite";
@@ -34,6 +36,6 @@ export default defineConfig({
     "import.meta.env.VITE_GIT_COMMIT_DATE": JSON.stringify(commitDate)
   },
   server: {
-    port: 7400
+    port: namedPort(process.env.npm_package_name!, { min: 7000, max: 10000 })
   }
 });

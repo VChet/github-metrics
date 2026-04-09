@@ -1,7 +1,7 @@
 {
   "recommendations": [
-    "christian-kohler.npm-intellisense",
     "dbaeumer.vscode-eslint",
+    "npmx-dev.vscode-npmx",
     "stylelint.vscode-stylelint",
     "vue.volar"
   ]
