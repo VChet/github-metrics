@@ -12,7 +12,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useFileDialog, whenever } from "@vueuse/core";
 import { IconDownload, IconUpload } from "@tabler/icons-vue";
 import dayjs from "dayjs";
@@ -43,6 +43,7 @@ whenever(files, async ({ 0: payload }) => {
     if (!isExportedData(parsedData)) throw new Error("Invalid import data");
 
     importSettings(parsedData.settings);
+    await nextTick(); // Wait fot authToken to be set before importing repositories
     if (parsedData.excludedDependencies.length) { importExcludedDependencies(parsedData.excludedDependencies); }
     if (parsedData.repositories.length) { await importRepositories(parsedData.repositories); }
   } finally {
