@@ -1,4 +1,3 @@
 enginesNode: true
 format: repo
 reject:
-  - vite # https://github.com/vite-pwa/vite-plugin-pwa/issues/918
