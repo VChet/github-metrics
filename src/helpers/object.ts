@@ -2,7 +2,7 @@ import type { WritableDeep } from "type-fest";
 
 function isObject(object: unknown): boolean {
   const type = typeof object;
-  return type === "function" || (type === "object" && !!object);
+  return type === "function" || (!!object && type === "object");
 }
 
 export function deepEqual<T extends Record<string, any>>(a: T | null, b: T | null): boolean {
@@ -22,4 +22,10 @@ export function deepEqual<T extends Record<string, any>>(a: T | null, b: T | nul
 
 export function deepCopy<T>(object: T): WritableDeep<T> {
   return JSON.parse(JSON.stringify(object)) as WritableDeep<T>;
+}
+
+export function isVersionsObject(versions: unknown): versions is Record<string, string> {
+  return !!versions &&
+    isObject(versions) &&
+    Object.values(versions).every((value): value is string => typeof value === "string");
 }

@@ -45,7 +45,7 @@
                 class="text-truncate"
               >
                 {{ dep }}
-                <div>{{ latestVersions[dep] ?? '???' }}</div>
+                <div class="dependency-versions">{{ getDisplayVersion(dep) }}</div>
               </a>
             </td>
             <td v-for="repo in repos" :key="repo.id" :class="versionDiffClass(dep, repo.dependencies![dep])">
@@ -63,21 +63,32 @@ import { coerce, compare, diff, type ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 import { composeHashColor } from "@/helpers/color";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
-import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useSettingsStore } from "@/store/settings";
+import { useVersionsStore } from "@/store/versions";
 
 const { settings } = useSettingsStore();
 const { hasDependencies, repos, dependencies } = useDependencyTable();
 const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
 
-const { latestVersions } = useLatestVersionsStore();
-function versionDiffClass(packageName: string, version?: string): ReleaseType | "ahead" | null {
+const { versions } = useVersionsStore();
+function getDisplayVersion(packageName: string): string {
+  const tags = versions.value[packageName];
+  if (!tags?.latest) return "???";
+
+  const { latest, next } = tags;
+  return next ? `${latest}\n${next}` : latest;
+}
+function versionDiffClass(packageName: string, version?: string): ReleaseType | null {
   if (!version) return null;
-  const projectVersion = coerce(version)?.version;
-  const latestVersion = coerce(latestVersions.value[packageName])?.version;
-  if (!projectVersion || !latestVersion) return null;
-  if (compare(projectVersion, latestVersion) === 1) return "ahead";
-  return diff(projectVersion, latestVersion);
+  const projectVersion = coerce(version, { includePrerelease: true })?.version;
+
+  const { latest, next } = versions.value[packageName];
+  if (!projectVersion || !latest) return null;
+
+  let targetVersion = latest;
+  if (next && compare(latest, projectVersion) === -1) targetVersion = next;
+
+  return diff(projectVersion, targetVersion);
 }
 </script>
 <style lang="scss">
@@ -149,17 +160,15 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
           color: #f35;
           background-color: #ff335526;
         }
-        &.ahead {
-          color: #c4b5fd;
-          background-color: #c4b5fd26;
-        }
       }
     }
     thead th, tbody td {
       white-space: nowrap;
       &:first-of-type {
-        div {
-          font-size: 0.75rem;
+        font-size: 0.9rem;
+        .dependency-versions {
+          font-size: 0.7rem;
+          white-space: pre-wrap;
         }
       }
       &:not(:first-of-type) {

@@ -30,9 +30,9 @@ import { computed, ref } from "vue";
 import { IconActivityHeartbeat, IconPalette, IconProgressAlert } from "@tabler/icons-vue";
 import { fetchRateLimit, fetchRepositoryFiles, rateLimit } from "@/service/octokit";
 import { useEventsStore } from "@/store/events";
-import { useLatestVersionsStore } from "@/store/latest-versions";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
+import { useVersionsStore } from "@/store/versions";
 import IconLoader from "../icon-loader.vue";
 import AboutModal from "../modals/about-modal.vue";
 import AddRepo from "../modals/add-repo.vue";
@@ -40,7 +40,7 @@ import SettingsModal from "../modals/settings-modal.vue";
 import HeaderSummary from "./header-summary.vue";
 
 const { isEmpty, updateRepositories } = useRepositoriesStore();
-const { updateLatestVersions } = useLatestVersionsStore();
+const { updateVersions } = useVersionsStore();
 const { updateEvents } = useEventsStore();
 
 const { settings, needRefresh, updateServiceWorker, nextTheme } = useSettingsStore();
@@ -50,7 +50,7 @@ async function update(): Promise<void> {
   try {
     isUpdating.value = true;
     fetchRepositoryFiles.clear();
-    await Promise.all([updateRepositories(), updateLatestVersions(), updateEvents()]);
+    await Promise.all([updateRepositories(), updateVersions(), updateEvents()]);
   } finally {
     isUpdating.value = false;
   }
