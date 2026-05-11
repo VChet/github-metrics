@@ -136,9 +136,4 @@ export default antfu({
     "vue/v-bind-style": ["error", "shorthand", { sameNameShorthand: "always" }],
     "vue/v-on-style": ["error", "shorthand"]
   }
-}, {
-  files: ["**/*.md"],
-  rules: {
-    "perfectionist/sort-imports": "off"
-  }
 });
