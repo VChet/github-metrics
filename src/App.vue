@@ -1,5 +1,7 @@
 <template>
   <main class="container main-container">
+    <swipe-navigator :tabs />
+
     <main-header />
     <main-placeholder v-if="!repositories.length" />
     <template v-else>
@@ -17,8 +19,10 @@ import { computed } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import { useEventsStore } from "@/store/events";
 import { useRepositoriesStore } from "@/store/repositories";
+import type { Tab } from "./types/tab";
 import MainHeader from "@/components/header/main-header.vue";
 import MainPlaceholder from "@/components/main-placeholder.vue";
+import SwipeNavigator from "@/components/swipe-navigator.vue";
 import TabSelector from "@/components/tab-selector.vue";
 
 const route = useRoute("Repositories");
@@ -27,9 +31,8 @@ const router = useRouter();
 const { repositories } = useRepositoriesStore();
 const { isFeedAvailable, amount } = useEventsStore();
 
-type Tab = "Repositories" | "Dependencies" | "Feed";
 const tabs = computed(() => {
-  const entries: { value: Tab, text: string }[] = [
+  const entries: Tab[] = [
     { value: "Repositories", text: "Repositories" },
     { value: "Dependencies", text: "Dependencies" }
   ];
@@ -37,9 +40,9 @@ const tabs = computed(() => {
   return entries;
 });
 
-const isFeedTab = (payload: unknown): payload is Tab => tabs.value.some(({ value }) => value === payload);
-const selectedTab = computed<Tab>({
-  get: () => isFeedTab(route.name) ? route.name : tabs.value[0].value,
+const isValidTab = (payload: unknown): payload is Tab => tabs.value.some(({ value }) => value === payload);
+const selectedTab = computed<Tab["value"]>({
+  get: () => isValidTab(route.name) ? route.name : tabs.value[0].value,
   set: (name) => { router.push({ name }); }
 });
 </script>

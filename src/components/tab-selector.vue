@@ -9,11 +9,8 @@
 </template>
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
+import type { Tab } from "@/types/tab";
 
-interface Tab {
-  value: string
-  text: string
-}
 interface Props {
   modelValue: Tab["value"]
   items: Tab[]

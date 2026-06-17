@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasDependencies" class="dependencies">
+  <section v-if="hasDependencies" class="dependencies">
     <fieldset v-if="excludedDependencies.size">
       <legend>Excluded dependencies:</legend>
       <div class="dependencies__excluded">
@@ -55,7 +55,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 </template>
 <script setup lang="ts">
 import { IconX } from "@tabler/icons-vue";
