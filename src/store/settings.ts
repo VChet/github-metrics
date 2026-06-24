@@ -1,5 +1,5 @@
 import { readonly } from "vue";
-import { createGlobalState, useLocalStorage } from "@vueuse/core";
+import { createGlobalState, useLocalStorage, useMediaQuery } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
 export type PackageBrowser = "npmjs.org" | "npmx.dev";
@@ -9,6 +9,7 @@ export interface SettingsStore {
   username: string
   displayOwner: boolean
   displayBadges: boolean
+  swipeNavigator: boolean
   packageBrowser: PackageBrowser
   theme: Theme
 }
@@ -18,12 +19,14 @@ const DEFAULT_STORE: SettingsStore = {
   username: "",
   displayOwner: true,
   displayBadges: true,
+  swipeNavigator: true,
   packageBrowser: "npmjs.org",
   theme: "github"
 };
 
 export const useSettingsStore = createGlobalState(() => {
   const settings = useLocalStorage<SettingsStore>("settings", DEFAULT_STORE, { mergeDefaults: true });
+  const isSwipeSupported = useMediaQuery("(pointer: coarse)");
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({ immediate: true });
 
@@ -43,6 +46,7 @@ export const useSettingsStore = createGlobalState(() => {
 
   return {
     settings: readonly(settings),
+    isSwipeSupported,
     needRefresh,
     setSettings,
     updateServiceWorker,

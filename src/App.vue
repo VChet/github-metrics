@@ -1,6 +1,6 @@
 <template>
   <main class="container main-container">
-    <swipe-navigator :tabs />
+    <swipe-navigator v-if="isSwipeSupported && settings.swipeNavigator" :tabs />
 
     <main-header />
     <main-placeholder v-if="!repositories.length" />
@@ -19,6 +19,7 @@ import { computed } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import { useEventsStore } from "@/store/events";
 import { useRepositoriesStore } from "@/store/repositories";
+import { useSettingsStore } from "@/store/settings";
 import type { Tab } from "./types/tab";
 import MainHeader from "@/components/header/main-header.vue";
 import MainPlaceholder from "@/components/main-placeholder.vue";
@@ -29,6 +30,7 @@ const route = useRoute("Repositories");
 const router = useRouter();
 
 const { repositories } = useRepositoriesStore();
+const { settings, isSwipeSupported } = useSettingsStore();
 const { isFeedAvailable, amount } = useEventsStore();
 
 const tabs = computed(() => {

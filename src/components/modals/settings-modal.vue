@@ -23,6 +23,10 @@
             <input v-model="form.displayBadges" name="displayBadges" type="checkbox">
             Display badges
           </label>
+          <label>
+            <input v-model="form.swipeNavigator" name="swipeNavigator" type="checkbox" :disabled="!isSwipeSupported">
+            Enable swipe tab navigation
+          </label>
         </fieldset>
         <fieldset>
           <legend>Package Browser</legend>
@@ -87,7 +91,7 @@ function closeModal(): void {
   close();
 }
 
-const { settings, setSettings } = useSettingsStore();
+const { settings, setSettings, isSwipeSupported } = useSettingsStore();
 const form = reactive(deepCopy(settings.value));
 watch(settings, (value) => { Object.assign(form, value); }, { deep: true });
 watch(() => settings.value.authToken, setAuthToken);
