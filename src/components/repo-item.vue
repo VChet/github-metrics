@@ -61,7 +61,7 @@
     <footer class="repo__footer">
       <div>
         <span v-if="repo.language">
-          <span class="repo__footer-language" :class="`bg-color-${repo.language.toLowerCase()}`" />
+          <span class="repo__footer-language" :class="`language-${repo.language.toLowerCase()}`" />
           {{ repo.language }}
         </span>
         <!-- Stars -->
@@ -178,6 +178,7 @@ const {
 } = useRepository(repo);
 </script>
 <style lang="scss">
+@use "@/assets/language-colors";
 .repo {
   display: flex;
   flex-direction: column;

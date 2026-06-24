@@ -11,7 +11,7 @@ export default {
   ],
   customSyntax: "postcss-scss",
   overrides: [{ files: ["**/*.vue"], customSyntax: "postcss-html" }],
-  ignoreFiles: ["dist"],
+  ignoreFiles: ["dist/**"],
   rules: {
     "@stylistic/selector-list-comma-newline-after": "always-multi-line",
     "at-rule-empty-line-before": "never",

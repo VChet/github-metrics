@@ -11,6 +11,7 @@
     "preinstall": "npx -y only-allow pnpm",
     "dev": "vite",
     "build": "vite build",
+    "build:colors": "node src/helpers/language-colors.ts",
     "preview": "vite preview",
     "lint:ts": "vue-tsc",
     "lint:js": "eslint .",
