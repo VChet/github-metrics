@@ -32,6 +32,15 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url))
     }
   },
+  build: {
+    rolldownOptions: {
+      onLog(level, log, defaultHandler) {
+        // TODO: Remove when updating VueUse beyond v14.3.0
+        if (log.code === "INVALID_ANNOTATION") return;
+        defaultHandler(level, log);
+      }
+    }
+  },
   define: {
     "import.meta.env.VITE_GIT_COMMIT_DATE": JSON.stringify(commitDate)
   },
