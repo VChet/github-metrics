@@ -12,7 +12,7 @@ interface Integrations {
 }
 
 export type Repository = Simplify<RepoResponse["data"] & {
-  dependencies: NonNullable<PackageJson.Dependency> | null
+  dependencies: PackageJson.Dependency | null
   integrations: Integrations
 }>;
 

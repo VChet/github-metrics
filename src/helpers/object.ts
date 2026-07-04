@@ -23,9 +23,3 @@ export function deepEqual<T extends Record<string, any>>(a: T | null, b: T | nul
 export function deepCopy<T>(object: T): WritableDeep<T> {
   return JSON.parse(JSON.stringify(object)) as WritableDeep<T>;
 }
-
-export function isVersionsObject(versions: unknown): versions is Record<string, string> {
-  return !!versions &&
-    isObject(versions) &&
-    Object.values(versions).every((value): value is string => typeof value === "string");
-}

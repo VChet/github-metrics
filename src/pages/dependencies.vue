@@ -7,7 +7,7 @@
           v-for="dep in [...excludedDependencies].sort()"
           :key="dep"
           :style="{ color: composeHashColor(dep), textDecoration: dependencies.includes(dep) ? '' : 'line-through' }"
-          class="icon chip"
+          class="icon"
           @click="showDependency(dep)"
         >
           {{ dep }}
@@ -32,8 +32,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="dep in dependencies.filter((dep) => !excludedDependencies.has(dep))" :key="dep">
-            <td :title="dep" :style="{ color: composeHashColor(dep) }" class="chip">
+          <tr v-for="dep in visibleDependencies" :key="dep">
+            <td :title="dep" :style="{ color: composeHashColor(dep) }" class="action-cell">
               <button class="icon" type="button" title="exclude dependency" @click="hideDependency(dep)">
                 <icon-x />
               </button>
@@ -58,6 +58,7 @@
   </section>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
 import { IconX } from "@tabler/icons-vue";
 import { coerce, compare, diff, type ReleaseType } from "semver";
 import { useDependencyTable } from "@/composable/useDependencyTable";
@@ -70,23 +71,20 @@ const { settings } = useSettingsStore();
 const { hasDependencies, repos, dependencies } = useDependencyTable();
 const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
 
+const visibleDependencies = computed(() => dependencies.value.filter((dep) => !excludedDependencies.value.has(dep)));
+
 const { versions } = useVersionsStore();
 function getDisplayVersion(packageName: string): string {
-  const tags = versions.value[packageName];
-  if (!tags?.latest) return "???";
-
-  const { latest, next } = tags;
-  return next ? `${latest}\n${next}` : latest;
+  const { latest, next } = versions.value[packageName];
+  return [latest, next].filter(Boolean).join("\n") ?? "???";
 }
 function versionDiffClass(packageName: string, version?: string): ReleaseType | null {
   if (!version) return null;
   const projectVersion = coerce(version, { includePrerelease: true })?.version;
+  if (!projectVersion) return null;
 
   const { latest, next } = versions.value[packageName];
-  if (!projectVersion || !latest) return null;
-
-  let targetVersion = latest;
-  if (next && compare(latest, projectVersion) === -1) targetVersion = next;
+  const targetVersion = next && compare(latest, projectVersion) < 0 ? next : latest;
 
   return diff(projectVersion, targetVersion);
 }
@@ -133,7 +131,7 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
       td {
         padding: 0.25rem 0.5rem;
         transition: color 0.3s, background-color 0.3s;
-        &.chip {
+        &.action-cell {
           display: grid;
           grid-template-columns: 1.5rem 10rem;
           gap: 0.25rem;
@@ -148,31 +146,30 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
             visibility: visible;
           }
         }
+        &.patch, &.minor, &.major {
+          background-color: color-mix(in srgb, currentcolor 15%, transparent);
+        }
         &.patch {
           color: #79d297;
-          background-color: #79d29726;
         }
         &.minor {
           color: #14b8b8;
-          background-color: #14b8b826;
         }
         &.major {
           color: #f35;
-          background-color: #ff335526;
         }
       }
     }
     thead th, tbody td {
+      text-align: center;
       white-space: nowrap;
       &:first-of-type {
         font-size: 0.9rem;
+        text-align: left;
         .dependency-versions {
           font-size: 0.7rem;
           white-space: pre-wrap;
         }
-      }
-      &:not(:first-of-type) {
-        text-align: center;
       }
     }
   }
