@@ -9,3 +9,5 @@ export type RepoResponse = Endpoints["GET /repos/{owner}/{repo}"]["response"];
 export type RepoEventsResponse = Endpoints["GET /repos/{owner}/{repo}/events"]["response"];
 export type RepoContentsResponse = Endpoints["GET /repos/{owner}/{repo}/contents/{path}"]["response"];
 export type WorkflowsResponse = Endpoints["GET /repos/{owner}/{repo}/actions/workflows"]["response"];
+
+export type Workflow = WorkflowsResponse["data"]["workflows"][number];

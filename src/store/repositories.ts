@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { isExportedRepository, type ExportedRepository } from "@/helpers/export";
 import { fetchRepo, fetchRepositoryFiles, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
+import type { Workflow } from "@/types/repo";
 
 interface RepositoriesStore {
   lastUpdate: string
@@ -15,10 +16,19 @@ const DEFAULT_STORE: RepositoriesStore = {
   data: []
 };
 
-async function parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowBadge"]> {
+async function parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowPath"]> {
   const workflowsData = await fetchRepositoryWorkflows(fullName);
-  const firstWorkflow = workflowsData?.workflows[0];
-  return firstWorkflow?.state === "active" ? firstWorkflow.path : undefined;
+  const latest = workflowsData?.workflows.reduce<Workflow | undefined>((best, workflow) => {
+    const { name, path } = workflow;
+    const isDependabot = name.toLowerCase().includes("dependabot") || path.toLowerCase().includes("dependabot");
+
+    if (isDependabot || workflow.state !== "active") return best;
+    if (!best) return workflow;
+
+    return dayjs(workflow.updated_at).isAfter(best.updated_at) ? workflow : best;
+  }, undefined);
+
+  return latest?.path;
 }
 async function parsePackageManager(fullName: Repository["full_name"]): Promise<"npm" | "pnpm" | "yarn" | undefined> {
   const files = await fetchRepositoryFiles(fullName);
@@ -54,7 +64,7 @@ export const useRepositoriesStore = createGlobalState(() => {
     if (isRepoExists(repo.id)) return updateRepository(fullName, integrations);
 
     const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
-    integrations.workflowBadge = repo.private ? await parseWorkflows(fullName) : undefined;
+    integrations.workflowPath = repo.private ? await parseWorkflows(fullName) : undefined;
     integrations.packageManager = await parsePackageManager(fullName);
 
     repositories.value.push({ ...repo, dependencies, integrations });
@@ -72,7 +82,7 @@ export const useRepositoriesStore = createGlobalState(() => {
     if (!repo) throw new Error("Repo not found");
 
     const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
-    integrations.workflowBadge = !repo.private ? await parseWorkflows(fullName) : undefined;
+    integrations.workflowPath = !repo.private ? await parseWorkflows(fullName) : undefined;
     integrations.packageManager = await parsePackageManager(fullName);
 
     const entryIndex = repositories.value.findIndex(({ id }) => id === repo.id);
@@ -87,7 +97,7 @@ export const useRepositoriesStore = createGlobalState(() => {
   }
 
   async function importRepositories(payload: ExportedRepository[]): Promise<void> {
-    const fetchPromises = payload.reduce((acc: Promise<void>[], repo) => {
+    const fetchPromises = payload.reduce<Promise<void>[]>((acc, repo) => {
       if (isExportedRepository(repo)) {
         const { id, full_name, integrations } = repo;
         const request = isRepoExists(id) ?

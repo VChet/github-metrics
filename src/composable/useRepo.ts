@@ -1,13 +1,13 @@
 import { computed, type Ref } from "vue";
 import type { PackageJson, Simplify } from "type-fest";
-import type { RepoResponse } from "@/types/repo";
+import type { RepoResponse, Workflow } from "@/types/repo";
 
 interface Integrations {
   uptimerobotKey?: string
   hostingProjectId?: string
   analytics?: string
   // Auto-detected
-  workflowBadge?: string
+  workflowPath?: Workflow["path"]
   packageManager?: string
 }
 
@@ -40,7 +40,7 @@ const TEST_FRAMEWORKS = [
   "zora"
 ];
 
-function composeBadgeUrl(base: string): string {
+function composeBadgeUrl(base: string): URL["href"] {
   const url = new URL(base);
   url.searchParams.set("style", "flat-square");
   return url.href;
@@ -71,9 +71,9 @@ export function useRepository(data: Ref<Repository>) {
   });
   const workflowBadge = computed<string | null>(() => {
     const { integrations, owner, name } = data.value;
-    if (!integrations.workflowBadge) return null;
+    if (!integrations.workflowPath) return null;
     return composeBadgeUrl(
-      `https://img.shields.io/github/actions/workflow/status/${owner.login}/${name}/${integrations.workflowBadge}`
+      `https://img.shields.io/github/actions/workflow/status/${owner.login}/${name}/${integrations.workflowPath}`
     );
   });
   const packageManager = computed<string | null>(() => data.value.integrations.packageManager ?? null);
