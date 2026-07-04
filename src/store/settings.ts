@@ -2,7 +2,7 @@ import { readonly } from "vue";
 import { createGlobalState, useLocalStorage, useMediaQuery } from "@vueuse/core";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
-export type PackageBrowser = "npmjs.org" | "npmx.dev";
+type PackageBrowser = "npmjs.org" | "npmx.dev";
 type Theme = "github" | "aqua" | "cream" | "mint" | "rose" | "departure";
 export interface SettingsStore {
   authToken: string
@@ -20,8 +20,8 @@ const DEFAULT_STORE: SettingsStore = {
   displayOwner: true,
   displayBadges: true,
   swipeNavigator: true,
-  packageBrowser: "npmjs.org",
-  theme: "github"
+  packageBrowser: "npmx.dev",
+  theme: "departure"
 };
 
 export const useSettingsStore = createGlobalState(() => {
