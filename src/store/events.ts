@@ -132,7 +132,7 @@ export const useEventsStore = createGlobalState(() => {
   }
 
   function updateCheck() {
-    const isUpdateNeeded = !lastUpdate.value || dayjs().diff(dayjs(lastUpdate.value), "hours") >= 1;
+    const isUpdateNeeded = !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
     if (isUpdateNeeded) return updateEvents();
   }
   whenever(() => storage.value.lastUpdate, updateCheck, { immediate: true });

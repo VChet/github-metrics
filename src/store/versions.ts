@@ -49,7 +49,7 @@ export const useVersionsStore = createGlobalState(() => {
   }
 
   function updateCheck() {
-    const isUpdateNeeded = isEmpty.value || !lastUpdate.value || dayjs().diff(dayjs(lastUpdate.value), "hours") >= 1;
+    const isUpdateNeeded = isEmpty.value || !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
     if (isUpdateNeeded) return updateVersions();
   }
   whenever(() => storage.value.lastUpdate, updateCheck, { immediate: true });
