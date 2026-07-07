@@ -146,7 +146,7 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
             visibility: visible;
           }
         }
-        &.patch, &.minor, &.major {
+        &.patch, &.minor, &.major, &.prerelease {
           background-color: color-mix(in srgb, currentcolor 15%, transparent);
         }
         &.patch {
@@ -157,6 +157,9 @@ function versionDiffClass(packageName: string, version?: string): ReleaseType | 
         }
         &.major {
           color: #f35;
+        }
+        &.prerelease {
+          color: #c4b5fd;
         }
       }
     }
