@@ -72,13 +72,13 @@ async function fetchRepositoryFile(fullName: Repository["full_name"], fileName: 
   throw new Error("Invalid file");
 }
 
-export async function fetchRepositoryPackages(fullName: Repository["full_name"]): Promise<PackageJson.Dependency | null> {
+export async function fetchPackageJson(fullName: Repository["full_name"]): Promise<PackageJson | null> {
   try {
     const hasPackage: boolean = await fetchRepositoryFiles(fullName).then((files) => files.includes("package.json"));
     if (!hasPackage) return null;
     const packageContents = await fetchRepositoryFile(fullName, "package.json");
     const content = JSON.parse(packageContents) as PackageJson;
-    return { ...content.dependencies, ...content.devDependencies };
+    return content;
   } catch (error: unknown) {
     if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
     return null;

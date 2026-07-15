@@ -2,42 +2,18 @@ import { computed } from "vue";
 import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import { isExportedRepository, type ExportedRepository } from "@/helpers/export";
-import { fetchRepo, fetchRepositoryFiles, fetchRepositoryPackages, fetchRepositoryWorkflows } from "@/service/octokit";
+import { populateRepositoryData } from "@/helpers/repo";
+import { fetchRepo } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
-import type { Workflow } from "@/types/repo";
 
 interface RepositoriesStore {
   lastUpdate: string
   data: Repository[]
 };
-
 const DEFAULT_STORE: RepositoriesStore = {
   lastUpdate: dayjs().toISOString(),
   data: []
 };
-
-async function parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowPath"]> {
-  const workflowsData = await fetchRepositoryWorkflows(fullName);
-  const latest = workflowsData?.workflows.reduce<Workflow | undefined>((best, workflow) => {
-    const { name, path } = workflow;
-    const isDependabot = name.toLowerCase().includes("dependabot") || path.toLowerCase().includes("dependabot");
-
-    if (isDependabot || workflow.state !== "active") return best;
-    if (!best) return workflow;
-
-    return dayjs(workflow.updated_at).isAfter(best.updated_at) ? workflow : best;
-  }, undefined);
-
-  return latest?.path;
-}
-async function parsePackageManager(fullName: Repository["full_name"]): Promise<"npm" | "pnpm" | "yarn" | undefined> {
-  const files = await fetchRepositoryFiles(fullName);
-  if (files.includes("package-lock.json")) return "npm";
-  else if (files.includes("pnpm-lock.yaml")) return "pnpm";
-  else if (files.includes("yarn.lock")) return "yarn";
-
-  return undefined;
-}
 
 export const useRepositoriesStore = createGlobalState(() => {
   const storage = useLocalStorage<RepositoriesStore>("repositories", DEFAULT_STORE, { mergeDefaults: true });
@@ -63,11 +39,7 @@ export const useRepositoriesStore = createGlobalState(() => {
     if (!repo) throw new Error("Repo not found");
     if (isRepoExists(repo.id)) return updateRepository(fullName, integrations);
 
-    const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
-    integrations.workflowPath = repo.private ? await parseWorkflows(fullName) : undefined;
-    integrations.packageManager = await parsePackageManager(fullName);
-
-    repositories.value.push({ ...repo, dependencies, integrations });
+    repositories.value.push(await populateRepositoryData({ ...repo, integrations }));
   }
 
   function deleteRepository(id: Repository["id"]): void {
@@ -81,12 +53,8 @@ export const useRepositoriesStore = createGlobalState(() => {
     const repo = await fetchRepo(fullName);
     if (!repo) throw new Error("Repo not found");
 
-    const dependencies = repo.language ? await fetchRepositoryPackages(fullName) : null;
-    integrations.workflowPath = !repo.private ? await parseWorkflows(fullName) : undefined;
-    integrations.packageManager = await parsePackageManager(fullName);
-
     const entryIndex = repositories.value.findIndex(({ id }) => id === repo.id);
-    repositories.value[entryIndex] = { ...repo, dependencies, integrations };
+    repositories.value[entryIndex] = await populateRepositoryData({ ...repo, integrations });
   }
   async function updateRepositories(): Promise<void> {
     const fetchPromises = repositories.value.map(
