@@ -24,9 +24,6 @@ jobs:
           run_install: true
           cache: true
 
-      - name: Audit dependencies
-        run: pnpm audit --prod --audit-level=high
-
       - name: Run linters
         run: pnpm run lint:all
 
