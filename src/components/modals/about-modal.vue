@@ -74,7 +74,10 @@ import { useDialog } from "@/composable/useDialog";
 
 const dialogRef = useTemplateRef("dialogElement");
 const { open, close } = useDialog(dialogRef);
-const commitDate = dayjs(import.meta.env.VITE_GIT_COMMIT_DATE).format("DD.MM.YY");
+const commitDate = new Intl.DateTimeFormat(
+  navigator.language,
+  { year: "numeric", month: "long", day: "numeric" }
+).format(dayjs(import.meta.env.VITE_GIT_COMMIT_DATE).toDate());
 </script>
 <style lang="scss">
 .about {

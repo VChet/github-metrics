@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 import Vue from "@vitejs/plugin-vue";
@@ -9,7 +9,7 @@ import VueRouter from "vue-router/vite";
 import type { TreeNode } from "vue-router/unplugin";
 import PWA_OPTIONS from "./src/constants/pwa-options.ts";
 
-const commitDate = execSync("git log -1 --format=%cI").toString().trimEnd();
+const commitDate = execFileSync("git", ["log", "-1", "--no-merges", "--format=%cI"], { encoding: "utf8" }).trim();
 
 function getRouteName(node: TreeNode): string {
   if (!node.parent) return "";
