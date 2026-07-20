@@ -3,7 +3,10 @@ import { createGlobalState, useLocalStorage, useMediaQuery } from "@vueuse/core"
 import { useRegisterSW } from "virtual:pwa-register/vue";
 
 type PackageBrowser = "npmjs.org" | "npmx.dev";
-type Theme = "github" | "aqua" | "cream" | "mint" | "rose" | "departure";
+
+const THEMES = ["github", "aqua", "cream", "mint", "rose", "departure"] as const;
+type Theme = typeof THEMES[number];
+
 export interface SettingsStore {
   authToken: string
   username: string
@@ -38,10 +41,9 @@ export const useSettingsStore = createGlobalState(() => {
     Object.assign(settings.value, payload);
   }
   function nextTheme(): void {
-    const themes = ["github", "aqua", "cream", "mint", "rose", "departure"] as const satisfies readonly Theme[];
-    const index = themes.indexOf(settings.value.theme);
-    const nextIndex = (index + 1) % themes.length;
-    settings.value.theme = themes[nextIndex];
+    const index = THEMES.indexOf(settings.value.theme);
+    const nextIndex = (index + 1) % THEMES.length;
+    settings.value.theme = THEMES[nextIndex];
   }
 
   return {
