@@ -310,6 +310,10 @@ dialog {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @supports (text-fit: shrink) {
+    overflow: revert;
+    text-fit: shrink;
+  }
 }
 .capitalize {
   text-transform: capitalize;
