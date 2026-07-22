@@ -3,7 +3,8 @@
     <button title="import repositories" type="button" :disabled="isImporting" @click="importFile()">
       <icon-download v-if="!isImporting" />
       <icon-loader v-else active persistent />
-      Import data
+      <span v-if="isImporting && importProgress.total">Importing: {{ importProgress.current }}/{{ importProgress.total }}</span>
+      <span v-else>Import data</span>
     </button>
     <button title="export repositories" type="button" :disabled="isImporting" @click="exportSettings">
       <icon-upload />
@@ -22,6 +23,7 @@ import { isValidJSON } from "@/helpers/validate";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
+import type { Progress } from "@/types/import.js";
 import IconLoader from "./icon-loader.vue";
 
 const { importRepositories, exportRepositories } = useRepositoriesStore();
@@ -30,12 +32,14 @@ const { excludedDependencies, importExcludedDependencies } = useExcludedDependen
 
 // Import
 const isImporting = ref<boolean>(false);
+const importProgress = ref<Progress>({ current: 0, total: 0 });
 defineExpose({ isImporting });
 
 const { files, open: importFile } = useFileDialog({ multiple: false, reset: true, accept: "application/json" });
 whenever(files, async ({ 0: payload }) => {
   try {
     isImporting.value = true;
+    importProgress.value = { current: 0, total: 0 };
 
     const content = await readFile(payload).then(String);
     if (!isValidJSON(content)) throw new Error("Invalid JSON");
@@ -45,9 +49,12 @@ whenever(files, async ({ 0: payload }) => {
     importSettings(parsedData.settings);
     await nextTick(); // Wait fot authToken to be set before importing repositories
     if (parsedData.excludedDependencies.length) { importExcludedDependencies(parsedData.excludedDependencies); }
-    if (parsedData.repositories.length) { await importRepositories(parsedData.repositories); }
+    if (parsedData.repositories.length) {
+      await importRepositories(parsedData.repositories, (progress) => { importProgress.value = progress; });
+    }
   } finally {
     isImporting.value = false;
+    importProgress.value = { current: 0, total: 0 };
   }
 });
 

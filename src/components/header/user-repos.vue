@@ -59,12 +59,13 @@ import { fetchCurrentUserRepos } from "@/service/octokit";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
+import type { Progress } from "@/types/import";
 import type { UserReposResponse } from "@/types/repo";
 
 type RawRepo = UserReposResponse["data"][number];
 
 interface Props {
-  progress: { current: number, total: number }
+  progress: Progress
 }
 defineProps<Props>();
 defineEmits<{ submit: [repos: Repository[]] }>();

@@ -32,6 +32,7 @@ import { deepCopy } from "@/helpers/object";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
+import type { Progress } from "@/types/import.js";
 import RepoForm from "../header/repo-form.vue";
 import UserRepos from "../header/user-repos.vue";
 
@@ -43,7 +44,7 @@ const { open, close } = useDialog(dialogRef);
 
 // Form
 const tab = ref<"url" | "token">("url");
-const progress = reactive({ current: 0, total: 0 });
+const progress = reactive<Progress>({ current: 0, total: 0 });
 const DEFAULTS = Object.freeze({ full_name: "", name: "", integrations: {} });
 
 const form = ref(deepCopy(DEFAULTS));

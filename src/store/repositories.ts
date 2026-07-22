@@ -5,6 +5,7 @@ import { isExportedRepository, type ExportedRepository } from "@/helpers/export"
 import { populateRepositoryData } from "@/helpers/repo";
 import { fetchRepo } from "@/service/octokit";
 import type { Repository } from "@/composable/useRepo";
+import type { Progress } from "@/types/import";
 
 interface RepositoriesStore {
   lastUpdate: string
@@ -64,18 +65,19 @@ export const useRepositoriesStore = createGlobalState(() => {
     lastUpdate.value = dayjs().toISOString();
   }
 
-  async function importRepositories(payload: ExportedRepository[]): Promise<void> {
-    const fetchPromises = payload.reduce<Promise<void>[]>((acc, repo) => {
-      if (isExportedRepository(repo)) {
-        const { id, full_name, integrations } = repo;
-        const request = isRepoExists(id) ?
-          updateRepository(full_name, integrations) :
-          addRepository(full_name, integrations);
-        acc.push(request);
-      }
-      return acc;
-    }, []);
-    await Promise.all(fetchPromises);
+  async function importRepositories(payload: ExportedRepository[], cb?: (progress: Progress) => void): Promise<void> {
+    const validRepos = payload.filter(isExportedRepository);
+    const progress: Progress = { current: 0, total: validRepos.length };
+
+    for await (const repo of validRepos) {
+      const { id, full_name, integrations } = repo;
+      isRepoExists(id) ?
+        await updateRepository(full_name, integrations) :
+        await addRepository(full_name, integrations);
+
+      progress.current += 1;
+      if (cb) cb(progress);
+    }
   }
   function exportRepositories(): ExportedRepository[] {
     return repositories.value.map(({ id, full_name, integrations }) => ({ id, full_name, integrations }));
