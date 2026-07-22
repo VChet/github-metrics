@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { IconX } from "@tabler/icons-vue";
-import { coerce, compare, diff, type ReleaseType } from "semver";
+import { coerce, compare, difference, type VersionDifference } from "verkit";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 import { composeHashColor } from "@/helpers/color";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
@@ -78,15 +78,15 @@ function getDisplayVersion(packageName: string): string {
   const { latest, next } = versions.value[packageName];
   return [latest, next].filter(Boolean).join("\n") ?? "???";
 }
-function versionDiffClass(packageName: string, version?: string): ReleaseType | null {
+function versionDiffClass(packageName: string, version?: string): VersionDifference | null {
   if (!version) return null;
-  const projectVersion = coerce(version, { includePrerelease: true })?.version;
+  const projectVersion = coerce(version, { includePrerelease: true });
   if (!projectVersion) return null;
 
   const { latest, next } = versions.value[packageName];
   const targetVersion = next && compare(latest, projectVersion) < 0 ? next : latest;
 
-  return diff(projectVersion, targetVersion);
+  return difference(projectVersion, targetVersion);
 }
 </script>
 <style lang="scss">
