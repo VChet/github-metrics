@@ -75,11 +75,13 @@ const visibleDependencies = computed(() => dependencies.value.filter((dep) => !e
 
 const { versions } = useVersionsStore();
 function getDisplayVersion(packageName: string): string {
+  if (!versions.value[packageName]) return "???";
   const { latest, next } = versions.value[packageName];
-  return [latest, next].filter(Boolean).join("\n") ?? "???";
+  return [latest, next].filter(Boolean).join("\n");
 }
 function versionDiffClass(packageName: string, version?: string): VersionDifference | null {
-  if (!version) return null;
+  if (!versions.value[packageName] || !version) return null;
+
   const projectVersion = coerce(version, { includePrerelease: true });
   if (!projectVersion) return null;
 
