@@ -1,14 +1,14 @@
-import type { ShallowRef } from "vue";
+import type { Ref, ShallowRef } from "vue";
 import { useEventListener } from "@vueuse/core";
 
-export function useDialog(elementRef: Readonly<ShallowRef<HTMLDialogElement | null>>) {
+export function useDialog(elementRef: Readonly<ShallowRef<HTMLDialogElement | null>>, disabled?: Ref<boolean>) {
   function open(): void {
     if (!elementRef.value) return;
     elementRef.value.showModal();
     document.body.classList.add("disable-scroll");
   }
   function close(): void {
-    if (!elementRef.value) return;
+    if (!elementRef.value || disabled?.value) return;
     elementRef.value.close();
     document.body.classList.remove("disable-scroll");
   }

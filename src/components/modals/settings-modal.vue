@@ -7,7 +7,7 @@
     <dialog ref="dialogElement" class="settings">
       <header>
         Settings
-        <button type="button" name="close" class="icon" @click="closeModal">
+        <button type="button" name="close" class="icon" @click="close">
           <icon-x />
         </button>
       </header>
@@ -64,7 +64,7 @@
             :disabled="!form.authToken"
           >
         </fieldset>
-        <button title="apply settings" type="submit">
+        <button title="apply settings" type="submit" :disabled="isImporting">
           Update
         </button>
       </form>
@@ -81,15 +81,11 @@ import { useSettingsStore } from "@/store/settings";
 import ImportExport from "@/components/import-export.vue";
 import InputSelect from "@/components/input-select.vue";
 
-const dialogRef = useTemplateRef("dialogElement");
-const { open, close } = useDialog(dialogRef);
-
 const importExportRef = useTemplateRef("importExportElement");
 const isImporting = computed<boolean>(() => importExportRef.value?.isImporting ?? false);
-function closeModal(): void {
-  if (isImporting.value) return;
-  close();
-}
+
+const dialogRef = useTemplateRef("dialogElement");
+const { open, close } = useDialog(dialogRef, isImporting);
 
 const { settings, setSettings, isSwipeSupported } = useSettingsStore();
 const form = reactive(deepCopy(settings.value));
@@ -111,7 +107,7 @@ async function setUsername(): Promise<void> {
 async function update(): Promise<void> {
   if (!form.username && form.authToken) await setUsername();
   setSettings(form);
-  closeModal();
+  close();
 }
 </script>
 <style lang="scss">
