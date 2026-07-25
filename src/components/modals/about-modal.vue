@@ -58,7 +58,7 @@
         <h2>Contact</h2>
         <p>
           For any questions or concerns, please reach out to the developer at the app's
-          <a href="https://github.com/VChet/github-metrics" rel="noopener noreferrer" title="Go to GitHub repository">
+          <a href="https://github.com/VChet/github-metrics" rel="noopener" title="Go to GitHub repository">
             GitHub repository
           </a>
         </p>

@@ -7,7 +7,7 @@
           <a
             :href="`https://${settings.packageBrowser}/${rep.moduleName}`"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             :title="`Go to ${rep.moduleName} on ${settings.packageBrowser}`"
           >
             {{ rep.moduleName }}
@@ -17,7 +17,7 @@
             <a
               :href="`https://${settings.packageBrowser}/${dep}`"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               :title="`Go to ${dep} on ${settings.packageBrowser}`"
             >
               {{ dep }}
@@ -47,12 +47,7 @@
           <tr>
             <th />
             <th v-for="repo in repos" :key="repo.id">
-              <a
-                :href="repo.html_url"
-                target="_blank"
-                rel="noopener noreferrer"
-                :title="`Go to ${repo.full_name} repository`"
-              >
+              <a :href="repo.html_url" target="_blank" rel="noopener" :title="`Go to ${repo.full_name} repository`">
                 {{ settings.displayOwner ? repo.full_name : repo.name }}
               </a>
             </th>
@@ -67,7 +62,7 @@
               <a
                 :href="`https://${settings.packageBrowser}/${dep}`"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
                 :title="`Go to ${dep} on ${settings.packageBrowser}`"
                 class="text-truncate"
               >

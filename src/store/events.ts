@@ -40,20 +40,20 @@ function getActionString({ type, payload }: RawEvent): string {
 function composeEventUrl(event: RawEvent): string | null {
   if (event.type === "IssuesEvent" && event.payload.issue) {
     const { html_url, number, title } = event.payload.issue;
-    return `<a href="${html_url}" rel="noopener noreferrer" title="Go to issue">#${number} ${title}</a> in `;
+    return `<a href="${html_url}" rel="noopener" title="Go to issue">#${number} ${title}</a> in `;
   }
   if (event.type === "ForkEvent" && "forkee" in event.payload) {
     const { html_url, full_name } = event.payload.forkee as { html_url: string, full_name: string };
-    return `<a href="${html_url}" rel="noopener noreferrer" title="Go to forked repository">${full_name}</a> from `;
+    return `<a href="${html_url}" rel="noopener" title="Go to forked repository">${full_name}</a> from `;
   }
   if (event.type === "PullRequestEvent" && "pull_request" in event.payload) {
     const { number } = event.payload.pull_request as { number: number };
     const html_url = `https://github.com/${event.repo.name}/pull/${number}`;
-    return `<a href="${html_url}" rel="noopener noreferrer" title="Go to pull request">#${number}</a> in `;
+    return `<a href="${html_url}" rel="noopener" title="Go to pull request">#${number}</a> in `;
   }
   if (event.type === "ReleaseEvent" && "release" in event.payload) {
     const { html_url, name } = event.payload.release as { html_url: string, name: string };
-    return `<a href="${html_url}" rel="noopener noreferrer" title="Go to release">${name}</a> in `;
+    return `<a href="${html_url}" rel="noopener" title="Go to release">${name}</a> in `;
   }
   return null;
 }

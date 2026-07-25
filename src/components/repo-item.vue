@@ -9,7 +9,7 @@
         <a
           v-dompurify-html="repoName"
           :href="repo.html_url"
-          rel="noopener noreferrer"
+          rel="noopener"
           :title="`Go to ${repo.full_name} repository`"
           class="text-truncate icon-button"
         />
@@ -47,12 +47,7 @@
         {{ repo.integrations.analytics }}
       </li>
       <li v-if="repo.homepage">
-        <a
-          :href="repo.homepage"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Go to website"
-        >
+        <a :href="repo.homepage" target="_blank" rel="noopener" title="Go to website">
           <icon-external-link />
           {{ hostingName ?? "Website" }}
         </a>
@@ -68,7 +63,7 @@
         <a
           :href="`https://github.com/${repo.full_name}/stargazers`"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           title="Go to stargazers"
         >
           <icon-star />
@@ -79,7 +74,7 @@
         <a
           :href="`https://github.com/${repo.full_name}/forks`"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           title="Go to forks"
         >
           <icon-git-fork />
@@ -90,7 +85,7 @@
         <a
           :href="`https://github.com/${repo.full_name}/issues?q=is%3Aopen`"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           title="Go to open issues/prs"
         >
           <icon-circle-dot />

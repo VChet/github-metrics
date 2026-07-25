@@ -13,7 +13,7 @@
           <a
             href="https://uptimerobot.com/dashboard.php#mySettings"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             title="Go to UptimeRobot settings"
           >
             Settings
@@ -37,7 +37,7 @@
           <a
             :href="`https://app.netlify.com/sites/${form.name}/configuration/general#site-information`"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
             title="Go to Netlify site details"
           >
             Site Details

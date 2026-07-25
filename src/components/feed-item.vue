@@ -9,7 +9,7 @@
       v-else
       :href="`https://github.com/${data.username}`"
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
       :title="`Go to ${data.username} profile`"
     >
       {{ data.username }}
@@ -19,7 +19,7 @@
     <a
       :href="`https://github.com/${data.repo}`"
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
       :title="`Go to ${data.repo} repository`"
     >
       {{ data.repo }}

@@ -40,7 +40,7 @@
               <a
                 href="https://github.com/settings/personal-access-tokens/new"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
                 title="github tokens page"
               >
                 <b>fine-grained tokens page</b>
