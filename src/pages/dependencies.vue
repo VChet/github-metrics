@@ -1,5 +1,32 @@
 <template>
   <section v-if="hasDependencies" class="dependencies">
+    <fieldset v-if="replacements.length">
+      <legend>Replacements:</legend>
+      <ul class="dependencies__replacements">
+        <li v-for="rep in replacements" :key="rep.moduleName">
+          <a
+            :href="`https://${settings.packageBrowser}/${rep.moduleName}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            :title="`Go to ${rep.moduleName} on ${settings.packageBrowser}`"
+          >
+            {{ rep.moduleName }}
+          </a>
+          →
+          <template v-for="(dep, index) in rep.replacements" :key="dep">
+            <a
+              :href="`https://${settings.packageBrowser}/${dep}`"
+              target="_blank"
+              rel="noopener noreferrer"
+              :title="`Go to ${dep} on ${settings.packageBrowser}`"
+            >
+              {{ dep }}
+            </a>
+            <span v-if="index < rep.replacements.length - 1"> / </span>
+          </template>
+        </li>
+      </ul>
+    </fieldset>
     <fieldset v-if="excludedDependencies.size">
       <legend>Excluded dependencies:</legend>
       <div class="dependencies__excluded">
@@ -68,7 +95,7 @@ import { useSettingsStore } from "@/store/settings";
 import { useVersionsStore } from "@/store/versions";
 
 const { settings } = useSettingsStore();
-const { hasDependencies, repos, dependencies } = useDependencyTable();
+const { hasDependencies, repos, dependencies, replacements } = useDependencyTable();
 const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
 
 const visibleDependencies = computed(() => dependencies.value.filter((dep) => !excludedDependencies.value.has(dep)));
