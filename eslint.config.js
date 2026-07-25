@@ -107,7 +107,7 @@ export default antfu({
     "style/lines-between-class-members": "off",
     "style/max-statements-per-line": "off",
     "style/operator-linebreak": ["error", "after"],
-    "style/quotes": ["error", "double"],
+    "style/quotes": ["error", "double", { avoidEscape: true, allowTemplateLiterals: "avoidEscape" }],
     "style/semi": ["error", "always"],
     "ts/array-type": "error",
     "ts/consistent-indexed-object-style": "error",

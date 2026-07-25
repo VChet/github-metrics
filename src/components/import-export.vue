@@ -23,7 +23,7 @@ import { isValidJSON } from "@/helpers/validate";
 import { useExcludedDependenciesStore } from "@/store/excluded-dependencies";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
-import type { Progress } from "@/types/import.js";
+import type { Progress } from "@/types/import";
 import IconLoader from "./icon-loader.vue";
 
 const { importRepositories, exportRepositories } = useRepositoriesStore();

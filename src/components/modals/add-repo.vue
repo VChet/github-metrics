@@ -32,7 +32,7 @@ import { deepCopy } from "@/helpers/object";
 import { useRepositoriesStore } from "@/store/repositories";
 import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
-import type { Progress } from "@/types/import.js";
+import type { Progress } from "@/types/import";
 import RepoForm from "../header/repo-form.vue";
 import UserRepos from "../header/user-repos.vue";
 
