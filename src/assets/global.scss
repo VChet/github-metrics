@@ -180,6 +180,12 @@ button {
     padding: 0;
     border: none;
     border-radius: 0;
+    &:focus-visible {
+      box-shadow: none;
+      svg {
+        filter: drop-shadow(0 0 0.625rem var(--accent));
+      }
+    }
   }
 }
 input {
