@@ -28,6 +28,7 @@
 </template>
 <script setup lang="ts">
 import {
+  IconAnalyze,
   IconCalendarEvent,
   IconCircleDot,
   IconEye,
@@ -69,6 +70,9 @@ const EVENT_VIEW_MAP: Record<NonNullable<FeedEvent["type"]>, Record<FeedEvent["a
     "opened pull request": { component: IconGitPullRequest, color: "var(--success)" },
     "closed pull request": { component: IconGitPullRequestClosed, color: "var(--danger)" },
     "merged pull request": { component: IconGitMerge, color: "var(--done)" }
+  },
+  PullRequestReviewEvent: {
+    reviewed: { component: IconAnalyze, color: "var(--accent)" }
   },
   ReleaseEvent: {
     "published release": { component: IconTag, color: "var(--success)" }

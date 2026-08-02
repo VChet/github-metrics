@@ -14,6 +14,7 @@ const TARGET_EVENTS = [
   "MemberEvent",
   "PublicEvent",
   "PullRequestEvent",
+  "PullRequestReviewEvent",
   "ReleaseEvent",
   "WatchEvent"
 ] as const;
@@ -32,6 +33,7 @@ function getActionString({ type, payload }: RawEvent): string {
     case "MemberEvent": return "joined";
     case "PublicEvent": return "made public";
     case "PullRequestEvent": return "action" in payload ? `${payload.action} pull request` : "pull request";
+    case "PullRequestReviewEvent": return "reviewed";
     case "ReleaseEvent": return "action" in payload ? `${payload.action} release` : "release";
     case "WatchEvent": return "starred";
     default: return type ?? "[unknown action]";
@@ -51,6 +53,11 @@ function composeEventUrl(event: RawEvent): string | null {
     const { number } = event.payload.pull_request;
     const html_url = `https://github.com/${event.repo.name}/pull/${number}`;
     return `<a href="${html_url}" rel="noopener" title="Go to pull request">#${number}</a> in `;
+  }
+  if (event.type === "PullRequestReviewEvent" && "pull_request" in event.payload && "review" in event.payload) {
+    const { number } = event.payload.pull_request;
+    const { html_url } = event.payload.review;
+    return `<a href="${html_url}" rel="noopener" title="Go to pull request review">#${number}</a> in `;
   }
   if (event.type === "ReleaseEvent" && "release" in event.payload) {
     const { html_url, name } = event.payload.release;
