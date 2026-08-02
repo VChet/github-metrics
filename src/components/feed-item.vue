@@ -78,7 +78,7 @@ const EVENT_VIEW_MAP: Record<NonNullable<FeedEvent["type"]>, Record<FeedEvent["a
   }
 };
 const DEFAULT_ICON = { component: IconCalendarEvent, color: "var(--base)" } as const satisfies IconInfo;
-const icon = props.data.type ? EVENT_VIEW_MAP[props.data.type][props.data.action] ?? DEFAULT_ICON : DEFAULT_ICON;
+const icon = props.data.type ? EVENT_VIEW_MAP[props.data.type]?.[props.data.action] ?? DEFAULT_ICON : DEFAULT_ICON;
 </script>
 <style lang="scss">
 .feed-item {
