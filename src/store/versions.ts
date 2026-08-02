@@ -10,7 +10,7 @@ interface LatestVersionsStore {
   data: Record<string, PackageManifest["distTags"]>
 }
 const DEFAULT_STORE: LatestVersionsStore = {
-  lastUpdate: dayjs().toISOString(),
+  lastUpdate: new Date().toISOString(),
   data: {}
 };
 
@@ -35,7 +35,7 @@ export const useVersionsStore = createGlobalState(() => {
       versions.value[name] = { latest: tags.latest, next: tags.next };
     }
 
-    lastUpdate.value = dayjs().toISOString();
+    lastUpdate.value = new Date().toISOString();
   }
 
   function updateCheck() {

@@ -12,7 +12,7 @@ interface RepositoriesStore {
   data: Repository[]
 };
 const DEFAULT_STORE: RepositoriesStore = {
-  lastUpdate: dayjs().toISOString(),
+  lastUpdate: new Date().toISOString(),
   data: []
 };
 
@@ -62,7 +62,7 @@ export const useRepositoriesStore = createGlobalState(() => {
       ({ full_name, integrations }) => updateRepository(full_name, integrations)
     );
     await Promise.all(fetchPromises);
-    lastUpdate.value = dayjs().toISOString();
+    lastUpdate.value = new Date().toISOString();
   }
 
   async function importRepositories(payload: ExportedRepository[], cb?: (progress: Progress) => void): Promise<void> {

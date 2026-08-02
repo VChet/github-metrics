@@ -82,7 +82,7 @@ interface EventsStore {
 };
 
 const DEFAULT_STORE: EventsStore = {
-  lastUpdate: dayjs().toISOString(),
+  lastUpdate: new Date().toISOString(),
   data: []
 };
 
@@ -133,7 +133,7 @@ export const useEventsStore = createGlobalState(() => {
 
   async function updateEvents(): Promise<void> {
     events.value = await fetchAllEvents();
-    lastUpdate.value = dayjs().toISOString();
+    lastUpdate.value = new Date().toISOString();
   }
 
   function updateCheck() {

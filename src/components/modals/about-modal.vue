@@ -69,7 +69,6 @@
 <script setup lang="ts">
 import { useTemplateRef } from "vue";
 import { IconTilde, IconX } from "@tabler/icons-vue";
-import dayjs from "dayjs";
 import { useDialog } from "@/composable/useDialog";
 
 const dialogRef = useTemplateRef("dialogElement");
@@ -77,7 +76,7 @@ const { open, close } = useDialog(dialogRef);
 const commitDate = new Intl.DateTimeFormat(
   navigator.language,
   { year: "numeric", month: "long", day: "numeric" }
-).format(dayjs(import.meta.env.VITE_GIT_COMMIT_DATE).toDate());
+).format(new Date(import.meta.env.VITE_GIT_COMMIT_DATE));
 </script>
 <style lang="scss">
 .about {

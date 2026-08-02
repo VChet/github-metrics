@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import type { PackageJson } from "type-fest";
 import { fetchPackageJson, fetchRepositoryFiles, fetchRepositoryWorkflows } from "@/service/octokit";
 import { getDependencies, getPackageManager, type PackageManager } from "./packageJson";
@@ -14,7 +13,7 @@ async function parseWorkflows(fullName: Repository["full_name"]): Promise<Reposi
     if (isDependabot || workflow.state !== "active") return best;
     if (!best) return workflow;
 
-    return dayjs(workflow.updated_at).isAfter(best.updated_at) ? workflow : best;
+    return Date.parse(workflow.updated_at) > Date.parse(best.updated_at) ? workflow : best;
   }, undefined);
 
   return latest?.path;
