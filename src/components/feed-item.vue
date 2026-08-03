@@ -1,7 +1,7 @@
 <template>
   <li class="feed-item">
     <time class="feed-item__timestamp">{{ data.date }}</time>
-    <component :is="icon.component" :style="{ stroke: icon.color }" class="feed-item__icon" />
+    <component :is="view.icon" :style="{ stroke: view.color }" class="feed-item__icon" />
     <span v-if="data.username.includes('github-actions')">
       {{ data.username }}
     </span>
@@ -14,14 +14,14 @@
     >
       {{ data.username }}
     </a>
-    {{ data.action }}
-    <span v-if="data.eventUrl" v-dompurify-html="data.eventUrl" />
-    <a
-      :href="`https://github.com/${data.repo}`"
-      target="_blank"
-      rel="noopener"
-      :title="`Go to ${data.repo} repository`"
-    >
+    {{ view.label }}
+    <template v-if="data.reference">
+      <a :href="data.reference.href" target="_blank" rel="noopener">
+        {{ data.reference.label }}
+      </a>
+      {{ ` ${view.preposition ?? 'in'} ` }}
+    </template>
+    <a :href="`https://github.com/${data.repo}`" target="_blank" rel="noopener">
       {{ data.repo }}
     </a>
   </li>
@@ -48,41 +48,42 @@ interface Props {
 }
 const props = defineProps<Props>();
 
-interface IconInfo {
-  component: Icon
+interface EventView {
+  icon: Icon
   color: string
+  label: string
+  preposition?: "from"
 }
-const EVENT_VIEW_MAP: Record<NonNullable<FeedEvent["type"]>, Record<FeedEvent["action"], IconInfo>> = {
-  ForkEvent: {
-    forked: { component: IconGitFork, color: "var(--base)" }
-  },
-  IssuesEvent: {
-    "opened issue": { component: IconCircleDot, color: "var(--success)" },
-    "closed issue": { component: IconCircleDot, color: "var(--danger)" }
-  },
-  MemberEvent: {
-    joined: { component: IconUser, color: "var(--base)" }
-  },
-  PublicEvent: {
-    "made public": { component: IconEye, color: "var(--accent)" }
-  },
-  PullRequestEvent: {
-    "opened pull request": { component: IconGitPullRequest, color: "var(--success)" },
-    "closed pull request": { component: IconGitPullRequestClosed, color: "var(--danger)" },
-    "merged pull request": { component: IconGitMerge, color: "var(--done)" }
-  },
-  PullRequestReviewEvent: {
-    reviewed: { component: IconAnalyze, color: "var(--accent)" }
-  },
-  ReleaseEvent: {
-    "published release": { component: IconTag, color: "var(--success)" }
-  },
-  WatchEvent: {
-    starred: { component: IconStar, color: "var(--accent)" }
+const DEFAULT_VIEW = {
+  icon: IconCalendarEvent,
+  color: "var(--base)",
+  label: "unknown event"
+} as const satisfies EventView;
+function getEventView(event: FeedEvent): EventView {
+  switch (event.type) {
+    case "ForkEvent": return { icon: IconGitFork, color: "var(--base)", label: "forked", preposition: "from" };
+    case "IssuesEvent":
+      switch (event.action) {
+        case "opened": return { icon: IconCircleDot, color: "var(--success)", label: "opened issue" };
+        case "closed": return { icon: IconCircleDot, color: "var(--danger)", label: "closed issue" };
+        default: return { icon: IconCircleDot, color: "var(--base)", label: "updated issue" };
+      }
+    case "MemberEvent": return { icon: IconUser, color: "var(--base)", label: "joined" };
+    case "PublicEvent": return { icon: IconEye, color: "var(--accent)", label: "made public" };
+    case "PullRequestEvent":
+      switch (event.action) {
+        case "opened": return { icon: IconGitPullRequest, color: "var(--success)", label: "opened pull request" };
+        case "closed": return { icon: IconGitPullRequestClosed, color: "var(--danger)", label: "closed pull request" };
+        case "merged": return { icon: IconGitMerge, color: "var(--done)", label: "merged pull request" };
+        default: return { icon: IconGitPullRequest, color: "var(--base)", label: "updated pull request" };
+      }
+    case "PullRequestReviewEvent": return { icon: IconAnalyze, color: "var(--accent)", label: "reviewed pull request" };
+    case "ReleaseEvent": return { icon: IconTag, color: "var(--success)", label: "published release" };
+    case "WatchEvent": return { icon: IconStar, color: "var(--accent)", label: "starred" };
   }
-};
-const DEFAULT_ICON = { component: IconCalendarEvent, color: "var(--base)" } as const satisfies IconInfo;
-const icon = props.data.type ? EVENT_VIEW_MAP[props.data.type]?.[props.data.action] ?? DEFAULT_ICON : DEFAULT_ICON;
+  return DEFAULT_VIEW;
+}
+const view = getEventView(props.data);
 </script>
 <style lang="scss">
 .feed-item {

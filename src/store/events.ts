@@ -18,52 +18,40 @@ const TARGET_EVENTS = [
   "ReleaseEvent",
   "WatchEvent"
 ] as const;
-const TARGET_ACTIONS = [
+const FILTERED_ACTIONS = [
   "labeled",
   "unlabeled",
   "assigned",
   "unassigned"
 ] as const;
 
-function getActionString({ type, payload }: RawEvent): string {
-  // Octokit no longer discriminates payload by event.type, so action must be checked at runtime
-  switch (type) {
-    case "ForkEvent": return "forked";
-    case "IssuesEvent": return "action" in payload ? `${payload.action} issue` : "issue";
-    case "MemberEvent": return "joined";
-    case "PublicEvent": return "made public";
-    case "PullRequestEvent": return "action" in payload ? `${payload.action} pull request` : "pull request";
-    case "PullRequestReviewEvent": return "reviewed";
-    case "ReleaseEvent": return "action" in payload ? `${payload.action} release` : "release";
-    case "WatchEvent": return "starred";
-    default: return type ?? "[unknown action]";
-  }
+interface EventReference {
+  href: string
+  label: string
 }
-
-function composeEventUrl(event: RawEvent): string | null {
+function composeReference(event: RawEvent): EventReference | undefined {
   if (event.type === "IssuesEvent" && "issue" in event.payload) {
     const { html_url, number, title } = event.payload.issue;
-    return `<a href="${html_url}" rel="noopener" title="Go to issue">#${number} ${title}</a> in `;
+    return { href: html_url, label: `#${number} ${title}` };
   }
   if (event.type === "ForkEvent" && "forkee" in event.payload) {
     const { html_url, full_name } = event.payload.forkee;
-    return `<a href="${html_url}" rel="noopener" title="Go to forked repository">${full_name}</a> from `;
+    return { href: html_url!, label: full_name! };
   }
   if (event.type === "PullRequestEvent" && "pull_request" in event.payload) {
     const { number } = event.payload.pull_request;
     const html_url = `https://github.com/${event.repo.name}/pull/${number}`;
-    return `<a href="${html_url}" rel="noopener" title="Go to pull request">#${number}</a> in `;
+    return { href: html_url, label: `#${number}` };
   }
   if (event.type === "PullRequestReviewEvent" && "pull_request" in event.payload && "review" in event.payload) {
     const { number } = event.payload.pull_request;
     const { html_url } = event.payload.review;
-    return `<a href="${html_url}" rel="noopener" title="Go to pull request review">#${number}</a> in `;
+    return { href: html_url!, label: `#${number}` };
   }
   if (event.type === "ReleaseEvent" && "release" in event.payload) {
     const { html_url, name } = event.payload.release;
-    return `<a href="${html_url}" rel="noopener" title="Go to release">${name}</a> in `;
+    return { href: html_url, label: name! };
   }
-  return null;
 }
 
 export interface FeedEvent {
@@ -72,8 +60,8 @@ export interface FeedEvent {
   repo: RawEvent["repo"]["name"]
   date: string
   username: string
-  action: string
-  eventUrl?: string | null
+  action?: string
+  reference?: EventReference
 }
 
 interface EventsStore {
@@ -105,7 +93,7 @@ export const useEventsStore = createGlobalState(() => {
     if (event.actor.login.includes("dependabot")) return false;
 
     if (!("action" in event.payload)) return true; // Some events don't have an action, so we consider them valid
-    return !TARGET_ACTIONS.includes(event.payload.action); // Filter out events with actions that are not relevant
+    return !FILTERED_ACTIONS.includes(event.payload.action); // Filter out events with actions that are not relevant
   }
 
   function formatEvent(event: RawEvent): FeedEvent {
@@ -115,8 +103,8 @@ export const useEventsStore = createGlobalState(() => {
       repo: event.repo.name,
       date: dayjs(event.created_at).format("DD MMM, HH:mm"),
       username: event.actor.display_login ?? event.actor.login,
-      action: getActionString(event),
-      eventUrl: composeEventUrl(event)
+      action: "action" in event.payload ? event.payload.action : undefined,
+      reference: composeReference(event)
     } satisfies FeedEvent;
   }
 
