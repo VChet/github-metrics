@@ -1,4 +1,4 @@
-import { computed, type Ref } from "vue";
+import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import type { PackageJson, Simplify } from "type-fest";
 import type { RepoResponse, Workflow } from "@/types/repo";
 
@@ -47,7 +47,8 @@ function composeBadgeUrl(base: string): URL["href"] {
 }
 
 const TOP_LEVEL_DOMAIN_REGEX = /\w+\.\w+$/;
-export function useRepository(data: Ref<Repository>) {
+export function useRepository(payload: MaybeRefOrGetter<Repository>) {
+  const data = computed(() => toValue(payload));
   const hostingName = computed<string | null>(() => {
     if (!data.value.homepage) return null;
     try {

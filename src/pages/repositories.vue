@@ -24,7 +24,7 @@
         </button>
       </div>
     </div>
-    <ul ref="reposElement" class="repo-grid__list">
+    <ul v-if="filteredItems.length" ref="reposElement" class="repo-grid__list">
       <repo-item
         v-for="repo in filteredItems"
         :key="repo.id"
@@ -33,6 +33,9 @@
         @delete="deleteRepository"
       />
     </ul>
+    <div v-else>
+      No repositories match "<b>{{ searchQuery }}</b>".
+    </div>
   </section>
 </template>
 <script setup lang="ts">

@@ -6,13 +6,13 @@
         <icon-template v-if="repo.is_template" />
         <icon-lock v-if="repo.private" />
         <icon-archive v-if="repo.archived" />
-        <a
-          v-dompurify-html="repoName"
-          :href="repo.html_url"
-          rel="noopener"
-          :title="`Go to ${repo.full_name} repository`"
-          class="text-truncate icon-button"
-        />
+        <a :href="repo.html_url" rel="noopener" class="text-truncate icon-button">
+          <template v-for="({ text, highlighted }, index) in repoName" :key="index">
+            <component :is="highlighted ? 'mark' : 'span'">
+              {{ text }}
+            </component>
+          </template>
+        </a>
       </h2>
       <div class="repo__header-actions">
         <edit-repo :repo />
@@ -132,6 +132,7 @@ import {
 } from "@tabler/icons-vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useHighlightedText } from "@/composable/useHighlightedText";
 import { useRepository, type Repository } from "@/composable/useRepo";
 import { useSettingsStore } from "@/store/settings";
 import { useSummaryStorage } from "@/store/summary";
@@ -149,16 +150,11 @@ dayjs.extend(relativeTime);
 
 const { settings } = useSettingsStore();
 
-// Watch deep changes
-const repo = computed(() => props.repo);
-const repoName = computed<string>(() => {
-  const name = settings.value.displayOwner ? repo.value.full_name : repo.value.name;
-  if (!props.query) return name;
-  return name.replace(new RegExp(props.query, "gi"), (match) => `<mark>${match}</mark>`);
-});
+const name = computed<string>(() => settings.value.displayOwner ? props.repo.full_name : props.repo.name);
+const repoName = useHighlightedText(name, () => props.query);
 
 const { repoDeltas } = useSummaryStorage();
-const repoDiff = computed(() => repoDeltas.value[repo.value.id] ?? null);
+const repoDiff = computed(() => repoDeltas.value[props.repo.id] ?? null);
 
 const {
   bundler,
@@ -170,7 +166,7 @@ const {
   workflowBadge,
   packageManager,
   license
-} = useRepository(repo);
+} = useRepository(() => props.repo);
 </script>
 <style lang="scss">
 @use "@/assets/language-colors";
