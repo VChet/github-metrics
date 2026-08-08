@@ -1,5 +1,4 @@
 import { execFileSync } from "node:child_process";
-import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 import Vue from "@vitejs/plugin-vue";
 import namedPort from "named-port";
@@ -7,6 +6,7 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import VueRouter from "vue-router/vite";
 import type { TreeNode } from "vue-router/unplugin";
+import pkg from "./package.json" with { type: "json" };
 import PWA_OPTIONS from "./src/constants/pwa-options.ts";
 
 const commitDate = execFileSync("git", ["log", "-1", "--no-merges", "--format=%cI"], { encoding: "utf8" }).trim();
@@ -20,7 +20,7 @@ function getRouteName(node: TreeNode): string {
   return parentName;
 }
 
-// https://vitejs.dev/config/
+// https://vitejs.dev/config
 export default defineConfig({
   plugins: [
     VueRouter({ dts: "./src/types/lib/typed-router.ts", getRouteName }),
@@ -36,6 +36,6 @@ export default defineConfig({
     "import.meta.env.VITE_GIT_COMMIT_DATE": JSON.stringify(commitDate)
   },
   server: {
-    port: namedPort(process.env.npm_package_name!, { min: 7000, max: 10000 })
+    port: namedPort(pkg.name, { min: 7000, max: 10000 })
   }
 });
