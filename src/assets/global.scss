@@ -256,6 +256,7 @@ label:has([type="checkbox"]) {
   }
 }
 dialog {
+  position: relative;
   width: 100%;
   max-width: 25rem;
   max-height: 90dvh;
@@ -278,11 +279,15 @@ dialog {
     margin: 1.5rem;
   }
   > header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     display: flex;
     align-items: baseline;
     padding: 1rem 1.5rem;
     font-size: 1.75rem;
     font-weight: bold;
+    background: inherit;
     border-bottom: 1px solid var(--base-dimmed);
     button[name="close"] {
       margin-left: auto;
