@@ -83,7 +83,7 @@
         </a>
         <!-- Issues -->
         <a
-          :href="`https://github.com/${repo.full_name}/issues?q=sort%3Aupdated-desc+is%3Aissue+state%3Aopen`"
+          :href="`https://github.com/${repo.full_name}/issues?q=sort:updated-desc+state:open`"
           target="_blank"
           rel="noopener"
           title="Go to open issues/prs"
