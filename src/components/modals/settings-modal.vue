@@ -49,20 +49,12 @@
             <li>Add Read-only access to Actions, Contents, Metadata</li>
             <li>Click <b>Generate token</b> and paste it here</li>
           </ol>
+          <div v-else>
+            Connected account:
+            <b>{{ form.username }}</b>
+          </div>
           <label for="authToken">Token</label>
           <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
-        </fieldset>
-        <fieldset>
-          <legend>Feed</legend>
-          <label for="username">GitHub Username</label>
-          <input
-            id="username"
-            v-model="form.username"
-            autocomplete="username"
-            type="text"
-            placeholder="username"
-            :disabled="!form.authToken"
-          >
         </fieldset>
         <button title="apply settings" type="submit" :disabled="isImporting">
           Update
