@@ -77,7 +77,7 @@ function getEventView(event: FeedEvent): EventView {
         case "merged": return { icon: IconGitMerge, color: "var(--done)", label: "merged pull request" };
         default: return { icon: IconGitPullRequest, color: "var(--base)", label: "updated pull request" };
       }
-    case "PullRequestReviewEvent": return { icon: IconAnalyze, color: "var(--accent)", label: "reviewed pull request" };
+    case "PullRequestReviewEvent": return { icon: IconAnalyze, color: "var(--success)", label: "reviewed pull request" };
     case "ReleaseEvent": return { icon: IconTag, color: "var(--success)", label: "published release" };
     case "WatchEvent": return { icon: IconStar, color: "var(--accent)", label: "starred" };
   }
