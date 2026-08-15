@@ -29,9 +29,7 @@
     </header>
     <ul class="repo__body">
       <li v-if="packageManager">
-        <icon-brand-npm v-if="packageManager === 'npm'" />
-        <icon-brand-pnpm v-else-if="packageManager === 'pnpm'" />
-        <icon-brand-yarn v-else-if="packageManager === 'yarn'" />
+        <component :is="ManagerComponent" />
         {{ packageManager }}
       </li>
       <li v-if="bundler.length">
@@ -113,6 +111,7 @@
 import { computed } from "vue";
 import {
   IconArchive,
+  IconBlob,
   IconBox,
   IconBrandNpm,
   IconBrandPnpm,
@@ -124,6 +123,7 @@ import {
   IconGripVertical,
   IconListCheck,
   IconLock,
+  IconPackage,
   IconScale,
   IconStar,
   IconTemplate,
@@ -167,6 +167,16 @@ const {
   packageManager,
   license
 } = useRepository(() => props.repo);
+
+const ManagerComponent = computed(() => {
+  switch (packageManager.value) {
+    case "npm": return IconBrandNpm;
+    case "yarn": return IconBrandYarn;
+    case "pnpm": return IconBrandPnpm;
+    case "bun": return IconBlob;
+    default: return IconPackage;
+  }
+});
 </script>
 <style lang="scss">
 @use "@/assets/language-colors";

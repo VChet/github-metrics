@@ -1,6 +1,6 @@
 import type { PackageJson } from "type-fest";
 
-export type PackageManager = "npm" | "pnpm" | "yarn";
+export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
 
 export function getPackageManager({ packageManager }: PackageJson): PackageManager | undefined {
   if (!packageManager) return undefined;
