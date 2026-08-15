@@ -1,8 +1,11 @@
 import type { PackageJson } from "type-fest";
-import { fetchPackageJson, fetchRepositoryFiles, fetchRepositoryWorkflows } from "@/service/octokit";
-import { getDependencies, getPackageManager, type PackageManager } from "./packageJson";
+import { fetchPackageJson, fetchPnpmWorkspace, fetchRepositoryFiles, fetchRepositoryWorkflows } from "@/service/octokit";
+import { resolveDependencies } from "./dependencies";
+import { getPackageManager, type PackageManager } from "./package-manager";
 import type { Repository } from "@/composable/useRepo";
-import type { Workflow } from "@/types/repo";
+import type { Workflow } from "@/types/api/octokit";
+
+export type Dependencies = Record<string, string>;
 
 async function parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowPath"]> {
   const workflowsData = await fetchRepositoryWorkflows(fullName);
@@ -18,6 +21,7 @@ async function parseWorkflows(fullName: Repository["full_name"]): Promise<Reposi
 
   return latest?.path;
 }
+
 async function parsePackageManager(
   packageJson: PackageJson,
   fullName: Repository["full_name"]
@@ -34,7 +38,8 @@ async function parsePackageManager(
 
 export async function populateRepositoryData(repo: Omit<Repository, "dependencies">): Promise<Repository> {
   const packageJson = await fetchPackageJson(repo.full_name);
-  const dependencies = packageJson ? getDependencies(packageJson) : null;
+  const pnpmWorkspace = packageJson ? await fetchPnpmWorkspace(repo.full_name) : undefined;
+  const dependencies = packageJson ? resolveDependencies(packageJson, pnpmWorkspace) : undefined;
 
   const integrations = {
     ...repo.integrations,

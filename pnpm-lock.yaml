@@ -57,6 +57,9 @@ importers:
       workbox-window:
         specifier: ^7.4.1
         version: 7.4.1
+      yaml:
+        specifier: ^2.9.0
+        version: 2.9.0
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^9.3.0

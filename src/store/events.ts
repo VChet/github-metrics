@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { fetchRepositoryEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
 import { useRepositoriesStore } from "./repositories";
-import type { RepoEventsResponse } from "@/types/repo";
+import type { RepoEventsResponse } from "@/types/api/octokit";
 
 type RawEvent = RepoEventsResponse["data"][number];
 

@@ -4,6 +4,7 @@ import { Octokit } from "@octokit/core";
 import { StatusCodes } from "http-status-codes";
 import type { RequestParameters, Route } from "@octokit/types";
 import type { PackageJson } from "type-fest";
+import { parsePnpmWorkspace, type PnpmWorkspace } from "@/helpers/pnpm-workspace";
 import { isRequestError } from "@/helpers/validate";
 import { useSettingsStore } from "@/store/settings";
 import type { Repository } from "@/composable/useRepo";
@@ -15,7 +16,7 @@ import type {
   UserReposResponse,
   UserResponse,
   WorkflowsResponse
-} from "@/types/repo";
+} from "@/types/api/octokit";
 
 const { settings } = useSettingsStore();
 
@@ -72,16 +73,28 @@ async function fetchRepositoryFile(fullName: Repository["full_name"], fileName: 
   throw new Error("Invalid file");
 }
 
-export async function fetchPackageJson(fullName: Repository["full_name"]): Promise<PackageJson | null> {
+export async function fetchPackageJson(fullName: Repository["full_name"]): Promise<PackageJson | undefined> {
   try {
     const hasPackage: boolean = await fetchRepositoryFiles(fullName).then((files) => files.includes("package.json"));
-    if (!hasPackage) return null;
+    if (!hasPackage) return undefined;
     const packageContents = await fetchRepositoryFile(fullName, "package.json");
     const content = JSON.parse(packageContents) as PackageJson;
     return content;
   } catch (error: unknown) {
     if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
-    return null;
+    return undefined;
+  }
+}
+
+export async function fetchPnpmWorkspace(fullName: Repository["full_name"]): Promise<PnpmWorkspace | undefined> {
+  try {
+    const hasWorkspace: boolean = await fetchRepositoryFiles(fullName).then((files) => files.includes("pnpm-workspace.yaml"));
+    if (!hasWorkspace) return undefined;
+    const workspaceContents = await fetchRepositoryFile(fullName, "pnpm-workspace.yaml");
+    return parsePnpmWorkspace(workspaceContents);
+  } catch (error: unknown) {
+    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
+    return undefined;
   }
 }
 

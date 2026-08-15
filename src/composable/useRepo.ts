@@ -1,6 +1,8 @@
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
-import type { PackageJson, Simplify } from "type-fest";
-import type { RepoResponse, Workflow } from "@/types/repo";
+import type { Simplify } from "type-fest";
+import type { PackageManager } from "@/helpers/package-manager";
+import type { Dependencies } from "@/helpers/repo";
+import type { RepoResponse, Workflow } from "@/types/api/octokit";
 
 interface Integrations {
   uptimerobotKey?: string
@@ -8,11 +10,10 @@ interface Integrations {
   analytics?: string
   // Auto-detected
   workflowPath?: Workflow["path"]
-  packageManager?: string
+  packageManager?: PackageManager
 }
-
 export type Repository = Simplify<RepoResponse["data"] & {
-  dependencies: PackageJson.Dependency | null
+  dependencies: Dependencies | undefined
   integrations: Integrations
 }>;
 

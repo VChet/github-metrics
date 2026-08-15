@@ -1,5 +1,5 @@
 <template>
-  <section v-if="hasDependencies" class="dependencies">
+  <section v-if="dependencies.length" class="dependencies">
     <fieldset v-if="replacements.length">
       <legend>Replacements:</legend>
       <ul class="dependencies__replacements">
@@ -90,7 +90,7 @@ import { useSettingsStore } from "@/store/settings";
 import { useVersionsStore } from "@/store/versions";
 
 const { settings } = useSettingsStore();
-const { hasDependencies, repos, dependencies, replacements } = useDependencyTable();
+const { repos, dependencies, replacements } = useDependencyTable();
 const { excludedDependencies, hideDependency, showDependency } = useExcludedDependenciesStore();
 
 const visibleDependencies = computed(() => dependencies.value.filter((dep) => !excludedDependencies.value.has(dep)));
