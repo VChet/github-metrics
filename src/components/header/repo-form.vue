@@ -48,7 +48,7 @@
       </ol>
       <input v-model.trim="form.integrations.hostingProjectId" name="hostingProjectId" placeholder="project id">
     </fieldset>
-    <button title="add repo" type="submit">
+    <button title="add repo" type="submit" :disabled>
       {{ submitText }}
     </button>
   </form>
@@ -62,6 +62,7 @@ import InputSelect from "@/components/input-select.vue";
 interface Props {
   repo: Pick<Repository, "name" | "full_name" | "integrations">
   submitText: string
+  disabled: boolean
 }
 interface Emits {
   submit: [repo: Props["repo"]]

@@ -10,7 +10,7 @@
           <icon-x />
         </button>
       </header>
-      <repo-form :repo="form" submit-text="Update" @submit="editRepo" />
+      <repo-form :repo="form" submit-text="Update" :disabled="isSubmitting" @submit="editRepo" />
     </dialog>
   </teleport>
 </template>
@@ -40,14 +40,18 @@ watch(() => form.value.full_name, () => {
 });
 
 const { updateRepository } = useRepositoriesStore();
+const isSubmitting = ref<boolean>(false);
 async function editRepo({ full_name, integrations }: Pick<Repository, "full_name" | "integrations">): Promise<void> {
-  if (!full_name) return;
+  if (!full_name || isSubmitting.value) return;
   try {
+    isSubmitting.value = true;
     hasError.value = false;
     await updateRepository(full_name, integrations);
     close();
   } catch {
     hasError.value = true;
+  } finally {
+    isSubmitting.value = false;
   }
 }
 </script>

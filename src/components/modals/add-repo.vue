@@ -19,7 +19,7 @@
           via current user
         </button>
       </div>
-      <repo-form v-if="tab === 'url'" :repo="form" submit-text="Add" @submit="addRepo" />
+      <repo-form v-if="tab === 'url'" :repo="form" submit-text="Add" :disabled="isSubmitting" @submit="addRepo" />
       <user-repos v-else-if="tab === 'token'" :progress @submit="addRepos" />
     </dialog>
   </teleport>
@@ -57,22 +57,23 @@ function resetForm(): void {
   progress.total = 0;
 }
 
-const hasError = ref(false);
-watch(() => form.value.full_name, () => {
-  hasError.value = false;
-});
+const isSubmitting = ref<boolean>(false);
+const hasError = ref<boolean>(false);
+watch(() => form.value.full_name, () => { hasError.value = false; });
 
 const { addRepository } = useRepositoriesStore();
-
 async function addRepo({ full_name, integrations }: Pick<Repository, "full_name" | "integrations">): Promise<void> {
-  if (!full_name) return;
+  if (!full_name || isSubmitting.value) return;
   try {
+    isSubmitting.value = true;
     hasError.value = false;
     await addRepository(full_name, integrations);
     resetForm();
     close();
   } catch {
     hasError.value = true;
+  } finally {
+    isSubmitting.value = false;
   }
 }
 async function addRepos(payload: Repository[]): Promise<void> {
