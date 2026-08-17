@@ -1,25 +1,20 @@
 import type { PackageJson } from "type-fest";
-import { fetchPackageJson, fetchPnpmWorkspace, fetchRepositoryFiles, fetchRepositoryWorkflows } from "@/service/octokit";
+import { fetchPackageJson, fetchPnpmWorkspace, fetchRepositoryFiles, fetchWorkflowRuns } from "@/service/octokit";
 import { resolveDependencies } from "./dependencies";
 import { getPackageManager, type PackageManager } from "./package-manager";
 import type { Repository } from "@/composable/useRepo";
-import type { Workflow } from "@/types/api/octokit";
 
 export type Dependencies = Record<string, string>;
 
-async function parseWorkflows(fullName: Repository["full_name"]): Promise<Repository["integrations"]["workflowPath"]> {
-  const workflowsData = await fetchRepositoryWorkflows(fullName);
-  const latest = workflowsData?.workflows.reduce<Workflow | undefined>((best, workflow) => {
-    const { name, path } = workflow;
-    const isDependabot = name.toLowerCase().includes("dependabot") || path.toLowerCase().includes("dependabot");
-
-    if (isDependabot || workflow.state !== "active") return best;
-    if (!best) return workflow;
-
-    return Date.parse(workflow.updated_at) > Date.parse(best.updated_at) ? workflow : best;
-  }, undefined);
-
-  return latest?.path;
+async function parseWorkflows({ full_name, default_branch }: Repository): Promise<Repository["integrations"]["ci"]> {
+  const response = await fetchWorkflowRuns(full_name);
+  const latest = response?.workflow_runs.find(({ name, path, head_branch }) => {
+    const isDependabot = name?.toLowerCase().includes("dependabot") || path.toLowerCase().includes("dependabot");
+    const isMaster = head_branch === default_branch;
+    return !isDependabot && isMaster;
+  });
+  if (!latest) return undefined;
+  return { name: latest.name, status: latest.status, conclusion: latest.conclusion };
 }
 
 async function parsePackageManager(
@@ -36,14 +31,14 @@ async function parsePackageManager(
   return undefined;
 }
 
-export async function populateRepositoryData(repo: Omit<Repository, "dependencies">): Promise<Repository> {
+export async function populateRepositoryData(repo: Repository): Promise<Repository> {
   const packageJson = await fetchPackageJson(repo.full_name);
   const pnpmWorkspace = packageJson ? await fetchPnpmWorkspace(repo.full_name) : undefined;
   const dependencies = packageJson ? resolveDependencies(packageJson, pnpmWorkspace) : undefined;
 
-  const integrations = {
+  const integrations: Repository["integrations"] = {
     ...repo.integrations,
-    workflowPath: !repo.private ? await parseWorkflows(repo.full_name) : undefined,
+    ci: await parseWorkflows(repo),
     packageManager: packageJson ? await parsePackageManager(packageJson, repo.full_name) : undefined
   };
 

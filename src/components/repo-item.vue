@@ -44,6 +44,12 @@
         <icon-timeline />
         {{ repo.integrations.analytics }}
       </li>
+      <li v-if="ci" :title="ci.title">
+        <a :href="`https://github.com/${repo.full_name}/actions`" target="_blank`" rel="noopener">
+          <icon-circle-open-arrow-right :class="`repo__footer-badge--${ci.state}`" />
+          {{ repo.integrations.ci!.name }}
+        </a>
+      </li>
       <li v-if="repo.homepage">
         <a :href="repo.homepage" target="_blank" rel="noopener" title="Go to website">
           <icon-external-link />
@@ -52,9 +58,9 @@
       </li>
     </ul>
     <footer class="repo__footer">
-      <div>
+      <div class="repo__footer-status">
         <span v-if="repo.language">
-          <span class="repo__footer-language" :class="`language-${repo.language.toLowerCase()}`" />
+          <span class="repo__footer-badge" :class="`language-${repo.language.toLowerCase()}`" />
           {{ repo.language }}
         </span>
         <!-- Stars -->
@@ -94,13 +100,14 @@
           <icon-scale />
           {{ license ?? "N/A" }}
         </span>
-        <span>
-          <icon-clock />
-          {{ dayjs(repo.updated_at).fromNow() }}
-        </span>
       </div>
+      <!-- Last update -->
+      <div class="repo__footer-updated">
+        <icon-clock />
+        {{ dayjs(repo.updated_at).fromNow() }}
+      </div>
+      <!-- Badges -->
       <div v-if="settings.displayBadges && hasBadges">
-        <img v-if="workflowBadge" :src="workflowBadge" alt="workflow badge">
         <img v-if="hostingStatusBadge" :src="hostingStatusBadge" alt="hosting status">
         <img v-if="uptimeRobotBadge" :src="uptimeRobotBadge" alt="uptimerobot ratio">
       </div>
@@ -117,6 +124,7 @@ import {
   IconBrandPnpm,
   IconBrandYarn,
   IconCircleDot,
+  IconCircleOpenArrowRight,
   IconClock,
   IconExternalLink,
   IconGitFork,
@@ -159,11 +167,11 @@ const repoDiff = computed(() => repoDeltas.value[props.repo.id] ?? null);
 const {
   bundler,
   testFramework,
+  ci,
   hasBadges,
   hostingName,
   uptimeRobotBadge,
   hostingStatusBadge,
-  workflowBadge,
   packageManager,
   license
 } = useRepository(() => props.repo);
@@ -234,7 +242,7 @@ const ManagerComponent = computed(() => {
     gap: 0.5rem;
     justify-content: space-between;
     margin-top: auto;
-    > div {
+    &-status {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
@@ -245,10 +253,28 @@ const ManagerComponent = computed(() => {
         align-items: inherit;
       }
     }
-    &-language {
+    &-updated {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: inherit;
+    }
+    &-badge {
       width: 0.75rem;
       height: 0.75rem;
       border-radius: 50%;
+      &--success {
+        color: var(--success);
+      }
+      &--failure {
+        color: var(--danger);
+      }
+      &--running,
+      &--waiting {
+        color: var(--attention);
+      }
+      &--unknown {
+        color: var(--base);
+      }
     }
   }
 }

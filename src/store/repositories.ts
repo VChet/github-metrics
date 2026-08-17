@@ -40,7 +40,7 @@ export const useRepositoriesStore = createGlobalState(() => {
     if (!repo) throw new Error("Repo not found");
     if (isRepoExists(repo.id)) return updateRepository(fullName, integrations);
 
-    repositories.value.push(await populateRepositoryData({ ...repo, integrations }));
+    repositories.value.push(await populateRepositoryData({ ...repo, integrations, dependencies: undefined }));
   }
 
   function deleteRepository(id: Repository["id"]): void {
@@ -55,7 +55,7 @@ export const useRepositoriesStore = createGlobalState(() => {
     if (!repo) throw new Error("Repo not found");
 
     const entryIndex = repositories.value.findIndex(({ id }) => id === repo.id);
-    repositories.value[entryIndex] = await populateRepositoryData({ ...repo, integrations });
+    repositories.value[entryIndex] = await populateRepositoryData({ ...repo, integrations, dependencies: undefined });
   }
   async function updateRepositories(): Promise<void> {
     const fetchPromises = repositories.value.map(

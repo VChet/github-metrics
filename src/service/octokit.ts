@@ -15,7 +15,7 @@ import type {
   RepoResponse,
   UserReposResponse,
   UserResponse,
-  WorkflowsResponse
+  WorkflowRunsResponse
 } from "@/types/api/octokit";
 
 const { settings } = useSettingsStore();
@@ -98,9 +98,9 @@ export async function fetchPnpmWorkspace(fullName: Repository["full_name"]): Pro
   }
 }
 
-export async function fetchRepositoryWorkflows(fullName: Repository["full_name"]) {
+export async function fetchWorkflowRuns(fullName: Repository["full_name"]) {
   try {
-    const { data } = await fetch<WorkflowsResponse>(`GET /repos/${fullName}/actions/workflows`);
+    const { data } = await fetch<WorkflowRunsResponse>(`GET /repos/${fullName}/actions/runs`);
     return data;
   } catch (error: unknown) {
     if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);

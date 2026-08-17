@@ -1,15 +1,20 @@
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
 import type { Simplify } from "type-fest";
+import { getRunState } from "@/helpers/ci";
 import type { PackageManager } from "@/helpers/package-manager";
 import type { Dependencies } from "@/helpers/repo";
-import type { RepoResponse, Workflow } from "@/types/api/octokit";
+import type { RepoResponse, WorkflowRun } from "@/types/api/octokit";
 
 interface Integrations {
   uptimerobotKey?: string
   hostingProjectId?: string
   analytics?: string
   // Auto-detected
-  workflowPath?: Workflow["path"]
+  ci?: {
+    name: WorkflowRun["name"]
+    status: WorkflowRun["status"]
+    conclusion: WorkflowRun["conclusion"]
+  }
   packageManager?: PackageManager
 }
 export type Repository = Simplify<RepoResponse["data"] & {
@@ -71,13 +76,6 @@ export function useRepository(payload: MaybeRefOrGetter<Repository>) {
     if (hostingName.value?.includes("netlify")) return composeBadgeUrl(`https://img.shields.io/netlify/${projectId}`);
     return null;
   });
-  const workflowBadge = computed<string | null>(() => {
-    const { integrations, owner, name } = data.value;
-    if (!integrations.workflowPath) return null;
-    return composeBadgeUrl(
-      `https://img.shields.io/github/actions/workflow/status/${owner.login}/${name}/${integrations.workflowPath}`
-    );
-  });
   const packageManager = computed<string | null>(() => data.value.integrations.packageManager ?? null);
   const license = computed<string | null>(() => {
     if (!data.value.license) return null;
@@ -85,8 +83,15 @@ export function useRepository(payload: MaybeRefOrGetter<Repository>) {
     return data.value.license.spdx_id;
   });
 
-  const hasBadges = computed<boolean>(() => {
-    return !!hostingStatusBadge.value || !!uptimeRobotBadge.value || !!workflowBadge.value;
+  const hasBadges = computed<boolean>(() => !!hostingStatusBadge.value || !!uptimeRobotBadge.value);
+
+  const ci = computed<{ title: string, state: string } | undefined>(() => {
+    if (!data.value.integrations?.ci) return undefined;
+    const { ci: run } = data.value.integrations;
+    return {
+      title: `${run.name ?? "CI"}: ${run.conclusion ?? "unknown"}`,
+      state: getRunState(run)
+    };
   });
 
   const bundler = computed<string[]>(() => {
@@ -102,10 +107,10 @@ export function useRepository(payload: MaybeRefOrGetter<Repository>) {
     hostingName,
     uptimeRobotBadge,
     hostingStatusBadge,
-    workflowBadge,
     packageManager,
     license,
     hasBadges,
+    ci,
     bundler,
     testFramework
   };
