@@ -33,13 +33,15 @@ async function parsePackageManager(
 
 export async function populateRepositoryData(repo: Repository): Promise<Repository> {
   const packageJson = await fetchPackageJson(repo.full_name);
-  const pnpmWorkspace = packageJson ? await fetchPnpmWorkspace(repo.full_name) : undefined;
+
+  const packageManager = packageJson ? await parsePackageManager(packageJson, repo.full_name) : undefined;
+  const pnpmWorkspace = packageManager === "pnpm" ? await fetchPnpmWorkspace(repo.full_name) : undefined;
   const dependencies = packageJson ? resolveDependencies(packageJson, pnpmWorkspace) : undefined;
 
   const integrations: Repository["integrations"] = {
     ...repo.integrations,
     ci: await parseWorkflows(repo),
-    packageManager: packageJson ? await parsePackageManager(packageJson, repo.full_name) : undefined
+    packageManager
   };
 
   return { ...repo, dependencies, integrations };

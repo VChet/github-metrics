@@ -75,8 +75,6 @@ async function fetchRepositoryFile(fullName: Repository["full_name"], fileName: 
 
 export async function fetchPackageJson(fullName: Repository["full_name"]): Promise<PackageJson | undefined> {
   try {
-    const hasPackage: boolean = await fetchRepositoryFiles(fullName).then((files) => files.includes("package.json"));
-    if (!hasPackage) return undefined;
     const packageContents = await fetchRepositoryFile(fullName, "package.json");
     const content = JSON.parse(packageContents) as PackageJson;
     return content;
@@ -88,8 +86,6 @@ export async function fetchPackageJson(fullName: Repository["full_name"]): Promi
 
 export async function fetchPnpmWorkspace(fullName: Repository["full_name"]): Promise<PnpmWorkspace | undefined> {
   try {
-    const hasWorkspace: boolean = await fetchRepositoryFiles(fullName).then((files) => files.includes("pnpm-workspace.yaml"));
-    if (!hasWorkspace) return undefined;
     const workspaceContents = await fetchRepositoryFile(fullName, "pnpm-workspace.yaml");
     return parsePnpmWorkspace(workspaceContents);
   } catch (error: unknown) {
