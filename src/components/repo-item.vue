@@ -47,7 +47,7 @@
       <li v-if="ci" :title="ci.title">
         <a :href="`https://github.com/${repo.full_name}/actions`" target="_blank`" rel="noopener">
           <icon-circle-open-arrow-right :class="`repo__footer-badge--${ci.state}`" />
-          {{ repo.integrations.ci!.name }}
+          {{ repo.ci!.name }}
         </a>
       </li>
       <li v-if="repo.homepage">

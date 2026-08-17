@@ -6,7 +6,7 @@ import type { Repository } from "@/composable/useRepo";
 
 export type Dependencies = Record<string, string>;
 
-async function parseWorkflows({ full_name, default_branch }: Repository): Promise<Repository["integrations"]["ci"]> {
+async function parseWorkflows({ full_name, default_branch }: Repository): Promise<Repository["ci"]> {
   const response = await fetchWorkflowRuns(full_name);
   const latest = response?.workflow_runs.find(({ name, path, head_branch }) => {
     const isDependabot = name?.toLowerCase().includes("dependabot") || path.toLowerCase().includes("dependabot");
@@ -37,12 +37,7 @@ export async function populateRepositoryData(repo: Repository): Promise<Reposito
   const packageManager = packageJson ? await parsePackageManager(packageJson, repo.full_name) : undefined;
   const pnpmWorkspace = packageManager === "pnpm" ? await fetchPnpmWorkspace(repo.full_name) : undefined;
   const dependencies = packageJson ? resolveDependencies(packageJson, pnpmWorkspace) : undefined;
+  const ci = await parseWorkflows(repo);
 
-  const integrations: Repository["integrations"] = {
-    ...repo.integrations,
-    ci: await parseWorkflows(repo),
-    packageManager
-  };
-
-  return { ...repo, dependencies, integrations };
+  return { ...repo, packageManager, dependencies, ci };
 }

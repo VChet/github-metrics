@@ -1,5 +1,4 @@
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
-import type { Simplify } from "type-fest";
 import { getRunState } from "@/helpers/ci";
 import type { PackageManager } from "@/helpers/package-manager";
 import type { Dependencies } from "@/helpers/repo";
@@ -9,18 +8,19 @@ interface Integrations {
   uptimerobotKey?: string
   hostingProjectId?: string
   analytics?: string
+}
+interface RepositoryMeta {
+  dependencies: Dependencies | undefined
+  integrations: Integrations
   // Auto-detected
+  packageManager?: PackageManager
   ci?: {
     name: WorkflowRun["name"]
     status: WorkflowRun["status"]
     conclusion: WorkflowRun["conclusion"]
   }
-  packageManager?: PackageManager
 }
-export type Repository = Simplify<RepoResponse["data"] & {
-  dependencies: Dependencies | undefined
-  integrations: Integrations
-}>;
+export type Repository = RepoResponse["data"] & RepositoryMeta;
 
 const BUNDLERS = [
   "esbuild",
@@ -76,7 +76,7 @@ export function useRepository(payload: MaybeRefOrGetter<Repository>) {
     if (hostingName.value?.includes("netlify")) return composeBadgeUrl(`https://img.shields.io/netlify/${projectId}`);
     return null;
   });
-  const packageManager = computed<string | null>(() => data.value.integrations.packageManager ?? null);
+  const packageManager = computed<string | null>(() => data.value.packageManager ?? null);
   const license = computed<string | null>(() => {
     if (!data.value.license) return null;
     if (data.value.license.spdx_id === "NOASSERTION") { return data.value.license.name; }
@@ -86,11 +86,10 @@ export function useRepository(payload: MaybeRefOrGetter<Repository>) {
   const hasBadges = computed<boolean>(() => !!hostingStatusBadge.value || !!uptimeRobotBadge.value);
 
   const ci = computed<{ title: string, state: string } | undefined>(() => {
-    if (!data.value.integrations?.ci) return undefined;
-    const { ci: run } = data.value.integrations;
+    if (!data.value.ci) return undefined;
     return {
-      title: `${run.name ?? "CI"}: ${run.conclusion ?? "unknown"}`,
-      state: getRunState(run)
+      title: `${data.value.ci.name ?? "CI"}: ${data.value.ci.conclusion ?? "unknown"}`,
+      state: getRunState(data.value.ci)
     };
   });
 

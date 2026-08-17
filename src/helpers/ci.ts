@@ -2,7 +2,7 @@ import type { Repository } from "@/composable/useRepo";
 
 type CIState = "success" | "failure" | "running" | "waiting" | "unknown";
 
-export function getRunState(run: Repository["integrations"]["ci"]): CIState {
+export function getRunState(run: Repository["ci"]): CIState {
   if (run?.status === "completed") {
     switch (run.conclusion) {
       case "success":
