@@ -1,3 +1,4 @@
+import { coerce, normalizeFull } from "verkit/version";
 import type { PackageJson } from "type-fest";
 import type { PnpmWorkspace } from "./pnpm-workspace";
 import type { Dependencies } from "./repo";
@@ -39,4 +40,9 @@ export function resolveDependencies(
   }
 
   return result;
+}
+
+export function extractVersion(versionRange: string): string | null {
+  const parsed = coerce(versionRange, { includePrerelease: true });
+  return parsed ? normalizeFull(parsed) : null;
 }

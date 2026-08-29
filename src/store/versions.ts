@@ -2,7 +2,7 @@ import { computed } from "vue";
 import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
 import dayjs from "dayjs";
 import { getVersionsBatch, type PackageManifest } from "fast-npm-meta";
-import { compare } from "verkit";
+import { compare } from "verkit/version";
 import { useDependencyTable } from "@/composable/useDependencyTable";
 
 interface LatestVersionsStore {
