@@ -69,7 +69,7 @@ function getEventView(event: FeedEvent): EventView {
         default: return { icon: IconCircleDot, color: "var(--base)", label: "updated issue" };
       }
     case "MemberEvent": return { icon: IconUser, color: "var(--base)", label: "joined" };
-    case "PublicEvent": return { icon: IconEye, color: "var(--accent)", label: "made public" };
+    case "PublicEvent": return { icon: IconEye, color: "var(--attention)", label: "made public" };
     case "PullRequestEvent":
       switch (event.action) {
         case "opened": return { icon: IconGitPullRequest, color: "var(--success)", label: "opened pull request" };
@@ -79,7 +79,7 @@ function getEventView(event: FeedEvent): EventView {
       }
     case "PullRequestReviewEvent": return { icon: IconAnalyze, color: "var(--success)", label: "reviewed pull request" };
     case "ReleaseEvent": return { icon: IconTag, color: "var(--success)", label: "published release" };
-    case "WatchEvent": return { icon: IconStar, color: "var(--accent)", label: "starred" };
+    case "WatchEvent": return { icon: IconStar, color: "var(--attention)", label: "starred" };
   }
   return DEFAULT_VIEW;
 }
