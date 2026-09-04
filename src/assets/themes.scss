@@ -1,0 +1,43 @@
+:root {
+  --radius: 0.375rem;
+  --base: #aaa;
+  --positive: #008000;
+  --negative: #e00000;
+  --success: #3fb950;
+  --done: #ab7df8;
+  --attention: #d29922;
+  --danger: #f85149;
+  --accent: #e3b341;
+  &[data-theme="github"] {
+    --base: #7d8590;
+    --background: #0d1117;
+    --base-dimmed: #30363d;
+    --accent: #2f81f7;
+  }
+  &[data-theme="aqua"] {
+    --background: #1d1d24;
+    --base-dimmed: #31313b;
+    --accent: #77babc;
+  }
+  &[data-theme="cream"] {
+    --background: #1b1a17;
+    --base-dimmed: #2c2b26;
+    --accent: #b9b384;
+  }
+  &[data-theme="mint"] {
+    --background: #1b1b1c;
+    --base-dimmed: #313131;
+    --accent: #63b97f;
+  }
+  &[data-theme="rose"] {
+    --background: #1f1a18;
+    --base-dimmed: #322b28;
+    --accent: #ff7b5d;
+  }
+  &[data-theme="departure"] {
+    --base: #c0c0c0;
+    --background: #222;
+    --base-dimmed: #35352f;
+    --accent: #ffa133;
+  }
+}
