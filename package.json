@@ -2,7 +2,7 @@
   "name": "github-metrics",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@11.24.0",
+  "packageManager": "pnpm@11.25.0",
   "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=24"
@@ -20,12 +20,12 @@
     "lint:all": "npm run lint:ts && npm run lint:js && npm run lint:css"
   },
   "dependencies": {
-    "@octokit/core": "^7.0.7",
+    "@octokit/core": "^7.0.8",
     "@tabler/icons-vue": "^3.46.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vueuse/core": "^14.4.0",
     "@vueuse/integrations": "^14.4.0",
-    "confbox": "^0.2.4",
+    "confbox": "^0.3.1",
     "dayjs": "^1.11.23",
     "fast-npm-meta": "^2.2.0",
     "http-status-codes": "^2.3.0",
@@ -38,26 +38,26 @@
     "workbox-window": "^7.4.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.3.0",
+    "@antfu/eslint-config": "^9.5.1",
     "@octokit/types": "^18.0.0",
     "@stylistic/stylelint-config": "^5.0.0",
     "@total-typescript/ts-reset": "^0.6.1",
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.4.1",
     "@types/sortablejs": "^1.15.9",
-    "eslint": "^10.9.1",
+    "eslint": "^10.10.0",
     "named-port": "^4.0.1",
     "postcss-html": "^2.0.0",
     "postcss-scss": "^4.0.9",
-    "sass-embedded": "^1.103.1",
-    "stylelint": "^17.14.1",
+    "sass-embedded": "^1.104.0",
+    "stylelint": "^17.15.0",
     "stylelint-config-recess-order": "^7.8.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-declaration-block-no-ignored-properties": "^3.0.0",
     "stylelint-order": "^8.1.1",
     "stylelint-rem-over-px": "^2.0.1",
-    "type-fest": "^5.8.0",
+    "type-fest": "^5.9.0",
     "typescript": "^6.0.3",
-    "vue-router": "^5.3.0",
+    "vue-router": "^5.3.1",
     "vue-tsc": "^3.3.11"
   }
 }
