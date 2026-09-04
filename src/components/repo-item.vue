@@ -6,7 +6,7 @@
         <icon-template v-if="repo.is_template" />
         <icon-lock v-if="repo.private" />
         <icon-archive v-if="repo.archived" />
-        <a :href="repo.html_url" rel="noopener" class="text-truncate icon-button">
+        <a :href="repo.html_url" rel="noopener" class="text-truncate">
           <template v-for="({ text, highlighted }, index) in repoName" :key="index">
             <component :is="highlighted ? 'mark' : 'span'">
               {{ text }}
@@ -19,7 +19,7 @@
         <button
           title="delete repo"
           type="button"
-          class="icon-button icon-button--negative"
+          class="icon icon--negative"
           @click="$emit('delete', repo.id)"
         >
           <icon-trash />

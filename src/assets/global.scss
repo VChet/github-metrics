@@ -105,10 +105,12 @@ fieldset {
   margin: 0;
   border: 1px solid var(--base-dimmed);
   border-radius: var(--radius);
-  &:has(input, textarea):hover,
-  &:has(input, textarea):focus-within {
-    color: var(--base);
-    border-color: var(--base);
+  &:has(input, select, textarea) {
+    &:hover,
+    &:focus-within {
+      color: var(--base);
+      border-color: var(--base);
+    }
   }
   ol {
     margin: 0 0 1rem 1.5rem;
@@ -136,6 +138,9 @@ a {
   }
   fieldset & {
     text-decoration: underline;
+    &:focus-visible {
+      box-shadow: none;
+    }
   }
   &:hover,
   &:focus-visible {
@@ -177,15 +182,22 @@ button {
   &:active {
     transform: scale(0.95);
   }
-  &.icon {
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    &:focus-visible {
-      box-shadow: none;
-      svg {
-        filter: drop-shadow(0 0 0.625rem var(--accent));
-      }
+}
+.icon {
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  &--negative {
+    color: var(--negative);
+  }
+  &:focus-visible {
+    box-shadow: none;
+  }
+  &:hover,
+  &:focus-visible {
+    svg {
+      filter: drop-shadow(0 0 0.625rem var(--accent));
     }
   }
 }
@@ -304,18 +316,6 @@ dialog {
   @media (width <= 600px) {
     margin-right: 1rem;
     margin-left: 1rem;
-  }
-}
-.icon-button {
-  padding: 0;
-  cursor: pointer;
-  border: 0;
-  &--negative {
-    color: var(--negative);
-    &:hover,
-    &:focus-visible {
-      color: #f00;
-    }
   }
 }
 .text-truncate {

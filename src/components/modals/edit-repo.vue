@@ -1,5 +1,5 @@
 <template>
-  <button title="edit repo" type="button" class="icon-button" @click="open">
+  <button title="edit repo" type="button" class="icon" @click="open">
     <icon-pencil title="edit repo" />
   </button>
   <teleport to="body">

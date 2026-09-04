@@ -53,7 +53,7 @@ onBeforeMount(() => {
     border-bottom: 1px solid var(--base-dimmed);
     &:hover,
     &:focus-visible {
-      outline: 1px solid var(--highlight);
+      border-color: 1px solid var(--base);
     }
     option {
       background: var(--background);
