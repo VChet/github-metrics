@@ -21,35 +21,39 @@
         If you do not agree, do not use the app.
 
         <h2>Description of Service</h2>
-        GitHub Metrics allows users to analyze repository statistics by providing a GitHub API personal access token.
-        The app collects repository statistics, build status (if a Netlify site ID is provided), uptime status (if an UptimeRobot monitor key is provided), and more.
+        GitHub Metrics is a client-side application for analyzing GitHub repository statistics and status information.
+        It can also display build status, uptime status, package information, and other data from third-party services.
 
         <h2>Data Storage and Privacy</h2>
         <ul>
-          <li>All data processed by the app is stored locally in your browser's localStorage.</li>
-          <li>The app does not transmit or store any personal data on external servers.</li>
-          <li>Users are responsible for safeguarding their GitHub API token.</li>
+          <li>The app does not operate a backend server and does not send data to servers operated by the developer.</li>
+          <li>Credentials, settings, and cached data are stored locally in your browser's localStorage.</li>
+          <li>API requests are made directly from your browser to the corresponding third-party services.</li>
+          <li>You are responsible for safeguarding your GitHub authentication token and other credentials.</li>
         </ul>
 
         <h2>User Responsibilities</h2>
         <ul>
           <li>You must not use the app for any illegal or unauthorized purpose.</li>
-          <li>You acknowledge that the accuracy of the displayed data depends on the availability and reliability of GitHub's API.</li>
-          <li>You are solely responsible for the security of your GitHub API token and any associated credentials.</li>
+          <li>The accuracy and availability of displayed data depend on the respective third-party services.</li>
+          <li>When creating a GitHub personal access token, use only the permissions required by the app.</li>
         </ul>
 
         <h2>Limitation of Liability</h2>
         <ul>
           <li>The app is provided "as is" without warranties of any kind.</li>
-          <li>The developer is not responsible for any inaccuracies, data loss, or issues arising from the use of the app.</li>
+          <li>The developer is not responsible for inaccuracies, data loss, service interruptions, or credential exposure resulting from the use of the app.</li>
           <li>You use the app at your own risk.</li>
         </ul>
 
         <h2>Third-Party Services</h2>
         <ul>
-          <li>The App interacts with GitHub's API and, optionally, Netlify's, UptimeRobot's services.</li>
-          <li>The app is not affiliated with GitHub, Netlify, or UptimeRobot.</li>
+          <li>The app may interact directly with GitHub, Netlify, UptimeRobot, and other third-party services.</li>
+          <li>GitHub Metrics is not affiliated with GitHub, Netlify, or UptimeRobot.</li>
         </ul>
+
+        <h2>Local Data Removal</h2>
+        You can remove locally stored application data, including credentials and cached data, by clearing the application's data from your browser.
 
         <h2>Changes to Terms</h2>
         The developer reserves the right to update these Terms at any time.
