@@ -11,6 +11,7 @@
   background: var(--accent);
 }
 html {
+  -webkit-tap-highlight-color: transparent;
   scrollbar-gutter: stable;
   overscroll-behavior-x: none;
   font-family: "Exo 2", "Open Sans", sans-serif;
