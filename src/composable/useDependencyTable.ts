@@ -1,5 +1,6 @@
 import { computed } from "vue";
-import { all, type ModuleReplacementMapping } from "module-replacements";
+import type { ModuleReplacementMapping } from "module-replacements";
+import { useReplacementsStore } from "@/store/replacements";
 import { useRepositoriesStore } from "@/store/repositories";
 import type { Repository } from "./useRepo";
 
@@ -17,10 +18,11 @@ export function useDependencyTable() {
     return [...set].sort((a, b) => a.localeCompare(b));
   });
 
+  const { mappings } = useReplacementsStore();
   const replacements = computed<ModuleReplacementMapping[]>(() => {
     const map: Map<string, ModuleReplacementMapping> = new Map();
     for (const dependency of dependencies.value) {
-      const mapping = all.mappings[dependency];
+      const mapping = mappings.value[dependency];
       if (mapping) map.set(dependency, mapping);
     }
     return [...map.values()];

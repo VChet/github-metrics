@@ -8,20 +8,14 @@
             :href="`https://${settings.packageBrowser}/${rep.moduleName}`"
             target="_blank"
             rel="noopener"
+            :style="{ color: composeHashColor(rep.moduleName) }"
             :title="`Go to ${rep.moduleName} on ${settings.packageBrowser}`"
           >
             {{ rep.moduleName }}
           </a>
           →
           <template v-for="(dep, index) in rep.replacements" :key="dep">
-            <a
-              :href="`https://${settings.packageBrowser}/${dep}`"
-              target="_blank"
-              rel="noopener"
-              :title="`Go to ${dep} on ${settings.packageBrowser}`"
-            >
-              {{ dep }}
-            </a>
+            <code :style="{ color: composeHashColor(dep) }">{{ dep }}</code>
             <span v-if="index < rep.replacements.length - 1"> / </span>
           </template>
         </li>
