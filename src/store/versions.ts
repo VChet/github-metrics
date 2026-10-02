@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
+import { createGlobalState, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { getVersionsBatch, type PackageManifest } from "fast-npm-meta";
 import { compare } from "verkit/version";
@@ -10,7 +10,7 @@ interface LatestVersionsStore {
   data: Record<string, PackageManifest["distTags"]>
 }
 const DEFAULT_STORE: LatestVersionsStore = {
-  lastUpdate: new Date().toISOString(),
+  lastUpdate: "",
   data: {}
 };
 
@@ -27,22 +27,25 @@ export const useVersionsStore = createGlobalState(() => {
   const isEmpty = computed(() => !Object.keys(versions.value).length);
 
   async function updateVersions(): Promise<void> {
-    const { dependencies } = useDependencyTable();
-    const manifests = await getVersionsBatch(dependencies.value);
-    for (const { name, distTags: tags } of manifests) {
-      // Ignore next version if it's lower or equal to latest
-      if (tags.next && compare(tags.next, tags.latest) <= 0) delete tags.next;
-      versions.value[name] = { latest: tags.latest, next: tags.next };
+    try {
+      const { dependencies } = useDependencyTable();
+      const manifests = await getVersionsBatch(dependencies.value);
+      for (const { name, distTags: tags } of manifests) {
+        // Ignore next version if it's lower or equal to latest
+        if (tags.next && compare(tags.next, tags.latest) <= 0) delete tags.next;
+        versions.value[name] = { latest: tags.latest, next: tags.next };
+      }
+
+      lastUpdate.value = new Date().toISOString();
+    } catch (error) {
+      console.error("Failed to update versions", error);
     }
-
-    lastUpdate.value = new Date().toISOString();
   }
 
-  function updateCheck() {
-    const isUpdateNeeded = isEmpty.value || !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
-    if (isUpdateNeeded) return updateVersions();
+  function isUpdateNeeded() {
+    return isEmpty.value || !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
   }
-  whenever(() => storage.value.lastUpdate, updateCheck, { immediate: true });
+  if (isUpdateNeeded()) updateVersions();
 
   return {
     versions,

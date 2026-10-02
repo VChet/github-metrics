@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
+import { createGlobalState, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { fetchRepositoryEvents } from "@/service/octokit";
 import { useSettingsStore } from "@/store/settings";
@@ -70,7 +70,7 @@ interface EventsStore {
 };
 
 const DEFAULT_STORE: EventsStore = {
-  lastUpdate: new Date().toISOString(),
+  lastUpdate: "",
   data: []
 };
 
@@ -120,15 +120,18 @@ export const useEventsStore = createGlobalState(() => {
   }
 
   async function updateEvents(): Promise<void> {
-    events.value = await fetchAllEvents();
-    lastUpdate.value = new Date().toISOString();
+    try {
+      events.value = await fetchAllEvents();
+      lastUpdate.value = new Date().toISOString();
+    } catch (error) {
+      console.error("Failed to update events", error);
+    }
   }
 
-  function updateCheck() {
-    const isUpdateNeeded = !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
-    if (isUpdateNeeded) return updateEvents();
+  function isUpdateNeeded() {
+    return !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
   }
-  whenever(() => storage.value.lastUpdate, updateCheck, { immediate: true });
+  if (isUpdateNeeded()) updateEvents();
 
   return {
     events,

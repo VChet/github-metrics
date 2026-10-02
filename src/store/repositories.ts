@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { createGlobalState, useLocalStorage, whenever } from "@vueuse/core";
+import { createGlobalState, useLocalStorage } from "@vueuse/core";
 import dayjs from "dayjs";
 import { isExportedRepository, type ExportedRepository } from "@/helpers/export";
 import { populateRepositoryData } from "@/helpers/repo";
@@ -12,7 +12,7 @@ interface RepositoriesStore {
   data: Repository[]
 };
 const DEFAULT_STORE: RepositoriesStore = {
-  lastUpdate: new Date().toISOString(),
+  lastUpdate: "",
   data: []
 };
 
@@ -58,11 +58,15 @@ export const useRepositoriesStore = createGlobalState(() => {
     repositories.value[entryIndex] = await populateRepositoryData({ ...repo, integrations, dependencies: undefined });
   }
   async function updateRepositories(): Promise<void> {
-    const fetchPromises = repositories.value.map(
-      ({ full_name, integrations }) => updateRepository(full_name, integrations)
-    );
-    await Promise.all(fetchPromises);
-    lastUpdate.value = new Date().toISOString();
+    try {
+      const fetchPromises = repositories.value.map(
+        ({ full_name, integrations }) => updateRepository(full_name, integrations)
+      );
+      await Promise.all(fetchPromises);
+      lastUpdate.value = new Date().toISOString();
+    } catch (error) {
+      console.error("Failed to update repositories", error);
+    }
   }
 
   async function importRepositories(payload: ExportedRepository[], cb?: (progress: Progress) => void): Promise<void> {
@@ -83,11 +87,10 @@ export const useRepositoriesStore = createGlobalState(() => {
     return repositories.value.map(({ id, full_name, integrations }) => ({ id, full_name, integrations }));
   }
 
-  function updateCheck() {
-    const isUpdateNeeded = !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
-    if (isUpdateNeeded) return updateRepositories();
+  function isUpdateNeeded() {
+    return !lastUpdate.value || dayjs().diff(lastUpdate.value, "hours") >= 1;
   }
-  whenever(() => storage.value.lastUpdate, updateCheck, { immediate: true });
+  if (isUpdateNeeded()) updateRepositories();
 
   return {
     repositories,
