@@ -28,7 +28,6 @@
     "confbox": "^0.3.1",
     "dayjs": "^1.11.23",
     "fast-npm-meta": "^2.2.0",
-    "http-status-codes": "^2.3.0",
     "module-replacements": "^3.4.0",
     "sortablejs": "^1.15.7",
     "verkit": "^0.5.0",

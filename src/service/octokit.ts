@@ -1,7 +1,6 @@
 import { ref } from "vue";
 import { useMemoize } from "@vueuse/core";
 import { Octokit } from "@octokit/core";
-import { StatusCodes } from "http-status-codes";
 import type { RequestParameters, Route } from "@octokit/types";
 import type { PackageJson } from "type-fest";
 import { parsePnpmWorkspace, type PnpmWorkspace } from "@/helpers/pnpm-workspace";
@@ -41,6 +40,14 @@ export function fetch<T>(url: Route, options: RequestParameters = {}): Promise<T
     headers: bypassCache ? { "If-None-Match": "" } : undefined
   }) as Promise<T>;
 }
+async function optionalFetch<T>(promise: Promise<T>): Promise<T | undefined> {
+  try {
+    return await promise;
+  } catch (error: unknown) {
+    if (isRequestError(error) && error.status === 404) return undefined;
+    throw error;
+  }
+}
 
 export async function fetchRateLimit() {
   const { data } = await fetch<RateLimitResponse>("GET /rate_limit");
@@ -58,13 +65,9 @@ async function fetchRepositoryContents(fullName: Repository["full_name"]) {
 }
 
 export const fetchRepositoryFiles = useMemoize(async (fullName: Repository["full_name"]) => {
-  try {
-    const files = await fetchRepositoryContents(fullName);
-    return Array.isArray(files) ? files.map(({ name }) => name) : [];
-  } catch (error: unknown) {
-    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
-    return [];
-  }
+  const files = await optionalFetch(fetchRepositoryContents(fullName));
+  if (!files) return [];
+  return Array.isArray(files) ? files.map(({ name }) => name) : [];
 });
 
 async function fetchRepositoryFile(fullName: Repository["full_name"], fileName: string) {
@@ -74,34 +77,21 @@ async function fetchRepositoryFile(fullName: Repository["full_name"], fileName: 
 }
 
 export async function fetchPackageJson(fullName: Repository["full_name"]): Promise<PackageJson | undefined> {
-  try {
-    const packageContents = await fetchRepositoryFile(fullName, "package.json");
-    const content = JSON.parse(packageContents) as PackageJson;
-    return content;
-  } catch (error: unknown) {
-    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
-    return undefined;
-  }
+  const packageContents = await optionalFetch(fetchRepositoryFile(fullName, "package.json"));
+  if (!packageContents) return undefined;
+  return JSON.parse(packageContents) as PackageJson;
 }
 
 export async function fetchPnpmWorkspace(fullName: Repository["full_name"]): Promise<PnpmWorkspace | undefined> {
-  try {
-    const workspaceContents = await fetchRepositoryFile(fullName, "pnpm-workspace.yaml");
-    return parsePnpmWorkspace(workspaceContents);
-  } catch (error: unknown) {
-    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
-    return undefined;
-  }
+  const workspaceContents = await optionalFetch(fetchRepositoryFile(fullName, "pnpm-workspace.yaml"));
+  if (!workspaceContents) return undefined;
+  return parsePnpmWorkspace(workspaceContents);
 }
 
 export async function fetchWorkflowRuns(fullName: Repository["full_name"]) {
-  try {
-    const { data } = await fetch<WorkflowRunsResponse>(`GET /repos/${fullName}/actions/runs`);
-    return data;
-  } catch (error: unknown) {
-    if (isRequestError(error) && error.status !== StatusCodes.NOT_FOUND) console.error(error);
-    return null;
-  }
+  const response = await optionalFetch(fetch<WorkflowRunsResponse>(`GET /repos/${fullName}/actions/runs`));
+  if (!response) return null;
+  return response.data;
 }
 
 export async function fetchRepositoryEvents(fullName: Repository["full_name"], page = 1) {
