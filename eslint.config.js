@@ -111,6 +111,7 @@ export default antfu({
     "style/quotes": ["error", "double", { avoidEscape: true, allowTemplateLiterals: "avoidEscape" }],
     "style/semi": ["error", "always"],
     "unicorn/prefer-includes": "off",
+    "unused-imports/no-unused-vars": "off",
     "yaml/quotes": ["error", { prefer: "double" }]
   }
 }, {
