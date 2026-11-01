@@ -1,5 +1,5 @@
 <template>
-  <li class="repo">
+  <li class="repo" :class="{ error: hasError }">
     <header class="repo__header">
       <h2 class="repo__header-name">
         <icon-git-fork v-if="repo.fork" />
@@ -96,7 +96,7 @@
           {{ repo.open_issues_count }}
           <metric-delta :delta="repoDiff?.issues" inverse />
         </a>
-        <span :class="{ error: !repo.private && !license }">
+        <span :class="{ error: isMissingLicense }">
           <icon-scale />
           {{ license ?? "N/A" }}
         </span>
@@ -176,6 +176,10 @@ const {
   license
 } = useRepository(() => props.repo);
 
+const isMissingLicense = computed(() => !props.repo.private && !license.value);
+const isCIFailed = computed(() => ci.value?.state === "failure");
+const hasError = computed(() => isMissingLicense.value || isCIFailed.value);
+
 const ManagerComponent = computed(() => {
   switch (packageManager.value) {
     case "npm": return IconBrandNpm;
@@ -200,6 +204,9 @@ const ManagerComponent = computed(() => {
   &:hover,
   &:focus-within {
     border-color: var(--base);
+  }
+  &.error {
+    border-color: var(--negative);
   }
   .error {
     color: var(--negative);
