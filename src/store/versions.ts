@@ -29,6 +29,7 @@ export const useVersionsStore = createGlobalState(() => {
   async function updateVersions(): Promise<void> {
     try {
       const { dependencies } = useDependencyTable();
+      if (!dependencies.value.length) return;
       const manifests = await getVersionsBatch(dependencies.value);
       for (const { name, distTags: tags } of manifests) {
         // Ignore next version if it's lower or equal to latest
