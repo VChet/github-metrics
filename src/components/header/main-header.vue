@@ -17,7 +17,7 @@
         <icon-loader :active="isUpdating" />
         Update
       </button>
-      <button v-if="needRefresh" type="button" @click.prevent="updateServiceWorker(true)">
+      <button v-if="needRefresh" type="button" @click.prevent="updateServiceWorker()">
         <icon-progress-alert />
         Update app
       </button>
