@@ -29,6 +29,7 @@ export default antfu({
   rules: {
     "antfu/consistent-list-newline": "off",
     "antfu/if-newline": "off",
+    "antfu/reasonable-newline": "off",
     "curly": ["error", "multi-line"],
     "import/consistent-type-specifier-style": "off",
     "max-lines": ["warn", { max: 1000 }],
@@ -111,6 +112,7 @@ export default antfu({
     "style/quotes": ["error", "double", { avoidEscape: true, allowTemplateLiterals: "avoidEscape" }],
     "style/semi": ["error", "always"],
     "unicorn/prefer-includes": "off",
+    "unused-imports/no-unused-vars": "off",
     "yaml/quotes": ["error", { prefer: "double" }]
   }
 }, {

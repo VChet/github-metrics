@@ -96,7 +96,7 @@ export async function fetchWorkflowRuns(fullName: Repository["full_name"]) {
 
 export async function fetchRepositoryEvents(fullName: Repository["full_name"], page = 1) {
   const { data } = await fetch<RepoEventsResponse>(`GET /repos/${fullName}/events`, { per_page: 100, page });
-  if (!Array.isArray(data)) throw new Error(`Error fetching ${fullName} repo events`, data);
+  if (!Array.isArray(data)) throw new TypeError(`Error fetching ${fullName} repo events`, data);
   return { data };
 }
 
