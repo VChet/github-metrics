@@ -88,13 +88,15 @@ const view = getEventView(props.data);
 <style lang="scss">
 .feed-item {
   &__timestamp {
-    font-size: 0.875rem;
+    font-family: monospace;
+    font-size: 0.95rem;
     color: var(--accent);
+    letter-spacing: -0.05rem;
   }
   &__icon {
     width: 1rem;
     height: 1rem;
-    margin-inline: 0.25rem;
+    margin-inline: 0.5rem 0.25rem;
     vertical-align: bottom;
   }
   a {

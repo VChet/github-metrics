@@ -20,8 +20,6 @@ const { events, amount } = useEventsStore();
     display: grid;
     gap: 0.5rem;
     justify-items: start;
-    padding-left: 1.25rem;
-    list-style-type: circle;
     @media (width <= 600px) {
       padding-left: 0;
       list-style-type: none;
