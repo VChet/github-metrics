@@ -56,7 +56,7 @@
           <label for="authToken">Token</label>
           <textarea id="authToken" v-model.trim="form.authToken" placeholder="authToken" />
         </fieldset>
-        <button title="apply settings" type="submit" :disabled="isImporting">
+        <button title="apply settings" type="submit" :disabled="isBusy">
           Update
         </button>
       </form>
@@ -74,10 +74,10 @@ import ImportExport from "@/components/import-export.vue";
 import InputSelect from "@/components/input-select.vue";
 
 const importExportRef = useTemplateRef("importExportElement");
-const isImporting = computed<boolean>(() => importExportRef.value?.isImporting ?? false);
+const isBusy = computed<boolean>(() => importExportRef.value?.isBusy ?? false);
 
 const dialogRef = useTemplateRef("dialogElement");
-const { open, close } = useDialog(dialogRef, isImporting);
+const { open, close } = useDialog(dialogRef, isBusy);
 
 const { settings, setSettings, isSwipeSupported } = useSettingsStore();
 const form = reactive(deepCopy(settings.value));

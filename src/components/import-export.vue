@@ -1,12 +1,14 @@
 <template>
   <section class="import-export">
-    <button title="import repositories" type="button" :disabled="isImporting" @click="importFile()">
-      <icon-download v-if="!isImporting" />
+    <button title="import repositories" type="button" :disabled="isBusy" @click="importFile()">
+      <icon-download v-if="!isBusy" />
       <icon-loader v-else active persistent />
-      <span v-if="isImporting && importProgress.total">Importing: {{ importProgress.current }}/{{ importProgress.total }}</span>
+      <span v-if="isBusy && importProgress.total">
+        Importing: {{ importProgress.current }}/{{ importProgress.total }}
+      </span>
       <span v-else>Import data</span>
     </button>
-    <button title="export repositories" type="button" :disabled="isImporting" @click="exportSettings">
+    <button title="export repositories" type="button" :disabled="isBusy" @click="exportSettings">
       <icon-upload />
       Export data
     </button>
@@ -31,14 +33,14 @@ const { settings, importSettings } = useSettingsStore();
 const { excludedDependencies, importExcludedDependencies } = useExcludedDependenciesStore();
 
 // Import
-const isImporting = ref<boolean>(false);
+const isBusy = ref<boolean>(false);
 const importProgress = ref<Progress>({ current: 0, total: 0 });
-defineExpose({ isImporting });
+defineExpose({ isBusy });
 
 const { files, open: importFile } = useFileDialog({ multiple: false, reset: true, accept: "application/json" });
 whenever(files, async ({ 0: payload }) => {
   try {
-    isImporting.value = true;
+    isBusy.value = true;
     importProgress.value = { current: 0, total: 0 };
 
     const content = await readFile(payload).then(String);
@@ -53,20 +55,26 @@ whenever(files, async ({ 0: payload }) => {
       await importRepositories(parsedData.repositories, (progress) => { importProgress.value = progress; });
     }
   } finally {
-    isImporting.value = false;
+    isBusy.value = false;
     importProgress.value = { current: 0, total: 0 };
   }
 });
 
 // Export
-function exportSettings(): void {
-  const fileName = `github-metrics-${dayjs().format("YYYY-MM-DD")}`;
-  const payload: ExportedData = {
-    settings: settings.value,
-    excludedDependencies: [...excludedDependencies.value.values()],
-    repositories: exportRepositories()
-  };
-  downloadFile(JSON.stringify(payload), fileName, "application/json");
+async function exportSettings(): Promise<void> {
+  isBusy.value = true;
+  try {
+    await nextTick();
+    const fileName = `github-metrics-${dayjs().format("YYYY-MM-DD")}`;
+    const payload: ExportedData = {
+      settings: settings.value,
+      excludedDependencies: [...excludedDependencies.value.values()],
+      repositories: exportRepositories()
+    };
+    downloadFile(JSON.stringify(payload), fileName, "application/json");
+  } finally {
+    isBusy.value = false;
+  }
 }
 </script>
 <style lang="scss">
