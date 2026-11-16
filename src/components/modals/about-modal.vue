@@ -1,6 +1,6 @@
 <template>
   <button title="open about" type="button" @click="open">
-    <icon-tilde />
+    <icon-info-circle />
     About
   </button>
   <teleport to="body">
@@ -72,7 +72,7 @@
 </template>
 <script setup lang="ts">
 import { useTemplateRef } from "vue";
-import { IconTilde, IconX } from "@tabler/icons-vue";
+import { IconInfoCircle, IconX } from "@tabler/icons-vue";
 import { useDialog } from "@/composable/useDialog";
 
 const dialogRef = useTemplateRef("dialogElement");
