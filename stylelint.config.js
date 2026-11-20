@@ -1,3 +1,5 @@
+import { defineStylistic, rules as stylisticRules } from "@stylistic/stylelint-config";
+
 export default {
   extends: [
     "stylelint-config-standard-scss",
@@ -10,7 +12,17 @@ export default {
     "stylelint-rem-over-px"
   ],
   customSyntax: "postcss-scss",
-  overrides: [{ files: ["**/*.vue"], customSyntax: "postcss-html" }],
+  overrides: [{
+    files: ["**/*.vue"],
+    customSyntax: "postcss-html",
+    rules: defineStylistic({
+      syntax: "scss",
+      rules: {
+        ...stylisticRules,
+        "selector-list-comma-newline-after": "always-multi-line"
+      }
+    })
+  }],
   ignoreFiles: ["dist/**"],
   rules: {
     "@stylistic/selector-list-comma-newline-after": "always-multi-line",
